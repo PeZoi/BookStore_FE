@@ -1,119 +1,46 @@
-import React from "react";
-import Book from "../../model/Book";
+import React, { useEffect, useState } from "react";
 import BookProps from "./components/BookProps";
+import BookModel from "../../model/BookModel";
+import { getAllBook } from "../../api/BookApi";
 
 const BookList: React.FC = () => {
-	const books: Book[] = [
-		{
-			id: 1,
-			name: "Book 1",
-			author: "John",
-			isbn: "123",
-			description: "Description Book 1",
-			listPrice: 50000,
-			sellPrice: 45000,
-			quantity: 45,
-			avgRating: 4.5,
-			imgURL:
-				"https://cdn0.fahasa.com/media/catalog/product/8/9/8935278607311.jpg",
-		},
-		{
-			id: 1,
-			name: "Book 2",
-			author: "John",
-			isbn: "123",
-			description: "Description Book 1",
-			listPrice: 50000,
-			sellPrice: 45000,
-			quantity: 45,
-			avgRating: 4.5,
-			imgURL:
-				"https://cdn0.fahasa.com/media/catalog/product/m/u/muonkiepnhansinh2_bia-01.jpg",
-		},
-		{
-			id: 1,
-			name: "Book 3",
-			author: "John",
-			isbn: "123",
-			description: "Description Book 1",
-			listPrice: 50000,
-			sellPrice: 45000,
-			quantity: 45,
-			avgRating: 4.5,
-			imgURL:
-				"https://cdn0.fahasa.com/media/catalog/product/8/9/8935280913288.jpg",
-		},
-		{
-			id: 1,
-			name: "Book 1",
-			author: "John",
-			isbn: "123",
-			description: "Description Book 1",
-			listPrice: 50000,
-			sellPrice: 45000,
-			quantity: 45,
-			avgRating: 4.5,
-			imgURL:
-				"https://cdn0.fahasa.com/media/catalog/product/8/9/8935278607311.jpg",
-		},
-		{
-			id: 1,
-			name: "Book 2",
-			author: "John",
-			isbn: "123",
-			description: "Description Book 1",
-			listPrice: 50000,
-			sellPrice: 45000,
-			quantity: 45,
-			avgRating: 4.5,
-			imgURL:
-				"https://cdn0.fahasa.com/media/catalog/product/m/u/muonkiepnhansinh2_bia-01.jpg",
-		},
-		{
-			id: 1,
-			name: "Book 3",
-			author: "John",
-			isbn: "123",
-			description: "Description Book 1",
-			listPrice: 50000,
-			sellPrice: 45000,
-			quantity: 45,
-			avgRating: 4.5,
-			imgURL:
-				"https://cdn0.fahasa.com/media/catalog/product/8/9/8935280913288.jpg",
-		},
-		{
-			id: 1,
-			name: "Book 1",
-			author: "John",
-			isbn: "123",
-			description: "Description Book 1",
-			listPrice: 50000,
-			sellPrice: 45000,
-			quantity: 45,
-			avgRating: 4.5,
-			imgURL:
-				"https://cdn0.fahasa.com/media/catalog/product/8/9/8935278607311.jpg",
-		},
-		{
-			id: 1,
-			name: "Book 2",
-			author: "John",
-			isbn: "123",
-			description: "Description Book 1",
-			listPrice: 50000,
-			sellPrice: 45000,
-			quantity: 45,
-			avgRating: 4.5,
-			imgURL:
-				"https://cdn0.fahasa.com/media/catalog/product/m/u/muonkiepnhansinh2_bia-01.jpg",
-		},
-	];
+	const [bookList, setBookList] = useState<BookModel[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [erroring, setErroring] = useState(null);
+
+	useEffect(() => {
+		getAllBook()
+			.then((response) => {
+				setBookList(response);
+				setLoading(false);
+			})
+			.catch((error) => {
+				setLoading(false);
+				setErroring(error.message);
+			});
+	}, []);
+
+	if (loading) {
+		return (
+			<div>
+				<h1>Đang tải dữ liệu</h1>
+			</div>
+		);
+	}
+
+	if (erroring) {
+		return (
+			<div>
+				<h1>Gặp lỗi: {erroring}</h1>
+			</div>
+		);
+	}
+
 	return (
 		<div className='container mb-5'>
 			<div className='row mt-4'>
-				{books.map((book) => (
-					<BookProps key={book.id} book={book} />
+				{bookList.map((book) => (
+					<BookProps key={book.idBook} book={book} />
 				))}
 			</div>
 		</div>

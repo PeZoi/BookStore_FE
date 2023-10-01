@@ -1,24 +1,63 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
-import Book from "../../../model/Book";
+import React, { useEffect, useState } from "react";
+import BookModel from "../../../model/BookModel";
+import ImageModel from "../../../model/ImageModel";
+import { getAllImageByBook } from "../../../api/ImageApi";
 
 interface BookProps {
-	book: Book;
+	book: BookModel;
 }
 
 const BookProps: React.FC<BookProps> = ({ book }) => {
+	const [imageList, setImageList] = useState<ImageModel[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [erroring, setErroring] = useState(null);
+
+	useEffect(() => {
+		getAllImageByBook(book.idBook)
+			.then((response) => {
+				setImageList(response);
+				setLoading(false);
+			})
+			.catch((error) => {
+				setLoading(false);
+				setErroring(error.message);
+			});
+	}, []);
+
+	if (loading) {
+		return (
+			<div>
+				<h1>Đang tải dữ liệu</h1>
+			</div>
+		);
+	}
+
+	if (erroring) {
+		return (
+			<div>
+				<h1>Gặp lỗi: {erroring}</h1>
+			</div>
+		);
+	}
+
+	let dataImage = "";
+	if (imageList[0] && imageList[0].dataImage) {
+		dataImage = imageList[0].dataImage;
+	}
+
 	return (
 		<div className='col-md-3 mt-3'>
 			<div className='card'>
 				<img
-					src={book.imgURL}
+					src={dataImage}
 					className='card-img-top mt-3'
-					alt={book.name}
-					// style={{ height: "200px" }}
+					alt={book.nameBook}
+					style={{ height: "300px" }}
 				/>
 				<div className='card-body'>
-					<h5 className='card-title'>{book.name}</h5>
+					<h5 className='card-title'>{book.nameBook}</h5>
 					<p className='card-text'>{book.description}</p>
 					<div className='price'>
 						<span className='original-price me-3 small'>
