@@ -1,22 +1,16 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import "./App.css";
+import Navbar from "./layouts/header-footer/Navbar";
+import Footer from "./layouts/header-footer/Footer";
+import HomePage from "./layouts/pages/HomePage";
 
 function App() {
 	return (
-		<div className='App'>
-			<header className='App-header'>
-				<p>
-					Edit <code>src/App.tsx</code> and save to reload.
-				</p>
-				<a
-					className='App-link'
-					href='https://reactjs.org'
-					target='_blank'
-					rel='noopener noreferrer'
-				>
-					Learn React
-				</a>
-			</header>
+		<div>
+			<Navbar />
+			<HomePage />
+			<Footer />
 		</div>
 	);
 }
