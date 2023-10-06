@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import BookProps from "./components/BookProps";
 import BookModel from "../../model/BookModel";
-import { getAllBook } from "../../api/BookApi";
-import "../products/Book.css";
+import { getNewBook } from "../../api/BookApi";
+import BookProps from "./components/BookProps";
 
-const BookList: React.FC = () => {
+const NewBookList: React.FC = () => {
 	const [bookList, setBookList] = useState<BookModel[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [erroring, setErroring] = useState(null);
 
 	useEffect(() => {
-		getAllBook()
+		getNewBook()
 			.then((response) => {
 				setBookList(response);
 				setLoading(false);
@@ -36,10 +35,9 @@ const BookList: React.FC = () => {
 			</div>
 		);
 	}
-
 	return (
 		<div className='container-book container mb-5 pb-5 px-5 bg-light'>
-			<h2 className='mt-4 px-3 py-3 mb-0'>TẤT CẢ</h2>
+			<h2 className='mt-4 px-3 py-3 mb-0'>SÁCH MỚI</h2>
 			<hr className='mt-0' />
 			<div className='row'>
 				{bookList.map((book) => (
@@ -50,4 +48,4 @@ const BookList: React.FC = () => {
 	);
 };
 
-export default BookList;
+export default NewBookList;

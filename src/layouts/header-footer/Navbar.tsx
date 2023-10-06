@@ -40,7 +40,7 @@ function Navbar() {
 								Trang chủ
 							</a>
 						</li>
-						<li className='nav-item dropdown'>
+						<li className='nav-item dropdown dropdown-hover'>
 							<a
 								className='nav-link dropdown-toggle'
 								href='#'

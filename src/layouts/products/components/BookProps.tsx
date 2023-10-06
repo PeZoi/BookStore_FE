@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
@@ -42,9 +43,17 @@ const BookProps: React.FC<BookProps> = ({ book }) => {
 		);
 	}
 
-	let dataImage = "";
+	let dataImage;
 	if (imageList[0] && imageList[0].dataImage) {
+		// Từ đầu hình ảnh sẽ mặc định thumbnail là ảnh đầu tiên
 		dataImage = imageList[0].dataImage;
+		// Duyệt qua tất cả các ảnh của sách đó nếu mà có ảnh nào có thumnail là true thì gán lại nó là thumnail
+		for (let img of imageList) {
+			if (img.isThumbnail === true) {
+				dataImage = img.dataImage;
+				break;
+			}
+		}
 	}
 
 	return (
@@ -61,11 +70,11 @@ const BookProps: React.FC<BookProps> = ({ book }) => {
 					<p className='card-text'>{book.description}</p>
 					<div className='price'>
 						<span className='original-price me-3 small'>
-							<del>{book.listPrice}</del>
+							<del>{book.listPrice?.toLocaleString()}đ</del>
 						</span>
 						<span className='discounted-price text-danger'>
 							<strong style={{ fontSize: "22px" }}>
-								{book.sellPrice}
+								{book.sellPrice?.toLocaleString()}đ
 							</strong>
 						</span>
 					</div>
@@ -76,7 +85,7 @@ const BookProps: React.FC<BookProps> = ({ book }) => {
 							</a>
 						</div>
 						<div className='col-6'>
-							<button className='btn btn-danger btn-block'>
+							<button className='btn btn-primary btn-block'>
 								<i className='fas fa-shopping-cart'></i>
 							</button>
 						</div>

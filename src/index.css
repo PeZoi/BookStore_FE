@@ -9,10 +9,13 @@ body {
 		"Helvetica Neue", sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	background-color: #fbfbfb;
+	background-color: #f0f0f0;
 }
 
-code {
-	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-		monospace;
+.dropdown-hover:hover > .dropdown-menu {
+	display: block;
+}
+
+.dropdown-hover > .dropdown-toggle:active {
+	pointer-events: none;
 }
