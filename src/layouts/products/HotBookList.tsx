@@ -11,7 +11,7 @@ const HotBookList: React.FC = () => {
 	useEffect(() => {
 		getHotBook()
 			.then((response) => {
-				setBookList(response);
+				setBookList(response.bookList);
 				setLoading(false);
 			})
 			.catch((error) => {

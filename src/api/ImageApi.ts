@@ -1,32 +1,18 @@
 import ImageModel from "../model/ImageModel";
 import { request } from "./Request";
 
-export async function getAllImageByBook(idBook: string): Promise<ImageModel[]> {
-   // const result: ImageModel[] = [];
-
-   // Xác định endpoint
-   const endpoint: string = `http://localhost:8080/books/${idBook}/listImages`;
-
+async function getBookImage(endpoint: string): Promise<ImageModel[]> {
    // Gọi phương thức request()
    const response = await request(endpoint);
 
    return response._embedded.images.map((imageData: any) => ({
       ...imageData,
    }));
+}
 
-   // Lấy ra json sách
-   // const responseData = response._embedded.images;
+export async function getAllImageByBook(idBook: string): Promise<ImageModel[]> {
+   // Xác định endpoint
+   const endpoint: string = `http://localhost:8080/books/${idBook}/listImages`;
 
-   // for (const key in responseData) {
-   //    result.push({
-   //       idImage: responseData[key].idImage,
-   //       nameImage: responseData[key].nameImage,
-   //       isThumbnail: responseData[key].isThumbnail,
-   //       urlImage: responseData[key].urlImage,
-   //       dataImage: responseData[key].dataImage,
-   //    })
-   // }
-
-
-   // return result;
+   return getBookImage(endpoint);
 }

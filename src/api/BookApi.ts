@@ -1,60 +1,45 @@
 import BookModel from '../model/BookModel'
 import { request } from './Request';
 
+interface resultInterface { // Tạo ra các biến trả về
+   bookList: BookModel[];
+   totalPage: number;
+   size: number;
+}
 
-export async function getAllBook(): Promise<BookModel[]> {
-   // const result: BookModel[] = [];
-
-   // Xác định endpoint
-   const endpoint: string = "http://localhost:8080/books";
-
+async function getBook(endpoint: string): Promise<resultInterface> {
    // Gọi phương thức request()
    const response = await request(endpoint);
 
-   return response._embedded.books.map((bookData: any) => ({
+   // Lấy ra thông tin trang
+   const totalPage: number = response.page.totalPages;
+   const size: number = response.page.totalElements;
+
+   // Lấy ra danh sách quyển sách
+   const bookList: any = response._embedded.books.map((bookData: any) => ({
       ...bookData,
-   }));
+   }))
 
-   // Lấy ra json sách
-   // const responseData = response._embedded.books;
-
-   // for (const key in responseData) {
-   //    result.push({
-   //       idBook: responseData[key].idBook,
-   //       nameBook: responseData[key].nameBook,
-   //       author: responseData[key].author,
-   //       isbn: responseData[key].isbn,
-   //       description: responseData[key].description,
-   //       listPrice: responseData[key].listPrice,
-   //       sellPrice: responseData[key].sellPrice,
-   //       quantity: responseData[key].quantity,
-   //       avgRating: responseData[key].avgRating
-   //    })
-   // }
-
-   // return result;
+   return { bookList: bookList, totalPage: totalPage, size: size };
 }
 
-export async function getHotBook(): Promise<BookModel[]> {
+export async function getAllBook(size: number, page: number): Promise<resultInterface> {
+   // Xác định endpoint
+   const endpoint: string = `http://localhost:8080/books?sort=idBook,desc&size=${size}&page=${page}`;
+
+   return getBook(endpoint);
+}
+
+export async function getHotBook(): Promise<resultInterface> {
    // Xác định endpoint
    const endpoint: string = "http://localhost:8080/books?sort=avgRating,desc&size=4";
 
-   // Gọi phương thức request()
-   const response = await request(endpoint);
-
-   return response._embedded.books.map((bookData: any) => ({
-      ...bookData,
-   }));
+   return getBook(endpoint);
 }
 
-export async function getNewBook(): Promise<BookModel[]> {
+export async function getNewBook(): Promise<resultInterface> {
    // Xác định endpoint
    const endpoint: string = "http://localhost:8080/books?sort=idBook,desc&size=4";
 
-   // Gọi phương thức request()
-   const response = await request(endpoint);
-
-   return response._embedded.books.map((bookData: any) => ({
-      ...bookData,
-   }));
+   return getBook(endpoint);
 }

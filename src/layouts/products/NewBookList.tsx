@@ -11,7 +11,7 @@ const NewBookList: React.FC = () => {
 	useEffect(() => {
 		getNewBook()
 			.then((response) => {
-				setBookList(response);
+				setBookList(response.bookList);
 				setLoading(false);
 			})
 			.catch((error) => {
