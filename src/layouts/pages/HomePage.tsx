@@ -3,7 +3,27 @@ import Carousel from "./components/Carousel";
 import BookList from "../products/BookList";
 import HotBookList from "../products/HotBookList";
 import NewBookList from "../products/NewBookList";
-function HomePage() {
+import { useParams } from "react-router-dom";
+
+interface HomePageProps {
+	keySearch: string;
+}
+
+function HomePage({ keySearch }: HomePageProps) {
+	// Lấy value từ ở trong url (http://localhost:8080?idGenre=1), thì sẽ lấy ra value là 1
+	const { idGenre } = useParams();
+
+	let idGenreNumber = 0;
+
+	try {
+		idGenreNumber = parseInt(idGenre + ""); // Có thể nó làm object nên phải + thêm chuỗi rỗng vào
+	} catch (error) {
+		console.error("Error: ", error);
+	}
+
+	if (Number.isNaN(idGenreNumber)) {
+		idGenreNumber = 0;
+	}
 	return (
 		<>
 			{/* Banner */}
@@ -21,7 +41,7 @@ function HomePage() {
 			{/* New Product */}
 			<NewBookList />
 			{/* Product List */}
-			<BookList />
+			<BookList keySearch={keySearch} idGenre={idGenreNumber} />
 		</>
 	);
 }

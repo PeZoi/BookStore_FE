@@ -1,7 +1,50 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import GenreModel from "../../model/GenreModel";
+import { getAllGenres } from "../../api/GenreApi";
 
-function Navbar() {
+interface NavbarProps {
+	setKeySearch: (keySearch: string) => void;
+}
+
+function Navbar({ setKeySearch }: NavbarProps) {
+	// Lấy tất cả thể loại
+	const [genreList, setGenreList] = useState<GenreModel[]>([]);
+	const [erroring, setErroring] = useState(null);
+
+	useEffect(() => {
+		getAllGenres()
+			.then((response) => {
+				setGenreList(response.genreList);
+			})
+			.catch((error) => {
+				setErroring(error.message);
+			});
+	}, []);
+
+	// Xử lý key search
+	let keySearchTemp: string = "";
+
+	const onSetKeySearch = (e: ChangeEvent<HTMLInputElement>) => {
+		keySearchTemp = e.target.value;
+
+		if (e.target.value.trim() === "") {
+			setKeySearch(e.target.value);
+		}
+	};
+
+	const submitSearch = () => {
+		setKeySearch(keySearchTemp);
+	};
+
+	// Khi nhập xong ở trong ô input thì nhấn enter sẽ tìm tìm kiếm luôn
+	const handleKeyUp = (event: any) => {
+		if (event.key === "Enter") {
+			submitSearch();
+		}
+	};
+
 	return (
 		<nav className='navbar navbar-expand-lg navbar-light bg-light'>
 			{/* <!-- Container wrapper --> */}
@@ -25,14 +68,14 @@ function Navbar() {
 					id='navbarSupportedContent'
 				>
 					{/* <!-- Navbar brand --> */}
-					<a className='navbar-brand mt-2 mt-lg-0' href='#'>
+					<Link className='navbar-brand mt-2 mt-lg-0' to='/'>
 						<img
 							src='https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp'
 							height='15'
 							alt='MDB Logo'
 							loading='lazy'
 						/>
-					</a>
+					</Link>
 					{/* <!-- Left links --> */}
 					<ul className='navbar-nav me-auto mb-2 mb-lg-0'>
 						<li className='nav-item'>
@@ -51,21 +94,18 @@ function Navbar() {
 								Thể loại
 							</a>
 							<ul className='dropdown-menu'>
-								<li>
-									<a className='dropdown-item' href='#'>
-										Trinh thám
-									</a>
-								</li>
-								<li>
-									<a className='dropdown-item' href='#'>
-										Truyện tranh
-									</a>
-								</li>
-								<li>
-									<a className='dropdown-item' href='#'>
-										Giáo trình
-									</a>
-								</li>
+								{genreList.map((genre) => {
+									return (
+										<li>
+											<Link
+												className='dropdown-item'
+												to={`/genre/${genre.idGenre}`}
+											>
+												{genre.nameGenre}
+											</Link>
+										</li>
+									);
+								})}
 							</ul>
 						</li>
 						<li className='nav-item'>
@@ -86,17 +126,23 @@ function Navbar() {
 				{/* <!-- Right elements --> */}
 				<div className='d-flex align-items-center'>
 					{/* Form Search */}
-					<form className='d-flex me-5' role='search'>
+					<div className='d-flex me-5' role='search'>
 						<input
 							className='form-control me-2'
 							type='search'
-							placeholder='Search'
+							placeholder='Nhập từ khoá tên sách'
 							aria-label='Search'
+							onChange={onSetKeySearch}
+							onKeyUp={handleKeyUp}
 						/>
-						<button type='button' className='btn btn-primary'>
+						<button
+							type='button'
+							className='btn btn-primary'
+							onClick={submitSearch}
+						>
 							<i className='fas fa-search'></i>
 						</button>
-					</form>
+					</div>
 
 					{/* <!-- Shopping Cart --> */}
 					<a className='text-reset me-3' href='#'>

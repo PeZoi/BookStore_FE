@@ -121,7 +121,7 @@ const Pagination: React.FC<PaginationInterface> = (props) => {
 					onClick={
 						props.totalPages === props.currentPage
 							? () => {}
-							: () => props.handlePagination(props.currentPage - 1)
+							: () => props.handlePagination(props.currentPage + 1)
 					}
 				>
 					<button className='page-link'>Next</button>

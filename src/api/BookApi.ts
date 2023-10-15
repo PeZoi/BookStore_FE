@@ -23,7 +23,12 @@ async function getBook(endpoint: string): Promise<resultInterface> {
    return { bookList: bookList, totalPage: totalPage, size: size };
 }
 
-export async function getAllBook(size: number, page: number): Promise<resultInterface> {
+export async function getAllBook(size?: number, page?: number): Promise<resultInterface> {
+   // Nếu không truyền size thì mặc định là 12
+   if (!size) {
+      size = 12;
+   }
+
    // Xác định endpoint
    const endpoint: string = `http://localhost:8080/books?sort=idBook,desc&size=${size}&page=${page}`;
 
@@ -40,6 +45,35 @@ export async function getHotBook(): Promise<resultInterface> {
 export async function getNewBook(): Promise<resultInterface> {
    // Xác định endpoint
    const endpoint: string = "http://localhost:8080/books?sort=idBook,desc&size=4";
+
+   return getBook(endpoint);
+}
+
+export async function searchBook(keySearch: string, idGenre: number, size?: number, page?: number): Promise<resultInterface> {
+
+   keySearch = keySearch.trim();
+
+   // Nếu không truyền size thì mặc định là 12
+   if (!size) {
+      size = 12;
+   }
+   const optionsShow = `size=${size}&page=${page}&sort=idBook,desc`;
+
+   // Endpoint mặc định
+   let endpoint: string = `http://localhost:8080/books?` + optionsShow;
+
+   // Nếu có key search
+   if (keySearch !== '') {
+      endpoint = `http://localhost:8080/books/search/findByNameBookContaining?nameBook=${keySearch}&` + optionsShow;
+   }
+
+   if (keySearch === '' && idGenre > 0) {
+      endpoint = `http://localhost:8080/books/search/findByListGenres_idGenre?idGenre=${idGenre}&` + optionsShow;
+   }
+
+   if (keySearch !== '' && idGenre > 0) {
+      endpoint = `http://localhost:8080/books/search/findByNameBookContainingAndListGenres_idGenre?nameBook=${keySearch}&idGenre=${idGenre}&` + optionsShow;
+   }
 
    return getBook(endpoint);
 }
