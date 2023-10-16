@@ -22,3 +22,9 @@ export async function getAllGenres(): Promise<resultInterface> {
 
    return getGenre(endpoint);
 }
+
+export async function getGenreByIdBook(idBook: number): Promise<resultInterface> {
+   const endpoint = `http://localhost:8080/books/${idBook}/listGenres`;
+
+   return getGenre(endpoint);
+}

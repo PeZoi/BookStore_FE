@@ -6,6 +6,7 @@ import Navbar from "./layouts/header-footer/Navbar";
 import Footer from "./layouts/header-footer/Footer";
 import HomePage from "./layouts/pages/HomePage";
 import About from "./layouts/about/About";
+import BookDetail from "./layouts/products/BookDetail";
 
 function App() {
 	const [keySearch, setKeySearch] = useState("");
@@ -19,6 +20,7 @@ function App() {
 					path='/genre/:idGenre'
 					element={<HomePage keySearch={keySearch} />}
 				/>
+				<Route path='/book/:idBook' element={<BookDetail />} />
 				<Route path='/about' element={<About />} />
 			</Routes>
 			<Footer />

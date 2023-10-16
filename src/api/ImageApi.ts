@@ -10,7 +10,7 @@ async function getBookImage(endpoint: string): Promise<ImageModel[]> {
    }));
 }
 
-export async function getAllImageByBook(idBook: string): Promise<ImageModel[]> {
+export async function getAllImageByBook(idBook: number): Promise<ImageModel[]> {
    // Xác định endpoint
    const endpoint: string = `http://localhost:8080/books/${idBook}/listImages`;
 

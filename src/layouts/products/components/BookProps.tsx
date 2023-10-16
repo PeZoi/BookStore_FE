@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import BookModel from "../../../model/BookModel";
 import ImageModel from "../../../model/ImageModel";
 import { getAllImageByBook } from "../../../api/ImageApi";
+import { Link } from "react-router-dom";
 
 interface BookProps {
 	book: BookModel;
@@ -59,15 +60,21 @@ const BookProps: React.FC<BookProps> = ({ book }) => {
 	return (
 		<div className='col-md-3 mt-3'>
 			<div className='card'>
-				<img
-					src={dataImage}
-					className='card-img-top mt-3'
-					alt={book.nameBook}
-					style={{ height: "300px" }}
-				/>
+				<Link to={`/book/${book.idBook}`}>
+					<img
+						src={dataImage}
+						className='card-img-top mt-3'
+						alt={book.nameBook}
+						style={{ height: "300px" }}
+					/>
+				</Link>
 				<div className='card-body'>
-					<h5 className='card-title'>{book.nameBook}</h5>
-					<p className='card-text'>{book.description}</p>
+					<Link
+						to={`/book/${book.idBook}`}
+						style={{ textDecoration: "none" }}
+					>
+						<h5 className='card-title'>{book.nameBook}</h5>
+					</Link>
 					<div className='price'>
 						<span className='original-price me-3 small'>
 							<del>{book.listPrice?.toLocaleString()}đ</del>

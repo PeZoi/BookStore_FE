@@ -17,13 +17,14 @@ function HomePage({ keySearch }: HomePageProps) {
 
 	try {
 		idGenreNumber = parseInt(idGenre + ""); // Có thể nó làm object nên phải + thêm chuỗi rỗng vào
+
+		if (Number.isNaN(idGenreNumber)) {
+			idGenreNumber = 0;
+		}
 	} catch (error) {
 		console.error("Error: ", error);
 	}
 
-	if (Number.isNaN(idGenreNumber)) {
-		idGenreNumber = 0;
-	}
 	return (
 		<>
 			{/* Banner */}

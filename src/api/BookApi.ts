@@ -77,3 +77,24 @@ export async function searchBook(keySearch: string, idGenre: number, size?: numb
 
    return getBook(endpoint);
 }
+
+export async function getBookById(idBook: number): Promise<BookModel | null> {
+   const endpoint = `http://localhost:8080/books/${idBook}`;
+
+   try {
+      // Gọi phương thức request()
+      const response = await request(endpoint);
+
+      // Kiểm tra xem dữ liệu endpoint trả về có dữ liệu không
+      if (response) {
+         // Trả về quyển sách
+         return response;
+      } else {
+         throw new Error("Sách không tồn tại");
+      }
+
+   } catch (error) {
+      console.error('Error: ', error);
+      return null;
+   }
+}

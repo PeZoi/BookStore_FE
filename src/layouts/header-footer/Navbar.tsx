@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { ChangeEvent, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import GenreModel from "../../model/GenreModel";
 import { getAllGenres } from "../../api/GenreApi";
 
@@ -22,6 +22,10 @@ function Navbar({ setKeySearch }: NavbarProps) {
 				setErroring(error.message);
 			});
 	}, []);
+
+	if (erroring) {
+		console.error(erroring);
+	}
 
 	// Xử lý key search
 	let keySearchTemp: string = "";
@@ -79,9 +83,9 @@ function Navbar({ setKeySearch }: NavbarProps) {
 					{/* <!-- Left links --> */}
 					<ul className='navbar-nav me-auto mb-2 mb-lg-0'>
 						<li className='nav-item'>
-							<a className='nav-link' href='#'>
+							<NavLink className='nav-link' to='/'>
 								Trang chủ
-							</a>
+							</NavLink>
 						</li>
 						<li className='nav-item dropdown dropdown-hover'>
 							<a
@@ -94,15 +98,15 @@ function Navbar({ setKeySearch }: NavbarProps) {
 								Thể loại
 							</a>
 							<ul className='dropdown-menu'>
-								{genreList.map((genre) => {
+								{genreList.map((genre, index) => {
 									return (
-										<li>
-											<Link
+										<li key={index}>
+											<NavLink
 												className='dropdown-item'
 												to={`/genre/${genre.idGenre}`}
 											>
 												{genre.nameGenre}
-											</Link>
+											</NavLink>
 										</li>
 									);
 								})}
