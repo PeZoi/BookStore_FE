@@ -3,12 +3,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
-import ReviewModel from "../../../model/ReviewModel";
-import { getUserByIdReview } from "../../../api/UserApi";
-import UserModel from "../../../model/UserModel";
+import ReviewModel from "../../../../model/ReviewModel";
+import { getUserByIdReview } from "../../../../api/UserApi";
+import UserModel from "../../../../model/UserModel";
 
 interface CommentProps {
 	review: ReviewModel;
+	children: React.ReactNode;
 }
 
 const User: React.FC<CommentProps> = (props) => {
@@ -30,7 +31,7 @@ const User: React.FC<CommentProps> = (props) => {
 				<span className='ms-2' style={{ fontSize: "12px", color: "#aaa" }}>
 					1 tháng trước
 				</span>
-				<p>{props.review.content}</p>
+				{props.children}
 			</div>
 		</>
 	);

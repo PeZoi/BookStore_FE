@@ -3,9 +3,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import Avatar from "@mui/material/Avatar";
-import ReviewModel from "../../../model/ReviewModel";
-import { getAllReview } from "../../../api/ReviewApi";
-import User from "./User";
+import ReviewModel from "../../../../model/ReviewModel";
+import { getAllReview } from "../../../../api/ReviewApi";
+import User from "../user/User";
 
 interface CommentProps {
 	idBook: number;
@@ -29,7 +29,9 @@ const Comment: React.FC<CommentProps> = (props) => {
 				return (
 					<div className='mb-3' key={index}>
 						<div className='d-flex'>
-							<User review={review} />
+							<User review={review}>
+								<p className='mb-0'>{review.content}</p>
+							</User>
 						</div>
 					</div>
 				);

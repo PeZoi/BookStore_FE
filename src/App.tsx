@@ -7,21 +7,18 @@ import Footer from "./layouts/header-footer/Footer";
 import HomePage from "./layouts/pages/HomePage";
 import About from "./layouts/about/About";
 import BookDetail from "./layouts/products/BookDetail";
+import FilterPage from "./layouts/pages/FilterPage";
 
 function App() {
-	const [keySearch, setKeySearch] = useState("");
-
 	return (
 		<BrowserRouter>
-			<Navbar setKeySearch={setKeySearch} />
+			<Navbar />
 			<Routes>
-				<Route path='/' element={<HomePage keySearch={keySearch} />} />
-				<Route
-					path='/genre/:idGenre'
-					element={<HomePage keySearch={keySearch} />}
-				/>
+				<Route path='/' element={<HomePage />} />
 				<Route path='/book/:idBook' element={<BookDetail />} />
 				<Route path='/about' element={<About />} />
+				<Route path='/search/:idGenreParam' element={<FilterPage />} />
+				<Route path='/search' element={<FilterPage />} />
 			</Routes>
 			<Footer />
 		</BrowserRouter>

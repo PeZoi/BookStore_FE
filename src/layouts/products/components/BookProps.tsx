@@ -6,6 +6,8 @@ import BookModel from "../../../model/BookModel";
 import ImageModel from "../../../model/ImageModel";
 import { getAllImageByBook } from "../../../api/ImageApi";
 import { Link } from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
+import TextEllipsis from "./text-ellipsis/TextEllipsis";
 
 interface BookProps {
 	book: BookModel;
@@ -58,8 +60,14 @@ const BookProps: React.FC<BookProps> = ({ book }) => {
 	}
 
 	return (
-		<div className='col-md-3 mt-3'>
-			<div className='card'>
+		<div className='col-md-6 col-lg-3 mt-3'>
+			<div className='card position-relative'>
+				<h4
+					className='my-0 d-inline-block position-absolute end-0'
+					style={{ top: "15px" }}
+				>
+					<span className='badge bg-primary'>{book.discountPercent}%</span>
+				</h4>
 				<Link to={`/book/${book.idBook}`}>
 					<img
 						src={dataImage}
@@ -73,16 +81,22 @@ const BookProps: React.FC<BookProps> = ({ book }) => {
 						to={`/book/${book.idBook}`}
 						style={{ textDecoration: "none" }}
 					>
-						<h5 className='card-title'>{book.nameBook}</h5>
+						<h5 className='card-title'>
+							<Tooltip title={book.nameBook} arrow>
+								<span>
+									<TextEllipsis text={book.nameBook + ""} limit={20} />
+								</span>
+							</Tooltip>
+						</h5>
 					</Link>
-					<div className='price'>
-						<span className='original-price me-3 small'>
-							<del>{book.listPrice?.toLocaleString()}đ</del>
-						</span>
+					<div className='price mb-3'>
 						<span className='discounted-price text-danger'>
 							<strong style={{ fontSize: "22px" }}>
 								{book.sellPrice?.toLocaleString()}đ
 							</strong>
+						</span>
+						<span className='original-price ms-3 small'>
+							<del>{book.listPrice?.toLocaleString()}đ</del>
 						</span>
 					</div>
 					<div className='row mt-2' role='group'>

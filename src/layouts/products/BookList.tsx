@@ -5,31 +5,48 @@ import BookModel from "../../model/BookModel";
 import { getAllBook, searchBook } from "../../api/BookApi";
 import "../products/Book.css";
 import Pagination from "../utils/Pagination";
+import Button from "@mui/material/Button";
+import { Link } from "react-router-dom";
 
 interface BookListProps {
-	keySearch: string;
-	idGenre: number;
+	paginable?: boolean;
+	size?: number;
+	keySearch?: string | undefined;
+	idGenre?: number;
+	filter?: number;
 }
 
 const BookList: React.FC<BookListProps> = (props) => {
-	let size: number = 12;
 	const [bookList, setBookList] = useState<BookModel[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [erroring, setErroring] = useState(null);
 	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPages, setTotalPages] = useState(0);
-	const [totalBook, setTotalBook] = useState(0);
+	const [totalPages, setTotalPages] = useState(1);
+
+	// const [totalBook, setTotalBook] = useState(0);
 
 	// Xử lý phân trang
 	const handlePagination = (pageNumber: number) => {
 		setCurrentPage(pageNumber);
 	};
 
+	// Chỗ này xử lý khi thực hiện chức năng hiện số sản phẩm
+	const [totalPagesTemp, setTotalPagesTemp] = useState(totalPages);
+	if (totalPagesTemp !== totalPages) {
+		setCurrentPage(1);
+		setTotalPagesTemp(totalPages);
+	}
+
 	useEffect(() => {
-		// Nếu có key search
-		if (props.keySearch === "" && props.idGenre === 0) {
+		// Mặc đinh sẽ gọi getAllBook
+		if (
+			(props.keySearch === "" &&
+				props.idGenre === 0 &&
+				props.filter === 0) ||
+			props.keySearch === undefined
+		) {
 			// currentPage - 1 vì trong endpoint trang đầu tiên sẽ là 0
-			getAllBook(size, currentPage - 1) // size là (tổng sản phẩm được hiện)
+			getAllBook(props.size, currentPage - 1) // size là (tổng sản phẩm được hiện)
 				.then((response) => {
 					setBookList(response.bookList);
 					setTotalPages(response.totalPage);
@@ -40,7 +57,14 @@ const BookList: React.FC<BookListProps> = (props) => {
 					setErroring(error.message);
 				});
 		} else {
-			searchBook(props.keySearch, props.idGenre, size, currentPage - 1)
+			// Khi có các param lọc
+			searchBook(
+				props.keySearch,
+				props.idGenre,
+				props.filter,
+				props.size,
+				currentPage - 1
+			)
 				.then((response) => {
 					setBookList(response.bookList);
 					setTotalPages(response.totalPage);
@@ -51,7 +75,7 @@ const BookList: React.FC<BookListProps> = (props) => {
 					setErroring(error.message);
 				});
 		}
-	}, [currentPage, props.keySearch, props.idGenre]);
+	}, [currentPage, props.keySearch, props.idGenre, props.filter, props.size]);
 
 	if (loading) {
 		return (
@@ -72,7 +96,7 @@ const BookList: React.FC<BookListProps> = (props) => {
 	// Kiểm tra danh sách sách xem có phần tử nào không
 	if (bookList.length === 0) {
 		return (
-			<div className='container-book container mb-5 px-5 bg-light'>
+			<div className='container-book container mb-5 px-5 px-5 bg-light'>
 				<h2 className='mt-4 px-3 py-3 mb-0'>
 					Không tìm thấy sách! "{props.keySearch}"
 				</h2>
@@ -82,19 +106,39 @@ const BookList: React.FC<BookListProps> = (props) => {
 
 	return (
 		<div className='container-book container mb-5 pb-5 px-5 bg-light'>
-			<h2 className='mt-4 px-3 py-3 mb-0'>TẤT CẢ</h2>
-			<hr className='mt-0' />
+			{!props.paginable && (
+				<>
+					<h2 className='mt-4 px-3 py-3 mb-0'>TẤT CẢ</h2>
+					<hr className='mt-0' />
+				</>
+			)}
 			<div className='row'>
 				{bookList.map((book) => (
 					<BookProps key={book.idBook} book={book} />
 				))}
 			</div>
-			<hr />
-			<Pagination
-				currentPage={currentPage}
-				totalPages={totalPages}
-				handlePagination={handlePagination}
-			/>
+			{props.paginable ? (
+				<>
+					<hr className='mt-5' style={{ color: "#aaa" }} />
+					<Pagination
+						currentPage={currentPage}
+						totalPages={totalPages}
+						handlePagination={handlePagination}
+					/>
+				</>
+			) : (
+				<Link to={"/search"}>
+					<div className='d-flex align-items-center justify-content-center'>
+						<Button
+							variant='outlined'
+							size='large'
+							className='text-primary mt-5 w-25'
+						>
+							Xem Thêm
+						</Button>
+					</div>
+				</Link>
+			)}
 		</div>
 	);
 };

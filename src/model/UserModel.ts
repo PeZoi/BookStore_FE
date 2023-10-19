@@ -10,6 +10,7 @@ class UserModel {
    password: string;
    phoneNumber: string;
    username: string;
+   avtar: string;
 
    constructor(idUser: number,
       dateOfBirth: Date,
@@ -21,7 +22,7 @@ class UserModel {
       gender: string,
       password: string,
       phoneNumber: string,
-      username: string,) {
+      username: string, avtar: string) {
       this.idUser = idUser;
       this.dateOfBirth = dateOfBirth;
       this.deliveryAddress = deliveryAddress;
@@ -33,6 +34,7 @@ class UserModel {
       this.password = password;
       this.phoneNumber = phoneNumber;
       this.username = username;
+      this.avtar = avtar;
    }
 }
 

@@ -4,11 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import GenreModel from "../../model/GenreModel";
 import { getAllGenres } from "../../api/GenreApi";
 
-interface NavbarProps {
-	setKeySearch: (keySearch: string) => void;
-}
-
-function Navbar({ setKeySearch }: NavbarProps) {
+function Navbar() {
 	// Lấy tất cả thể loại
 	const [genreList, setGenreList] = useState<GenreModel[]>([]);
 	const [erroring, setErroring] = useState(null);
@@ -26,28 +22,6 @@ function Navbar({ setKeySearch }: NavbarProps) {
 	if (erroring) {
 		console.error(erroring);
 	}
-
-	// Xử lý key search
-	let keySearchTemp: string = "";
-
-	const onSetKeySearch = (e: ChangeEvent<HTMLInputElement>) => {
-		keySearchTemp = e.target.value;
-
-		if (e.target.value.trim() === "") {
-			setKeySearch(e.target.value);
-		}
-	};
-
-	const submitSearch = () => {
-		setKeySearch(keySearchTemp);
-	};
-
-	// Khi nhập xong ở trong ô input thì nhấn enter sẽ tìm tìm kiếm luôn
-	const handleKeyUp = (event: any) => {
-		if (event.key === "Enter") {
-			submitSearch();
-		}
-	};
 
 	return (
 		<nav className='navbar navbar-expand-lg navbar-light bg-light'>
@@ -101,12 +75,12 @@ function Navbar({ setKeySearch }: NavbarProps) {
 								{genreList.map((genre, index) => {
 									return (
 										<li key={index}>
-											<NavLink
+											<Link
 												className='dropdown-item'
-												to={`/genre/${genre.idGenre}`}
+												to={`/search/${genre.idGenre}`}
 											>
 												{genre.nameGenre}
-											</NavLink>
+											</Link>
 										</li>
 									);
 								})}
@@ -129,25 +103,6 @@ function Navbar({ setKeySearch }: NavbarProps) {
 
 				{/* <!-- Right elements --> */}
 				<div className='d-flex align-items-center'>
-					{/* Form Search */}
-					<div className='d-flex me-5' role='search'>
-						<input
-							className='form-control me-2'
-							type='search'
-							placeholder='Nhập từ khoá tên sách'
-							aria-label='Search'
-							onChange={onSetKeySearch}
-							onKeyUp={handleKeyUp}
-						/>
-						<button
-							type='button'
-							className='btn btn-primary'
-							onClick={submitSearch}
-						>
-							<i className='fas fa-search'></i>
-						</button>
-					</div>
-
 					{/* <!-- Shopping Cart --> */}
 					<a className='text-reset me-3' href='#'>
 						<i className='fas fa-shopping-cart'></i>

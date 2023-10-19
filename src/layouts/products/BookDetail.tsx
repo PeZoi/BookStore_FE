@@ -5,12 +5,12 @@ import { getBookById } from "../../api/BookApi";
 import BookModel from "../../model/BookModel";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import Rating from "./components/Rating";
-import SelectQuantity from "./components/SelectQuantity";
+import Rating from "./components/rating/Rating";
+import SelectQuantity from "./components/select-quantity/SelectQuantity";
 import Button from "@mui/material/Button";
 import { ShoppingCartOutlined } from "@mui/icons-material";
-import Comment from "./components/Comment";
-import TextEllipsis from "./components/TextEllipsis";
+import Comment from "./components/comment/Comment";
+import TextEllipsis from "./components/text-ellipsis/TextEllipsis";
 import { getGenreByIdBook } from "../../api/GenreApi";
 import GenreModel from "../../model/GenreModel";
 import { getAllImageByBook } from "../../api/ImageApi";
@@ -46,7 +46,7 @@ const BookDetail: React.FC = () => {
 				setLoading(false);
 				setErroring(error.message);
 			});
-	}, [idBook]);
+	}, []);
 
 	// Lấy ra thể loại của sách
 	const [genres, setGenres] = useState<GenreModel[] | null>(null);
@@ -54,7 +54,7 @@ const BookDetail: React.FC = () => {
 		getGenreByIdBook(idBookNumber).then((response) => {
 			setGenres(response.genreList);
 		});
-	}, [idBook]);
+	}, []);
 
 	// Lấy ra hình ảnh của sách
 	const [images, setImages] = useState<ImageModel[] | null>(null);
@@ -66,7 +66,7 @@ const BookDetail: React.FC = () => {
 			.catch((error) => {
 				console.error(error);
 			});
-	}, [idBook]);
+	}, []);
 
 	if (loading) {
 		return (
@@ -130,8 +130,26 @@ const BookDetail: React.FC = () => {
 							</p>
 						</div>
 						<div className='d-flex align-items-center'>
-							<Rating />
-							<p className='text-danger ms-2 mb-0'>(4.5)</p>
+							<div className='d-flex align-items-center'>
+								<Rating />
+								<p className='text-danger ms-2 mb-0'>(4.5)</p>
+							</div>
+							<div className='d-flex align-items-center'>
+								<span className='mx-3 mb-1 text-secondary'>|</span>
+							</div>
+							<div className='d-flex align-items-end justify-content-center '>
+								<span
+									style={{
+										color: "rgb(135,135,135)",
+										fontSize: "16px",
+									}}
+								>
+									Đã bán
+								</span>
+								<span className='fw-bold ms-2'>
+									{book.soldQuantity}
+								</span>
+							</div>
 						</div>
 						<div className='price'>
 							<span className='discounted-price text-danger me-3'>
@@ -144,9 +162,11 @@ const BookDetail: React.FC = () => {
 									<del>{book.listPrice?.toLocaleString()}đ</del>
 								</strong>
 							</span>
-							<h3 className='my-0 d-inline-block'>
-								<span className='badge bg-danger'>15%</span>
-							</h3>
+							<h4 className='my-0 d-inline-block'>
+								<span className='badge bg-danger'>
+									{book.discountPercent}%
+								</span>
+							</h4>
 						</div>
 						<div className='mt-3'>
 							<p>
@@ -158,27 +178,32 @@ const BookDetail: React.FC = () => {
 									Thay đổi
 								</span>
 							</p>
+							<div className='d-flex align-items-center mt-3'>
+								<img
+									src='https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/d9e992985b18d96aab90969636ebfd0e.png'
+									height='20'
+									alt='free ship'
+								/>
+								<span className='ms-3'>Miễn phí vận chuyển</span>
+							</div>
 						</div>
 						<div className='d-flex align-items-center mt-3'>
 							<strong className='me-5'>Số lượng: </strong>
 							<SelectQuantity />
+							<span className='ms-4'>
+								{book.quantity} sản phẩm có sẵn
+							</span>
 						</div>
-						<div className='mt-5'>
+						<div className='mt-4 d-flex align-items-center'>
 							<Button
 								variant='outlined'
 								size='large'
 								startIcon={<ShoppingCartOutlined />}
 								className='me-3'
-								style={{ width: "30%" }}
 							>
 								Thêm vào giỏ hàng
 							</Button>
-							<Button
-								variant='contained'
-								size='large'
-								className='ms-3'
-								style={{ width: "30%" }}
-							>
+							<Button variant='contained' size='large' className='ms-3'>
 								Mua ngay
 							</Button>
 						</div>
@@ -188,7 +213,11 @@ const BookDetail: React.FC = () => {
 			<div className='container p-4 bg-white my-3 rounded'>
 				<h5 className='my-3'>Mô tả sản phẩm</h5>
 				<hr />
-				<TextEllipsis text={book.description + ""} limit={1000} />
+				<TextEllipsis
+					isShow={true}
+					text={book.description + ""}
+					limit={1000}
+				/>
 			</div>
 			<div className='container p-4 bg-white my-3 rounded'>
 				<h5 className='my-3'>Khách hàng đánh giá</h5>

@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import React, { useState } from "react";
 
 interface TextEllipsis {
+	isShow?: boolean;
 	text: string;
 	limit: number;
 }
@@ -14,7 +15,8 @@ const TextEllipsis: React.FC<TextEllipsis> = (props) => {
 
 	const truncatedText = showFullText
 		? props.text
-		: props.text.slice(0, props.limit) + "...";
+		: props.text.slice(0, props.limit) +
+		  (props.text.length > props.limit ? "..." : "");
 
 	return (
 		<>
@@ -28,21 +30,23 @@ const TextEllipsis: React.FC<TextEllipsis> = (props) => {
 				>
 					{truncatedText}
 				</p>
-				<div className='d-flex align-items-center justify-content-center mt-3'>
-					{props.text.length > props.limit && (
-						<Button
-							variant='outlined'
-							className='text-primary'
-							style={{
-								cursor: "pointer",
-								width: "20%",
-							}}
-							onClick={() => setShowFullText(!showFullText)}
-						>
-							{showFullText ? "Rút gọn" : "Xem thêm"}
-						</Button>
-					)}
-				</div>
+				{props.isShow && (
+					<div className='d-flex align-items-center justify-content-center mt-3'>
+						{props.text.length > props.limit && (
+							<Button
+								variant='outlined'
+								className='text-primary'
+								style={{
+									cursor: "pointer",
+									width: "20%",
+								}}
+								onClick={() => setShowFullText(!showFullText)}
+							>
+								{showFullText ? "Rút gọn" : "Xem thêm"}
+							</Button>
+						)}
+					</div>
+				)}
 			</div>
 		</>
 	);
