@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getBookById } from "../../api/BookApi";
 import BookModel from "../../model/BookModel";
@@ -16,6 +16,7 @@ import { getAllImageByBook } from "../../api/ImageApi";
 import ImageModel from "../../model/ImageModel";
 import RatingStar from "./components/rating/Rating";
 import React from "react";
+import ReactSimpleImageViewer from "react-simple-image-viewer";
 
 const BookDetail: React.FC = () => {
 	// Lấy mã sách từ url
@@ -69,6 +70,27 @@ const BookDetail: React.FC = () => {
 			});
 	}, []);
 
+	// Viewer hình ảnh
+	const [currentImage, setCurrentImage] = useState(0);
+	const [isViewerOpen, setIsViewerOpen] = useState(false);
+
+	let imageList: string[] = [];
+	if (images !== undefined && images !== null) {
+		imageList = images.map((image) => {
+			return image.dataImage || image.urlImage;
+		}) as string[];
+	}
+
+	const openImageViewer = useCallback((index: number) => {
+		setCurrentImage(index);
+		setIsViewerOpen(true);
+	}, []);
+
+	const closeImageViewer = () => {
+		setCurrentImage(0);
+		setIsViewerOpen(false);
+	};
+
 	if (loading) {
 		return (
 			<div>
@@ -104,7 +126,7 @@ const BookDetail: React.FC = () => {
 							showIndicators={false}
 						>
 							{images?.map((image, index) => (
-								<div key={index}>
+								<div key={index} onClick={() => openImageViewer(index)}>
 									<img
 										alt=''
 										src={
@@ -116,6 +138,18 @@ const BookDetail: React.FC = () => {
 								</div>
 							))}
 						</Carousel>
+						{isViewerOpen && (
+							<ReactSimpleImageViewer
+								src={imageList}
+								currentIndex={currentImage}
+								disableScroll={true}
+								closeOnClickOutside={true}
+								onClose={closeImageViewer}
+								backgroundStyle={{
+									backgroundColor: "rgba(0,0,0,0.7)",
+								}}
+							/>
+						)}
 					</div>
 					<div className='col-8 px-5'>
 						<h2>{book.nameBook}</h2>
