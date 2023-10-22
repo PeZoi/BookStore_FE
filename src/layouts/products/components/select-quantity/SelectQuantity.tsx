@@ -6,11 +6,15 @@ import Button from "@mui/material/Button";
 import "./SelectQuantity.css";
 import Icon from "@mui/material/Icon";
 
-const SelectQuantity: React.FC = () => {
+interface SelectQuantityProps {
+	max: number | undefined;
+}
+
+const SelectQuantity: React.FC<SelectQuantityProps> = (props) => {
 	const [quantity, setQuantity] = useState(1);
 
 	const add = () => {
-		if (quantity < 99) {
+		if (quantity < (props.max ? props.max : 1)) {
 			setQuantity(quantity + 1);
 		}
 	};
@@ -18,6 +22,17 @@ const SelectQuantity: React.FC = () => {
 	const reduce = () => {
 		if (quantity > 1) {
 			setQuantity(quantity - 1);
+		}
+	};
+
+	const handleQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const newQuantity = parseInt(e.target.value);
+		if (
+			!isNaN(newQuantity) &&
+			newQuantity >= 1 &&
+			newQuantity <= (props.max ? props.max : 1)
+		) {
+			setQuantity(newQuantity);
 		}
 	};
 
@@ -30,9 +45,9 @@ const SelectQuantity: React.FC = () => {
 				type='number'
 				className='inp-number p-0 m-0'
 				value={quantity}
-				onChange={(e) => setQuantity(parseInt(e.target.value))}
+				onChange={handleQuantity}
 				min={1}
-				max={99}
+				max={props.max}
 			/>
 			<Button size='small' onClick={() => add()}>
 				<Icon>add</Icon>

@@ -6,6 +6,7 @@ import Avatar from "@mui/material/Avatar";
 import ReviewModel from "../../../../model/ReviewModel";
 import { getAllReview } from "../../../../api/ReviewApi";
 import User from "../user/User";
+import RatingStar from "../rating/Rating";
 
 interface CommentProps {
 	idBook: number;
@@ -30,7 +31,13 @@ const Comment: React.FC<CommentProps> = (props) => {
 					<div className='mb-3' key={index}>
 						<div className='d-flex'>
 							<User review={review}>
-								<p className='mb-0'>{review.content}</p>
+								<div>
+									<RatingStar
+										readonly={true}
+										ratingPoint={review.ratingPoint}
+									/>
+									<p className='mb-0'>{review.content}</p>
+								</div>
 							</User>
 						</div>
 					</div>

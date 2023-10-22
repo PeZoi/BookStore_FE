@@ -1,21 +1,31 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import Rating from "@mui/material/Rating";
 import React from "react";
-import Rate from "@mui/material/Rating";
 
-const Rating: React.FC = () => {
-	const [value, setValue] = React.useState<number | null>(5);
+interface RatingStarProps {
+	readonly?: boolean;
+	ratingPoint?: number;
+}
+
+const RatingStar: React.FC<RatingStarProps> = (props) => {
+	const [value, setValue] = React.useState<number | null>(
+		props.ratingPoint || 0
+	);
 
 	return (
-		<Rate
-			name='simple-controlled'
+		<Rating
+			name='half-rating'
 			value={value}
+			precision={0.5}
 			onChange={(event, newValue) => {
 				setValue(newValue);
 			}}
+			readOnly={props.readonly}
+			size='small'
 		/>
 	);
 };
 
-export default Rating;
+export default RatingStar;

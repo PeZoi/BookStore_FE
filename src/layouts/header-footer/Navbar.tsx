@@ -104,9 +104,12 @@ function Navbar() {
 				{/* <!-- Right elements --> */}
 				<div className='d-flex align-items-center'>
 					{/* <!-- Shopping Cart --> */}
-					<a className='text-reset me-3' href='#'>
+					<Link className='text-reset me-3' to='/cart'>
 						<i className='fas fa-shopping-cart'></i>
-					</a>
+						<span className='badge rounded-pill badge-notification bg-danger'>
+							2
+						</span>
+					</Link>
 
 					{/* <!-- Notifications --> */}
 					<div className='dropdown'>
@@ -168,12 +171,17 @@ function Navbar() {
 						>
 							<li>
 								<a className='dropdown-item' href='#'>
-									My profile
+									Thông tin cá nhân
 								</a>
 							</li>
 							<li>
+								<Link className='dropdown-item' to='/my-favorite-books'>
+									Sách yêu thích của tôi
+								</Link>
+							</li>
+							<li>
 								<a className='dropdown-item' href='#'>
-									Settings
+									Cài đặt
 								</a>
 							</li>
 							<li>

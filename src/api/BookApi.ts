@@ -56,30 +56,28 @@ export async function searchBook(keySearch?: string, idGenre?: number, filter?: 
       keySearch = keySearch.trim();
    }
 
-   // console.log(idGenre);
-
-
-   const optionsShow = `size=${size}&page=${page}&sort=idBook,desc`;
+   const optionsShow = `size=${size}&page=${page}`;
 
    // Endpoint mặc định
    let endpoint: string = `http://localhost:8080/books?` + optionsShow;
 
+   let filterEndpoint = '';
+   if (filter === 1) {
+      filterEndpoint = "sort=nameBook";
+   } else if (filter === 2) {
+      filterEndpoint = "sort=nameBook,desc";
+   } else if (filter === 3) {
+      filterEndpoint = "sort=sellPrice";
+   } else if (filter === 4) {
+      filterEndpoint = "sort=sellPrice,desc";
+   } else if (filter === 5) {
+      filterEndpoint = "sort=soldQuantity,desc";
+   }
+
    // Nếu có key search và không có lọc thể loại
    if (keySearch !== '') {
       // Mặc đinh nếu không có filter
-      endpoint = `http://localhost:8080/books/search/findByNameBookContaining?nameBook=${keySearch}&` + optionsShow;
-      // Nếu có filter
-      if (filter === 1) {
-         endpoint = `http://localhost:8080/books/search/findByNameBookContaining?sort=nameBook&nameBook=${keySearch}&` + optionsShow;
-      } else if (filter === 2) {
-         endpoint = `http://localhost:8080/books/search/findByNameBookContaining?sort=nameBook,desc&nameBook=${keySearch}&` + optionsShow;
-      } else if (filter === 3) {
-         endpoint = `http://localhost:8080/books/search/findByNameBookContaining?sort=sellPrice&nameBook=${keySearch}&` + optionsShow;
-      } else if (filter === 4) {
-         endpoint = `http://localhost:8080/books/search/findByNameBookContaining?sort=sellPrice,desc&nameBook=${keySearch}&` + optionsShow;
-      } else if (filter === 5) {
-         endpoint = `http://localhost:8080/books/search/findByNameBookContaining?sort=soldQuantity&nameBook=${keySearch}&` + optionsShow;
-      }
+      endpoint = `http://localhost:8080/books/search/findByNameBookContaining?nameBook=${keySearch}&` + optionsShow + '&' + filterEndpoint;
    }
 
    // Nếu idGenre không undifined
@@ -87,60 +85,23 @@ export async function searchBook(keySearch?: string, idGenre?: number, filter?: 
       // Nếu có không có key search và có lọc thể loại
       if (keySearch === '' && idGenre > 0) {
          // Mặc định nếu không có filter
-         endpoint = `http://localhost:8080/books/search/findByListGenres_idGenre?idGenre=${idGenre}&` + optionsShow;
-
-         if (filter === 1) {
-            endpoint = `http://localhost:8080/books/search/findByListGenres_idGenre?sort=nameBook&idGenre=${idGenre}&` + optionsShow;
-         } else if (filter === 2) {
-            endpoint = `http://localhost:8080/books/search/findByListGenres_idGenre?sort=nameBook,desc&idGenre=${idGenre}&` + optionsShow;
-         } else if (filter === 3) {
-            endpoint = `http://localhost:8080/books/search/findByListGenres_idGenre?sort=sellPrice&idGenre=${idGenre}&` + optionsShow;
-         } else if (filter === 4) {
-            endpoint = `http://localhost:8080/books/search/findByListGenres_idGenre?sort=sellPrice,desc&idGenre=${idGenre}&` + optionsShow;
-         } else if (filter === 5) {
-            endpoint = `http://localhost:8080/books/search/findByListGenres_idGenre?sort=soldQuantity&idGenre=${idGenre}&` + optionsShow;
-         }
+         endpoint = `http://localhost:8080/books/search/findByListGenres_idGenre?idGenre=${idGenre}&` + optionsShow + '&' + filterEndpoint;
       }
 
       // Nếu có key search và có lọc thể loại
       if (keySearch !== '' && idGenre > 0) {
-         endpoint = `http://localhost:8080/books/search/findByNameBookContainingAndListGenres_idGenre?nameBook=${keySearch}&idGenre=${idGenre}&` + optionsShow;
-
-         if (filter === 1) {
-            endpoint = `http://localhost:8080/books/search/findByNameBookContainingAndListGenres_idGenre?sort=nameBook&nameBook=${keySearch}&idGenre=${idGenre}&` + optionsShow;
-         } else if (filter === 2) {
-            endpoint = `http://localhost:8080/books/search/findByNameBookContainingAndListGenres_idGenre?sort=nameBook,desc&nameBook=${keySearch}&idGenre=${idGenre}&` + optionsShow;
-         } else if (filter === 3) {
-            endpoint = `http://localhost:8080/books/search/findByNameBookContainingAndListGenres_idGenre?sort=sellPrice&nameBook=${keySearch}&idGenre=${idGenre}&` + optionsShow;
-         } else if (filter === 4) {
-            endpoint = `http://localhost:8080/books/search/findByNameBookContainingAndListGenres_idGenre?sort=sellPrice,desc&nameBook=${keySearch}&idGenre=${idGenre}&` + optionsShow;
-         } else if (filter === 5) {
-            endpoint = `http://localhost:8080/books/search/findByNameBookContainingAndListGenres_idGenre?sort=soldQuantity&nameBook=${keySearch}&idGenre=${idGenre}&` + optionsShow;
-         }
+         endpoint = `http://localhost:8080/books/search/findByNameBookContainingAndListGenres_idGenre?nameBook=${keySearch}&idGenre=${idGenre}&` + optionsShow + '&' + filterEndpoint;
       }
 
       // Chỉ lọc filter
-      if (keySearch === '' && idGenre === 0) {
-         if (filter === 1) {
-            endpoint = "http://localhost:8080/books?sort=nameBook&" + optionsShow;
-         } else if (filter === 2) {
-            endpoint = "http://localhost:8080/books?sort=nameBook,desc&" + optionsShow;
-         } else if (filter === 3) {
-            endpoint = "http://localhost:8080/books?sort=sellPrice&" + optionsShow;
-         } else if (filter === 4) {
-            endpoint = "http://localhost:8080/books?sort=sellPrice,desc&" + optionsShow;
-         } else if (filter === 5) {
-            endpoint = "http://localhost:8080/books?sort=soldQuantity&" + optionsShow;
-         }
+      if (keySearch === '' && (idGenre === 0 || typeof (idGenre) === 'string')) {
+         endpoint = "http://localhost:8080/books?" + optionsShow + '&' + filterEndpoint;
       }
 
-      // console.log("idGenre: " + idGenre + ", filter: " + filter + ", keySearch" + keySearch);
+      // console.log("idGenre: " + typeof (idGenre) + idGenre + ", filter: " + typeof (filter) + filter + ", keySearch" + +typeof (keySearch) + keySearch);
    }
 
    // console.log(endpoint);
-
-
-
 
    return getBook(endpoint);
 }

@@ -8,6 +8,9 @@ import HomePage from "./layouts/pages/HomePage";
 import About from "./layouts/about/About";
 import BookDetail from "./layouts/products/BookDetail";
 import FilterPage from "./layouts/pages/FilterPage";
+import MyFavoriteBooksPage from "./layouts/pages/MyFavoriteBooksPage";
+import CartPage from "./layouts/pages/CartPage";
+import RegisterPage from "./layouts/user/RegisterPage";
 
 function App() {
 	return (
@@ -19,6 +22,12 @@ function App() {
 				<Route path='/about' element={<About />} />
 				<Route path='/search/:idGenreParam' element={<FilterPage />} />
 				<Route path='/search' element={<FilterPage />} />
+				<Route
+					path='/my-favorite-books'
+					element={<MyFavoriteBooksPage />}
+				/>
+				<Route path='/cart' element={<CartPage />}></Route>
+				<Route path='/register' element={<RegisterPage />}></Route>
 			</Routes>
 			<Footer />
 		</BrowserRouter>

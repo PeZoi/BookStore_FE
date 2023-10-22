@@ -26,6 +26,7 @@ const TextEllipsis: React.FC<TextEllipsis> = (props) => {
 						width: "100%",
 						overflowWrap: "break-word",
 						whiteSpace: "pre-wrap",
+						lineHeight: "20px",
 					}}
 				>
 					{truncatedText}

@@ -95,8 +95,14 @@ const BookProps: React.FC<BookProps> = ({ book }) => {
 								{book.sellPrice?.toLocaleString()}đ
 							</strong>
 						</span>
-						<span className='original-price ms-3 small'>
+						<span className='original-price ms-3 small fw-bolder'>
 							<del>{book.listPrice?.toLocaleString()}đ</del>
+						</span>
+						<span
+							className='ms-4'
+							style={{ fontSize: "13px", color: "#aaa" }}
+						>
+							Đã bán {book.soldQuantity}
 						</span>
 					</div>
 					<div className='row mt-2' role='group'>

@@ -5,7 +5,6 @@ import { getBookById } from "../../api/BookApi";
 import BookModel from "../../model/BookModel";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import Rating from "./components/rating/Rating";
 import SelectQuantity from "./components/select-quantity/SelectQuantity";
 import Button from "@mui/material/Button";
 import { ShoppingCartOutlined } from "@mui/icons-material";
@@ -15,6 +14,8 @@ import { getGenreByIdBook } from "../../api/GenreApi";
 import GenreModel from "../../model/GenreModel";
 import { getAllImageByBook } from "../../api/ImageApi";
 import ImageModel from "../../model/ImageModel";
+import RatingStar from "./components/rating/Rating";
+import React from "react";
 
 const BookDetail: React.FC = () => {
 	// Lấy mã sách từ url
@@ -31,10 +32,10 @@ const BookDetail: React.FC = () => {
 		console.error("Error: " + error);
 	}
 
+	// Khai báo biến
 	const [book, setBook] = useState<BookModel | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [erroring, setErroring] = useState(null);
-
 	// Lấy sách ra
 	useEffect(() => {
 		getBookById(idBookNumber)
@@ -131,7 +132,11 @@ const BookDetail: React.FC = () => {
 						</div>
 						<div className='d-flex align-items-center'>
 							<div className='d-flex align-items-center'>
-								<Rating />
+								<RatingStar
+									readonly={true}
+									ratingPoint={book.avgRating}
+								/>
+
 								<p className='text-danger ms-2 mb-0'>(4.5)</p>
 							</div>
 							<div className='d-flex align-items-center'>
@@ -189,7 +194,7 @@ const BookDetail: React.FC = () => {
 						</div>
 						<div className='d-flex align-items-center mt-3'>
 							<strong className='me-5'>Số lượng: </strong>
-							<SelectQuantity />
+							<SelectQuantity max={book.quantity} />
 							<span className='ms-4'>
 								{book.quantity} sản phẩm có sẵn
 							</span>
