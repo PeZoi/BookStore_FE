@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Navbar from "./layouts/header-footer/Navbar";
@@ -11,6 +10,7 @@ import FilterPage from "./layouts/pages/FilterPage";
 import MyFavoriteBooksPage from "./layouts/pages/MyFavoriteBooksPage";
 import CartPage from "./layouts/pages/CartPage";
 import RegisterPage from "./layouts/user/RegisterPage";
+import LoginPage from "./layouts/user/LoginPage";
 
 function App() {
 	return (
@@ -28,6 +28,7 @@ function App() {
 				/>
 				<Route path='/cart' element={<CartPage />}></Route>
 				<Route path='/register' element={<RegisterPage />}></Route>
+				<Route path='/login' element={<LoginPage />}></Route>
 			</Routes>
 			<Footer />
 		</BrowserRouter>

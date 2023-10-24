@@ -1,4 +1,8 @@
+import { Button, TextField } from "@mui/material";
 import React, { useState } from "react";
+import "./Form.css";
+import { Link } from "react-router-dom";
+import { Password, Phone } from "@mui/icons-material";
 
 const RegisterPage: React.FC = () => {
 	// Khai báo biến cần đăng ký
@@ -15,6 +19,7 @@ const RegisterPage: React.FC = () => {
 	const [errorEmail, setErrorEmail] = useState("");
 	const [errorPassword, setErrorPassword] = useState("");
 	const [errorRepeatPassword, setErrorRepeatPassword] = useState("");
+	const [errorPhoneNumber, setErrorPhoneNumber] = useState("");
 
 	// Khai báo biến thông báo
 	const [status, setStatus] = useState<boolean | null>(null);
@@ -72,11 +77,19 @@ const RegisterPage: React.FC = () => {
 
 	// Hàm check username xem tồn tại chưa
 	const checkExistUsername = async (username: string) => {
+		if (username.trim() === "") {
+			return false;
+		}
+		if (username.trim().length < 8) {
+			setErrorUsername("Tên đăng nhập phải chứa ít nhất 8 ký tự.");
+			return true;
+		}
 		const endpoint = `http://localhost:8080/users/search/existsByUsername?username=${username}`;
 		// Call api
 		try {
 			const response = await fetch(endpoint);
 			const data = await response.text();
+
 			if (data === "true") {
 				setErrorUsername("Username đã tồn tại!");
 				return true;
@@ -91,7 +104,6 @@ const RegisterPage: React.FC = () => {
 	) => {
 		setUserName(e.target.value);
 		setErrorUsername("");
-		// return checkExistUsername(e.target.value);
 	};
 
 	// Hàm check email xem tồn tại chưa
@@ -119,7 +131,9 @@ const RegisterPage: React.FC = () => {
 	// Hàm check mật khẩu có đúng định dạng không
 	const checkPassword = (password: string) => {
 		const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
-		if (!passwordRegex.test(password)) {
+		if (password === "") {
+			return false;
+		} else if (!passwordRegex.test(password)) {
 			setErrorPassword(
 				"Mật khẩu phải có ít nhất 8 ký tự và bao gồm chữ và số."
 			);
@@ -150,119 +164,156 @@ const RegisterPage: React.FC = () => {
 	) => {
 		setRepeatPassword(e.target.value);
 		setErrorRepeatPassword("");
-		// return checkRepeatPassword(e.target.value);
 	};
+
+	// Hàm check số điện thoại có đúng định dạng không
+	const checkPhoneNumber = (phoneNumber: string) => {
+		const phoneNumberRegex = /^(0[1-9]|84[1-9])[0-9]{8}$/;
+		if (phoneNumber.trim() === "") {
+			return false;
+		} else if (!phoneNumberRegex.test(phoneNumber.trim())) {
+			setErrorPhoneNumber("Số điện thoại không đúng.");
+			return true;
+		} else {
+			setErrorPhoneNumber("");
+			return false;
+		}
+	};
+	const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setPhoneNumber(e.target.value);
+		setErrorPhoneNumber("");
+	};
+
 	return (
-		<div className='container my-5 px-5'>
-			<h1 className='text-center'>Đăng ký tài khoản</h1>
+		<div className='container my-5 py-4 rounded-5 shadow-5 bg-light w-50'>
+			<h1 className='text-center'>ĐĂNG KÝ</h1>
+
 			<form onSubmit={handleSubmit} className='form'>
-				<div className='row px-5 mt-3'>
-					<div className='col-lg-6 col-md-6 col-6'>
-						<label htmlFor='username' className='form-label'>
-							Tên đăng nhập:{" "}
-						</label>
-						<input
-							type='text'
-							id='username'
-							className='form-control'
+				<div className='row px-2'>
+					<div className='col-lg-6 col-md-12 col-12'>
+						<TextField
+							fullWidth
+							error={errorUsername.length > 0 ? true : false}
+							helperText={errorUsername}
+							required={true}
+							id='outlined-required'
+							label='Tên đăng nhập'
+							placeholder='Nhập tên đăng nhập'
 							value={username}
 							onChange={handleUsernameChange}
 							onBlur={(e) => {
 								checkExistUsername(e.target.value);
 							}}
+							className='input-field'
 						/>
-						<div className='text-danger'>{errorUsername}</div>
 
-						<label htmlFor='email' className='form-label'>
-							Email:{" "}
-						</label>
-						<input
-							type='email'
-							id='email'
-							className='form-control'
-							value={email}
-							onChange={handleEmailChange}
-							onBlur={(e) => {
-								checkExistEmail(e.target.value);
-							}}
-						/>
-						<div className='text-danger'>{errorEmail}</div>
-
-						<label htmlFor='password' className='form-label'>
-							Mật khẩu:{" "}
-						</label>
-						<input
+						<TextField
+							error={errorPassword.length > 0 ? true : false}
+							helperText={errorPassword}
+							required={true}
+							fullWidth
 							type='password'
-							id='password'
-							className='form-control'
+							id='outlined-required'
+							label='Mật khẩu'
+							placeholder='Nhập mật khẩu'
 							value={password}
 							onChange={handlePasswordChange}
 							onBlur={(e) => {
 								checkPassword(e.target.value);
 							}}
+							className='input-field'
 						/>
-						<div className='text-danger'>{errorPassword}</div>
 
-						<label htmlFor='password' className='form-label'>
-							Nhập lại mật khẩu:{" "}
-						</label>
-						<input
+						<TextField
+							error={errorRepeatPassword.length > 0 ? true : false}
+							helperText={errorRepeatPassword}
+							required={true}
+							fullWidth
 							type='password'
-							id='repeatPassword'
-							className='form-control'
+							id='outlined-required'
+							label='Xác nhận mật khẩu'
+							placeholder='Nhập lại mật khẩu'
 							value={repeatPassword}
 							onChange={handleRepeatPasswordChange}
 							onBlur={(e) => {
 								checkRepeatPassword(e.target.value);
 							}}
+							className='input-field'
 						/>
-						<div className='text-danger'>{errorRepeatPassword}</div>
 					</div>
-					<div className='col-lg-6 col-md-6 col-6'>
-						<label htmlFor='firstName' className='form-label'>
-							Họ đệm:{" "}
-						</label>
-						<input
-							type='text'
-							id='firstName'
-							className='form-control'
+					<div className='col-lg-6 col-md-12 col-12'>
+						<TextField
+							fullWidth
+							helperText={""}
+							required={true}
+							id='outlined-required'
+							label='Họ đệm'
+							placeholder='Nhập họ đệm'
 							value={firstName}
 							onChange={(e) => {
 								setFirstName(e.target.value);
 							}}
+							className='input-field'
 						/>
-
-						<label htmlFor='lastName' className='form-label'>
-							Tên:{" "}
-						</label>
-						<input
-							type='text'
-							id='lastName'
-							className='form-control'
+						<TextField
+							fullWidth
+							helperText={""}
+							required={true}
+							id='outlined-required'
+							label='Tên'
+							placeholder='Nhập tên'
 							value={lastName}
 							onChange={(e) => {
 								setLastName(e.target.value);
 							}}
+							className='input-field'
 						/>
-
-						<label htmlFor='phoneNumber' className='form-label'>
-							Số điện thoại:{" "}
-						</label>
-						<input
-							type='text'
-							id='phoneNumber'
-							className='form-control'
+						<TextField
+							fullWidth
+							error={errorPhoneNumber.length > 0 ? true : false}
+							helperText={errorPhoneNumber}
+							required={true}
+							id='outlined-required'
+							label='Số điện thoại'
+							placeholder='Nhập số điện thoại'
 							value={phoneNumber}
-							onChange={(e) => {
-								setPhoneNumber(e.target.value);
+							onChange={handlePhoneNumberChange}
+							onBlur={(e) => {
+								checkPhoneNumber(e.target.value);
 							}}
+							className='input-field'
+						/>
+					</div>
+					<div>
+						<TextField
+							fullWidth
+							helperText={errorEmail}
+							required={true}
+							id='outlined-required'
+							label='Email'
+							placeholder='Nhập email'
+							value={email}
+							onChange={handleEmailChange}
+							onBlur={(e) => {
+								checkExistEmail(e.target.value);
+							}}
+							className='input-field'
 						/>
 					</div>
 				</div>
-				<div className='text-center my-5'>
-					<button type='submit' className='btn btn-outline-primary'>
+				<div className='d-flex justify-content-end mt-2 px-3'>
+					<span>
+						Bạn có tài khoản rồi? <Link to={"/login"}>Đăng nhập</Link>
+					</span>
+				</div>
+				<div className='text-center my-3'>
+					<Button
+						variant='outlined'
+						type='submit'
+						sx={{ width: "25%", padding: "10px" }}
+					>
 						Đăng ký
-					</button>
+					</Button>
 					{status !== null && (
 						<div className={"text-" + (status ? "success" : "danger")}>
 							{notification}
