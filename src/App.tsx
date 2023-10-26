@@ -11,6 +11,7 @@ import MyFavoriteBooksPage from "./layouts/pages/MyFavoriteBooksPage";
 import CartPage from "./layouts/pages/CartPage";
 import RegisterPage from "./layouts/user/RegisterPage";
 import LoginPage from "./layouts/user/LoginPage";
+import ProfilePage from "./layouts/user/ProfilePage";
 
 function App() {
 	return (
@@ -29,6 +30,7 @@ function App() {
 				<Route path='/cart' element={<CartPage />}></Route>
 				<Route path='/register' element={<RegisterPage />}></Route>
 				<Route path='/login' element={<LoginPage />}></Route>
+				<Route path='/profile' element={<ProfilePage />}></Route>
 			</Routes>
 			<Footer />
 		</BrowserRouter>

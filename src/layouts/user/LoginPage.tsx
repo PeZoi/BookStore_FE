@@ -1,5 +1,5 @@
 import { Button, TextField } from "@mui/material";
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
@@ -8,7 +8,6 @@ const LoginPage: React.FC = () => {
 	const [password, setPassword] = useState("");
 
 	// Biến thông báo lỗi
-	const [error, setError] = useState("");
 	function handleSubmit(event: FormEvent<HTMLFormElement>): void {
 		throw new Error("Function not implemented.");
 	}

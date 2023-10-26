@@ -1,9 +1,16 @@
-import { Alert, Box, Button, Snackbar, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import React, { useState } from "react";
 import "./Form.css";
 import { Link } from "react-router-dom";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Toast from "../utils/Toast";
+import {
+	checkExistEmail,
+	checkExistUsername,
+	checkPassword,
+	checkPhoneNumber,
+	checkRepeatPassword,
+} from "./Validation";
 
 const RegisterPage: React.FC = () => {
 	// Khai báo biến cần đăng ký
@@ -40,11 +47,21 @@ const RegisterPage: React.FC = () => {
 
 		e.preventDefault();
 
-		const isUsernameValid = !(await checkExistUsername(username));
-		const isEmailValid = !(await checkExistEmail(email));
-		const isPassword = !checkPassword(password);
-		const isRepeatPassword = !checkRepeatPassword(repeatPassword);
-		const isPhoneNumberValid = !checkPhoneNumber(phoneNumber);
+		const isUsernameValid = !(await checkExistUsername(
+			setErrorUsername,
+			username
+		));
+		const isEmailValid = !(await checkExistEmail(setErrorEmail, email));
+		const isPassword = !checkPassword(setErrorPassword, password);
+		const isRepeatPassword = !checkRepeatPassword(
+			setErrorRepeatPassword,
+			repeatPassword,
+			password
+		);
+		const isPhoneNumberValid = !checkPhoneNumber(
+			setErrorPhoneNumber,
+			phoneNumber
+		);
 
 		if (
 			isUsernameValid &&
@@ -54,14 +71,14 @@ const RegisterPage: React.FC = () => {
 			isPhoneNumberValid
 		) {
 			try {
-				console.log({
-					username,
-					password,
-					email,
-					firstName,
-					lastName,
-					phoneNumber,
-				});
+				// console.log({
+				// 	username,
+				// 	password,
+				// 	email,
+				// 	firstName,
+				// 	lastName,
+				// 	phoneNumber,
+				// });
 
 				const endpoint = "http://localhost:8080/user/register";
 
@@ -77,6 +94,7 @@ const RegisterPage: React.FC = () => {
 						firstName,
 						lastName,
 						phoneNumber,
+						gender: "M",
 					}),
 				});
 
@@ -98,30 +116,6 @@ const RegisterPage: React.FC = () => {
 		}
 	};
 
-	// Hàm check username xem tồn tại chưa
-	const checkExistUsername = async (username: string) => {
-		if (username.trim() === "") {
-			return false;
-		}
-		if (username.trim().length < 8) {
-			setErrorUsername("Tên đăng nhập phải chứa ít nhất 8 ký tự");
-			return true;
-		}
-		const endpoint = `http://localhost:8080/users/search/existsByUsername?username=${username}`;
-		// Call api
-		try {
-			const response = await fetch(endpoint);
-			const data = await response.text();
-
-			if (data === "true") {
-				setErrorUsername("Username đã tồn tại!");
-				return true;
-			}
-			return false;
-		} catch (error) {
-			console.log("Lỗi api khi gọi hàm kiểm tra username");
-		}
-	};
 	const handleUsernameChange = async (
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
@@ -129,59 +123,16 @@ const RegisterPage: React.FC = () => {
 		setErrorUsername("");
 	};
 
-	// Hàm check email xem tồn tại chưa
-	const checkExistEmail = async (email: string) => {
-		const endpoint = `http://localhost:8080/users/search/existsByEmail?email=${email}`;
-		// Call api
-		try {
-			const response = await fetch(endpoint);
-			const data = await response.text();
-			if (data === "true") {
-				setErrorEmail("Email đã tồn tại!");
-				return true;
-			}
-			return false;
-		} catch (error) {
-			console.log("Lỗi api khi gọi hàm kiểm tra email");
-		}
-	};
 	const handleEmailChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		setEmail(e.target.value);
 		setErrorEmail("");
-		// return checkExistEmail(e.target.value);
 	};
 
-	// Hàm check mật khẩu có đúng định dạng không
-	const checkPassword = (password: string) => {
-		const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
-		if (password === "") {
-			return false;
-		} else if (!passwordRegex.test(password)) {
-			setErrorPassword(
-				"Mật khẩu phải có ít nhất 8 ký tự và bao gồm chữ và số."
-			);
-			return true;
-		} else {
-			setErrorPassword("");
-			return false;
-		}
-	};
 	const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setPassword(e.target.value);
 		setErrorPassword("");
-		// return checkPassword(e.target.value);
 	};
 
-	// Hàm check mật khẩu nhập lại
-	const checkRepeatPassword = (repeatPassword: string) => {
-		if (repeatPassword !== password) {
-			setErrorRepeatPassword("Mật khẩu không khớp.");
-			return true;
-		} else {
-			setErrorRepeatPassword("");
-			return false;
-		}
-	};
 	const handleRepeatPasswordChange = (
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
@@ -189,19 +140,6 @@ const RegisterPage: React.FC = () => {
 		setErrorRepeatPassword("");
 	};
 
-	// Hàm check số điện thoại có đúng định dạng không
-	const checkPhoneNumber = (phoneNumber: string) => {
-		const phoneNumberRegex = /^(0[1-9]|84[1-9])[0-9]{8}$/;
-		if (phoneNumber.trim() === "") {
-			return false;
-		} else if (!phoneNumberRegex.test(phoneNumber.trim())) {
-			setErrorPhoneNumber("Số điện thoại không đúng.");
-			return true;
-		} else {
-			setErrorPhoneNumber("");
-			return false;
-		}
-	};
 	const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setPhoneNumber(e.target.value);
 		setErrorPhoneNumber("");
@@ -224,7 +162,7 @@ const RegisterPage: React.FC = () => {
 							value={username}
 							onChange={handleUsernameChange}
 							onBlur={(e) => {
-								checkExistUsername(e.target.value);
+								checkExistUsername(setErrorUsername, e.target.value);
 							}}
 							className='input-field'
 						/>
@@ -240,7 +178,7 @@ const RegisterPage: React.FC = () => {
 							value={password}
 							onChange={handlePasswordChange}
 							onBlur={(e) => {
-								checkPassword(e.target.value);
+								checkPassword(setErrorPassword, e.target.value);
 							}}
 							className='input-field'
 						/>
@@ -256,7 +194,11 @@ const RegisterPage: React.FC = () => {
 							value={repeatPassword}
 							onChange={handleRepeatPasswordChange}
 							onBlur={(e) => {
-								checkRepeatPassword(e.target.value);
+								checkRepeatPassword(
+									setErrorRepeatPassword,
+									e.target.value,
+									password
+								);
 							}}
 							className='input-field'
 						/>
@@ -296,7 +238,7 @@ const RegisterPage: React.FC = () => {
 							value={phoneNumber}
 							onChange={handlePhoneNumberChange}
 							onBlur={(e) => {
-								checkPhoneNumber(e.target.value);
+								checkPhoneNumber(setErrorPhoneNumber, e.target.value);
 							}}
 							className='input-field'
 						/>
@@ -312,7 +254,7 @@ const RegisterPage: React.FC = () => {
 							value={email}
 							onChange={handleEmailChange}
 							onBlur={(e) => {
-								checkExistEmail(e.target.value);
+								checkExistEmail(setErrorEmail, e.target.value);
 							}}
 							className='input-field'
 						/>

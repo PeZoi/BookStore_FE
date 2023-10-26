@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
-import Avatar from "@mui/material/Avatar";
 import ReviewModel from "../../../../model/ReviewModel";
 import { getAllReview } from "../../../../api/ReviewApi";
 import User from "../user/User";

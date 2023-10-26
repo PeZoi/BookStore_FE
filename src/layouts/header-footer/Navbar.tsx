@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import GenreModel from "../../model/GenreModel";
 import { getAllGenres } from "../../api/GenreApi";
@@ -170,9 +170,9 @@ function Navbar() {
 							aria-labelledby='navbarDropdownMenuAvatar'
 						>
 							<li>
-								<a className='dropdown-item' href='#'>
+								<Link to={"/profile"} className='dropdown-item'>
 									Thông tin cá nhân
-								</a>
+								</Link>
 							</li>
 							<li>
 								<Link className='dropdown-item' to='/my-favorite-books'>
