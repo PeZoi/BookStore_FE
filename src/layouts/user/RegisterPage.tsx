@@ -1,8 +1,9 @@
-import { Button, TextField } from "@mui/material";
+import { Alert, Box, Button, Snackbar, TextField } from "@mui/material";
 import React, { useState } from "react";
 import "./Form.css";
 import { Link } from "react-router-dom";
-import { Password, Phone } from "@mui/icons-material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import Toast from "../utils/Toast";
 
 const RegisterPage: React.FC = () => {
 	// Khai báo biến cần đăng ký
@@ -22,11 +23,16 @@ const RegisterPage: React.FC = () => {
 	const [errorPhoneNumber, setErrorPhoneNumber] = useState("");
 
 	// Khai báo biến thông báo
-	const [status, setStatus] = useState<boolean | null>(null);
-	const [notification, setNotification] = useState("");
+	const [status, setStatus] = useState<boolean>(false); // thành công hay thấy bại
+	const [statusToast, setstatusToast] = useState(false); // tắt/mở toast
+
+	// Khi submit thì btn loading ...
+	const [statusBtn, setStatusBtn] = useState(false);
 
 	// hàm submit form
 	const handleSubmit = async (e: React.FormEvent) => {
+		setStatusBtn(true);
+
 		setErrorUsername("");
 		setErrorEmail("");
 		setErrorPassword("");
@@ -38,9 +44,25 @@ const RegisterPage: React.FC = () => {
 		const isEmailValid = !(await checkExistEmail(email));
 		const isPassword = !checkPassword(password);
 		const isRepeatPassword = !checkRepeatPassword(repeatPassword);
+		const isPhoneNumberValid = !checkPhoneNumber(phoneNumber);
 
-		if (isUsernameValid && isEmailValid && isPassword && isRepeatPassword) {
+		if (
+			isUsernameValid &&
+			isEmailValid &&
+			isPassword &&
+			isRepeatPassword &&
+			isPhoneNumberValid
+		) {
 			try {
+				console.log({
+					username,
+					password,
+					email,
+					firstName,
+					lastName,
+					phoneNumber,
+				});
+
 				const endpoint = "http://localhost:8080/user/register";
 
 				const response = await fetch(endpoint, {
@@ -59,18 +81,19 @@ const RegisterPage: React.FC = () => {
 				});
 
 				if (response.ok) {
+					setstatusToast(true);
+					setStatusBtn(false);
 					setStatus(true);
-					setNotification(
-						"Đăng ký thành công! Kiểm tra email để xác minh tài khoản!"
-					);
 				} else {
+					setstatusToast(true);
+					setStatusBtn(false);
 					setStatus(false);
-					setNotification("Đăng ký tài khoản thất bại!");
 				}
 			} catch (error) {
 				console.log(error);
+				setstatusToast(true);
+				setStatusBtn(false);
 				setStatus(false);
-				setNotification("Đăng ký tài khoản thất bại!!!!!!!");
 			}
 		}
 	};
@@ -81,7 +104,7 @@ const RegisterPage: React.FC = () => {
 			return false;
 		}
 		if (username.trim().length < 8) {
-			setErrorUsername("Tên đăng nhập phải chứa ít nhất 8 ký tự.");
+			setErrorUsername("Tên đăng nhập phải chứa ít nhất 8 ký tự");
 			return true;
 		}
 		const endpoint = `http://localhost:8080/users/search/existsByUsername?username=${username}`;
@@ -196,7 +219,6 @@ const RegisterPage: React.FC = () => {
 							error={errorUsername.length > 0 ? true : false}
 							helperText={errorUsername}
 							required={true}
-							id='outlined-required'
 							label='Tên đăng nhập'
 							placeholder='Nhập tên đăng nhập'
 							value={username}
@@ -213,7 +235,6 @@ const RegisterPage: React.FC = () => {
 							required={true}
 							fullWidth
 							type='password'
-							id='outlined-required'
 							label='Mật khẩu'
 							placeholder='Nhập mật khẩu'
 							value={password}
@@ -230,7 +251,6 @@ const RegisterPage: React.FC = () => {
 							required={true}
 							fullWidth
 							type='password'
-							id='outlined-required'
 							label='Xác nhận mật khẩu'
 							placeholder='Nhập lại mật khẩu'
 							value={repeatPassword}
@@ -246,7 +266,6 @@ const RegisterPage: React.FC = () => {
 							fullWidth
 							helperText={""}
 							required={true}
-							id='outlined-required'
 							label='Họ đệm'
 							placeholder='Nhập họ đệm'
 							value={firstName}
@@ -259,7 +278,6 @@ const RegisterPage: React.FC = () => {
 							fullWidth
 							helperText={""}
 							required={true}
-							id='outlined-required'
 							label='Tên'
 							placeholder='Nhập tên'
 							value={lastName}
@@ -273,7 +291,6 @@ const RegisterPage: React.FC = () => {
 							error={errorPhoneNumber.length > 0 ? true : false}
 							helperText={errorPhoneNumber}
 							required={true}
-							id='outlined-required'
 							label='Số điện thoại'
 							placeholder='Nhập số điện thoại'
 							value={phoneNumber}
@@ -289,9 +306,9 @@ const RegisterPage: React.FC = () => {
 							fullWidth
 							helperText={errorEmail}
 							required={true}
-							id='outlined-required'
 							label='Email'
 							placeholder='Nhập email'
+							type='email'
 							value={email}
 							onChange={handleEmailChange}
 							onBlur={(e) => {
@@ -307,18 +324,24 @@ const RegisterPage: React.FC = () => {
 					</span>
 				</div>
 				<div className='text-center my-3'>
-					<Button
-						variant='outlined'
+					<LoadingButton
 						type='submit'
+						loading={statusBtn}
+						variant='outlined'
 						sx={{ width: "25%", padding: "10px" }}
 					>
-						Đăng ký
-					</Button>
-					{status !== null && (
-						<div className={"text-" + (status ? "success" : "danger")}>
-							{notification}
-						</div>
-					)}
+						Submit
+					</LoadingButton>
+					<Toast
+						status={status}
+						statusToast={statusToast}
+						setstatusToast={setstatusToast}
+						message={
+							status
+								? "Đăng ký tài khoản thành công. Kiểm tra email để kích hoạt tài khoản"
+								: "Đăng ký tài khoản thất bại."
+						}
+					/>
 				</div>
 			</form>
 		</div>
