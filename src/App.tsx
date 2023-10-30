@@ -12,6 +12,7 @@ import CartPage from "./layouts/pages/CartPage";
 import RegisterPage from "./layouts/user/RegisterPage";
 import LoginPage from "./layouts/user/LoginPage";
 import ProfilePage from "./layouts/user/ProfilePage";
+import ActiveAccount from "./layouts/user/ActiveAccount";
 
 function App() {
 	return (
@@ -27,10 +28,14 @@ function App() {
 					path='/my-favorite-books'
 					element={<MyFavoriteBooksPage />}
 				/>
-				<Route path='/cart' element={<CartPage />}></Route>
-				<Route path='/register' element={<RegisterPage />}></Route>
-				<Route path='/login' element={<LoginPage />}></Route>
-				<Route path='/profile' element={<ProfilePage />}></Route>
+				<Route path='/cart' element={<CartPage />} />
+				<Route path='/register' element={<RegisterPage />} />
+				<Route path='/login' element={<LoginPage />} />
+				<Route path='/profile' element={<ProfilePage />} />
+				<Route
+					path='/active/:email/:activationCode'
+					element={<ActiveAccount />}
+				/>
 			</Routes>
 			<Footer />
 		</BrowserRouter>

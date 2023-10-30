@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from "react";
-import Button from "@mui/material/Button";
 import "./SelectQuantity.css";
 import Icon from "@mui/material/Icon";
 
@@ -37,10 +36,21 @@ const SelectQuantity: React.FC<SelectQuantityProps> = (props) => {
 	};
 
 	return (
-		<div className='wrapper-select-quantity d-flex align-items-center rounded'>
-			<Button size='small' onClick={() => reduce()}>
+		<div
+			className='wrapper-select-quantity d-flex align-items-center rounded'
+			style={{ width: "110px" }}
+		>
+			<button
+				type='button'
+				className='d-flex align-items-center justify-content-center'
+				onClick={() => reduce()}
+				style={{
+					backgroundColor: "transparent",
+					borderColor: "transparent",
+				}}
+			>
 				<Icon>remove</Icon>
-			</Button>
+			</button>
 			<input
 				type='number'
 				className='inp-number p-0 m-0'
@@ -49,9 +59,17 @@ const SelectQuantity: React.FC<SelectQuantityProps> = (props) => {
 				min={1}
 				max={props.max}
 			/>
-			<Button size='small' onClick={() => add()}>
+			<button
+				type='button'
+				className='d-flex align-items-center justify-content-center'
+				onClick={() => add()}
+				style={{
+					backgroundColor: "transparent",
+					borderColor: "transparent",
+				}}
+			>
 				<Icon>add</Icon>
-			</Button>
+			</button>
 		</div>
 	);
 };

@@ -47,7 +47,7 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 					</div>
 				</Link>
 			</div>
-			<div className='col-3 text-center px-4 my-auto'>
+			<div className='col-3 text-center my-auto d-flex align-items-center justify-content-center'>
 				<SelectQuantity max={99} />
 			</div>
 			<div className='col-2 text-center my-auto'>

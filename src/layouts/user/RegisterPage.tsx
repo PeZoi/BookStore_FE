@@ -37,15 +37,14 @@ const RegisterPage: React.FC = () => {
 	const [statusBtn, setStatusBtn] = useState(false);
 
 	// hàm submit form
-	const handleSubmit = async (e: React.FormEvent) => {
+	const handleSubmit = async (event: React.FormEvent) => {
+		event.preventDefault();
 		setStatusBtn(true);
 
 		setErrorUsername("");
 		setErrorEmail("");
 		setErrorPassword("");
 		setErrorRepeatPassword("");
-
-		e.preventDefault();
 
 		const isUsernameValid = !(await checkExistUsername(
 			setErrorUsername,
@@ -102,10 +101,12 @@ const RegisterPage: React.FC = () => {
 					setstatusToast(true);
 					setStatusBtn(false);
 					setStatus(true);
+					return true;
 				} else {
 					setstatusToast(true);
 					setStatusBtn(false);
 					setStatus(false);
+					return false;
 				}
 			} catch (error) {
 				console.log(error);
@@ -113,6 +114,8 @@ const RegisterPage: React.FC = () => {
 				setStatusBtn(false);
 				setStatus(false);
 			}
+		} else {
+			setStatusBtn(false);
 		}
 	};
 
@@ -246,6 +249,7 @@ const RegisterPage: React.FC = () => {
 					<div>
 						<TextField
 							fullWidth
+							error={errorEmail.length > 0 ? true : false}
 							helperText={errorEmail}
 							required={true}
 							label='Email'
@@ -272,7 +276,7 @@ const RegisterPage: React.FC = () => {
 						variant='outlined'
 						sx={{ width: "25%", padding: "10px" }}
 					>
-						Submit
+						ĐĂNG KÝ
 					</LoadingButton>
 					<Toast
 						status={status}
