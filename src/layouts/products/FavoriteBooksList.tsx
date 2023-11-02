@@ -4,7 +4,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import TextEllipsis from "./components/text-ellipsis/TextEllipsis";
 
-const FavoriteBooksList: React.FC = () => {
+interface FavoriteBooksListProps {
+	setTotalCart: any;
+}
+
+const FavoriteBooksList: React.FC<FavoriteBooksListProps> = (props) => {
 	return (
 		<div className='container-book container mb-5 pb-5 px-5 bg-light'>
 			<h2 className='mt-4 px-3 py-3 mb-0'>SÁCH YÊU THÍCH CỦA TÔI</h2>

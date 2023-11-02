@@ -13,22 +13,60 @@ import RegisterPage from "./layouts/user/RegisterPage";
 import LoginPage from "./layouts/user/LoginPage";
 import ProfilePage from "./layouts/user/ProfilePage";
 import ActiveAccount from "./layouts/user/ActiveAccount";
+import { useEffect, useState } from "react";
+import CartItemModel from "./model/CartItemModel";
 
 function App() {
+	const [cartList, setCartList] = useState<CartItemModel[]>([]);
+	const [totalCart, setTotalCart] = useState(0);
+
+	useEffect(() => {
+		const cartData: string | null = localStorage.getItem("cart");
+		const cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
+		// let totalQuantity = cart.reduce(
+		// 	(total, currentValue) => total + currentValue.quantity,
+		// 	0
+		// );
+		setCartList(cart);
+		setTotalCart(cart.length);
+	}, []);
+
 	return (
 		<BrowserRouter>
-			<Navbar />
+			<Navbar totalCart={totalCart} />
 			<Routes>
-				<Route path='/' element={<HomePage />} />
-				<Route path='/book/:idBook' element={<BookDetail />} />
+				<Route
+					path='/'
+					element={
+						<HomePage setTotalCart={setTotalCart} totalCart={totalCart} />
+					}
+				/>
+				<Route
+					path='/book/:idBook'
+					element={
+						<BookDetail
+							setTotalCart={setTotalCart}
+							totalCart={totalCart}
+						/>
+					}
+				/>
 				<Route path='/about' element={<About />} />
-				<Route path='/search/:idGenreParam' element={<FilterPage />} />
-				<Route path='/search' element={<FilterPage />} />
+				<Route
+					path='/search/:idGenreParam'
+					element={<FilterPage setTotalCart={setTotalCart} />}
+				/>
+				<Route
+					path='/search'
+					element={<FilterPage setTotalCart={setTotalCart} />}
+				/>
 				<Route
 					path='/my-favorite-books'
-					element={<MyFavoriteBooksPage />}
+					element={<MyFavoriteBooksPage setTotalCart={setTotalCart} />}
 				/>
-				<Route path='/cart' element={<CartPage />} />
+				<Route
+					path='/cart'
+					element={<CartPage setTotalCart={setTotalCart} />}
+				/>
 				<Route path='/register' element={<RegisterPage />} />
 				<Route path='/login' element={<LoginPage />} />
 				<Route path='/profile' element={<ProfilePage />} />

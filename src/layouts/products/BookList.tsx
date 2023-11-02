@@ -14,6 +14,8 @@ interface BookListProps {
 	keySearch?: string | undefined;
 	idGenre?: number;
 	filter?: number;
+	setTotalCart?: any;
+	totalCart?: number;
 }
 
 const BookList: React.FC<BookListProps> = (props) => {
@@ -114,7 +116,11 @@ const BookList: React.FC<BookListProps> = (props) => {
 			)}
 			<div className='row'>
 				{bookList.map((book) => (
-					<BookProps key={book.idBook} book={book} />
+					<BookProps
+						key={book.idBook}
+						book={book}
+						setTotalCart={props.setTotalCart}
+					/>
 				))}
 			</div>
 			{props.paginable ? (

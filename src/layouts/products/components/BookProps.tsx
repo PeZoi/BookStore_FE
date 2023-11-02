@@ -8,12 +8,14 @@ import { getAllImageByBook } from "../../../api/ImageApi";
 import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import TextEllipsis from "./text-ellipsis/TextEllipsis";
+import CartItemModel from "../../../model/CartItemModel";
 
 interface BookProps {
 	book: BookModel;
+	setTotalCart: any;
 }
 
-const BookProps: React.FC<BookProps> = ({ book }) => {
+const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 	const [imageList, setImageList] = useState<ImageModel[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [erroring, setErroring] = useState(null);
@@ -46,6 +48,7 @@ const BookProps: React.FC<BookProps> = ({ book }) => {
 		);
 	}
 
+	// Loading ảnh thumbnail
 	let dataImage;
 	if (imageList[0] && imageList[0].dataImage) {
 		// Từ đầu hình ảnh sẽ mặc định thumbnail là ảnh đầu tiên
@@ -58,6 +61,29 @@ const BookProps: React.FC<BookProps> = ({ book }) => {
 			}
 		}
 	}
+
+	// Xử lý thêm sản phẩm vào giỏ hàng
+	const handleAddProduct = (newBook: BookModel) => {
+		const cartData: string | null = localStorage.getItem("cart");
+		const cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
+		// cái isExistBook này sẽ tham chiếu đến cái cart ở trên, nên khi update thì cart nó cũng update theo
+		let isExistBook = cart.find(
+			(cartItem) => cartItem.book.idBook === newBook.idBook
+		);
+		// Thêm 1 sản phẩm vào giỏ hàng
+		if (isExistBook) {
+			// nếu có rồi thì sẽ tăng số lượng
+			isExistBook.quantity += 1;
+		} else {
+			cart.push({
+				quantity: 1,
+				book: newBook,
+			});
+		}
+		// Lưu vào localStorage
+		localStorage.setItem("cart", JSON.stringify(cart));
+		setTotalCart(cart.length);
+	};
 
 	return (
 		<div className='col-md-6 col-lg-3 mt-3'>
@@ -112,7 +138,10 @@ const BookProps: React.FC<BookProps> = ({ book }) => {
 							</a>
 						</div>
 						<div className='col-6'>
-							<button className='btn btn-primary btn-block'>
+							<button
+								className='btn btn-primary btn-block'
+								onClick={() => handleAddProduct(book)}
+							>
 								<i className='fas fa-shopping-cart'></i>
 							</button>
 						</div>

@@ -4,26 +4,20 @@
 import React, { useState } from "react";
 import "./SelectQuantity.css";
 import Icon from "@mui/material/Icon";
+import CartItemModel from "../../../../model/CartItemModel";
+import BookModel from "../../../../model/BookModel";
 
 interface SelectQuantityProps {
 	max: number | undefined;
+	setQuantity?: any;
+	quantity?: number;
+	add?: any;
+	reduce?: any;
+	book?: BookModel;
 }
 
 const SelectQuantity: React.FC<SelectQuantityProps> = (props) => {
-	const [quantity, setQuantity] = useState(1);
-
-	const add = () => {
-		if (quantity < (props.max ? props.max : 1)) {
-			setQuantity(quantity + 1);
-		}
-	};
-
-	const reduce = () => {
-		if (quantity > 1) {
-			setQuantity(quantity - 1);
-		}
-	};
-
+	// Xử lý khi thay đổi input quantity bằng bàn phím
 	const handleQuantity = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const newQuantity = parseInt(e.target.value);
 		if (
@@ -31,7 +25,20 @@ const SelectQuantity: React.FC<SelectQuantityProps> = (props) => {
 			newQuantity >= 1 &&
 			newQuantity <= (props.max ? props.max : 1)
 		) {
-			setQuantity(newQuantity);
+			props.setQuantity(newQuantity);
+			const cartData: string | null = localStorage.getItem("cart");
+			const cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
+			// cái isExistBook này sẽ tham chiếu đến cái cart ở trên, nên khi update thì cart nó cũng update theo
+			let isExistBook = cart.find(
+				(cartItem) => cartItem.book.idBook === props.book?.idBook
+			);
+			// Thêm 1 sản phẩm vào giỏ hàng
+			if (isExistBook) {
+				// nếu có rồi thì sẽ gán là số lượng mới
+				isExistBook.quantity = newQuantity;
+			}
+			// Cập nhật lại
+			localStorage.setItem("cart", JSON.stringify(cart));
 		}
 	};
 
@@ -43,7 +50,7 @@ const SelectQuantity: React.FC<SelectQuantityProps> = (props) => {
 			<button
 				type='button'
 				className='d-flex align-items-center justify-content-center'
-				onClick={() => reduce()}
+				onClick={() => props.reduce()}
 				style={{
 					backgroundColor: "transparent",
 					borderColor: "transparent",
@@ -54,7 +61,7 @@ const SelectQuantity: React.FC<SelectQuantityProps> = (props) => {
 			<input
 				type='number'
 				className='inp-number p-0 m-0'
-				value={quantity}
+				value={props.quantity}
 				onChange={handleQuantity}
 				min={1}
 				max={props.max}
@@ -62,7 +69,7 @@ const SelectQuantity: React.FC<SelectQuantityProps> = (props) => {
 			<button
 				type='button'
 				className='d-flex align-items-center justify-content-center'
-				onClick={() => add()}
+				onClick={() => props.add()}
 				style={{
 					backgroundColor: "transparent",
 					borderColor: "transparent",

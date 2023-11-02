@@ -18,7 +18,12 @@ import RatingStar from "./components/rating/Rating";
 import React from "react";
 import ReactSimpleImageViewer from "react-simple-image-viewer";
 
-const BookDetail: React.FC = () => {
+interface BookDetailProps {
+	totalCart: number;
+	setTotalCart: any;
+}
+
+const BookDetail: React.FC<BookDetailProps> = (props) => {
 	// Lấy mã sách từ url
 	const { idBook } = useParams();
 	let idBookNumber: number = 0;
@@ -239,6 +244,7 @@ const BookDetail: React.FC = () => {
 								size='large'
 								startIcon={<ShoppingCartOutlined />}
 								className='me-3'
+								onClick={() => props.setTotalCart(props.totalCart + 1)}
 							>
 								Thêm vào giỏ hàng
 							</Button>

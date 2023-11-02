@@ -4,7 +4,11 @@ import { Link, NavLink } from "react-router-dom";
 import GenreModel from "../../model/GenreModel";
 import { getAllGenres } from "../../api/GenreApi";
 
-function Navbar() {
+interface NavbarProps {
+	totalCart: number | undefined;
+}
+
+const Navbar: React.FC<NavbarProps> = (props) => {
 	// Lấy tất cả thể loại
 	const [genreList, setGenreList] = useState<GenreModel[]>([]);
 	const [erroring, setErroring] = useState(null);
@@ -107,7 +111,7 @@ function Navbar() {
 					<Link className='text-reset me-3' to='/cart'>
 						<i className='fas fa-shopping-cart'></i>
 						<span className='badge rounded-pill badge-notification bg-danger'>
-							2
+							{props.totalCart ? props.totalCart : ""}
 						</span>
 					</Link>
 
@@ -197,6 +201,6 @@ function Navbar() {
 			{/* <!-- Container wrapper --> */}
 		</nav>
 	);
-}
+};
 
 export default Navbar;

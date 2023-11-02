@@ -1,10 +1,14 @@
 import React from "react";
 import FavoriteBooksList from "../products/FavoriteBooksList";
 
-const MyFavoriteBooksPage: React.FC = () => {
+interface MyFavoriteBooksPageProps {
+	setTotalCart: any;
+}
+
+const MyFavoriteBooksPage: React.FC<MyFavoriteBooksPageProps> = (props) => {
 	return (
 		<>
-			<FavoriteBooksList />
+			<FavoriteBooksList setTotalCart={props.setTotalCart} />
 		</>
 	);
 };
