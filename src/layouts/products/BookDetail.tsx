@@ -17,6 +17,8 @@ import ImageModel from "../../model/ImageModel";
 import RatingStar from "./components/rating/Rating";
 import React from "react";
 import ReactSimpleImageViewer from "react-simple-image-viewer";
+import CartItemModel from "../../model/CartItemModel";
+import Toast from "../utils/Toast";
 
 interface BookDetailProps {
 	totalCart: number;
@@ -24,6 +26,9 @@ interface BookDetailProps {
 }
 
 const BookDetail: React.FC<BookDetailProps> = (props) => {
+	// Khai báo biến thông báo
+	const [statusToast, setstatusToast] = useState(false); // tắt/mở toast
+
 	// Lấy mã sách từ url
 	const { idBook } = useParams();
 	let idBookNumber: number = 0;
@@ -74,6 +79,47 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 				console.error(error);
 			});
 	}, []);
+
+	const [quantity, setQuantity] = useState(1);
+	// Xử lý tăng số lượng
+	const add = () => {
+		if (quantity < (book?.quantity ? book?.quantity : 1)) {
+			setQuantity(quantity + 1);
+			// handleModifiedQuantity(props.cartItem.book.idBook, 1);
+		}
+	};
+
+	// Xử lý giảm số lượng
+	const reduce = () => {
+		if (quantity > 1) {
+			setQuantity(quantity - 1);
+		}
+	};
+
+	// Xử lý khi click vào nút thêm vào giỏ hàng
+	// Xử lý thêm sản phẩm vào giỏ hàng
+	const handleAddProduct = (newBook: BookModel) => {
+		const cartData: string | null = localStorage.getItem("cart");
+		const cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
+		// cái isExistBook này sẽ tham chiếu đến cái cart ở trên, nên khi update thì cart nó cũng update theo
+		let isExistBook = cart.find(
+			(cartItem) => cartItem.book.idBook === newBook.idBook
+		);
+		// Thêm 1 sản phẩm vào giỏ hàng
+		if (isExistBook) {
+			// nếu có rồi thì sẽ tăng số lượng
+			isExistBook.quantity += quantity;
+		} else {
+			cart.push({
+				quantity: quantity,
+				book: newBook,
+			});
+			props.setTotalCart(cart.length);
+		}
+		// Lưu vào localStorage
+		localStorage.setItem("cart", JSON.stringify(cart));
+		setstatusToast(true);
+	};
 
 	// Viewer hình ảnh
 	const [currentImage, setCurrentImage] = useState(0);
@@ -233,7 +279,13 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 						</div>
 						<div className='d-flex align-items-center mt-3'>
 							<strong className='me-5'>Số lượng: </strong>
-							<SelectQuantity max={book.quantity} />
+							<SelectQuantity
+								max={book.quantity}
+								quantity={quantity}
+								setQuantity={setQuantity}
+								add={add}
+								reduce={reduce}
+							/>
 							<span className='ms-4'>
 								{book.quantity} sản phẩm có sẵn
 							</span>
@@ -244,7 +296,7 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 								size='large'
 								startIcon={<ShoppingCartOutlined />}
 								className='me-3'
-								onClick={() => props.setTotalCart(props.totalCart + 1)}
+								onClick={() => handleAddProduct(book)}
 							>
 								Thêm vào giỏ hàng
 							</Button>
@@ -269,6 +321,12 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 				<hr />
 				<Comment idBook={idBookNumber} />
 			</div>
+			<Toast
+				status={true}
+				statusToast={statusToast}
+				setstatusToast={setstatusToast}
+				message={"Thêm thành công sản phẩm vào giỏ hàng"}
+			/>
 		</>
 	);
 };

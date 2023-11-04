@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import GenreModel from "../../model/GenreModel";
 import { getAllGenres } from "../../api/GenreApi";
 
@@ -52,8 +52,8 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 					{/* <!-- Navbar brand --> */}
 					<Link className='navbar-brand mt-2 mt-lg-0' to='/'>
 						<img
-							src='https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp'
-							height='15'
+							src={"./../../../images/public/logo.svg"}
+							width='50'
 							alt='MDB Logo'
 							loading='lazy'
 						/>

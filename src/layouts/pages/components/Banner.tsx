@@ -1,5 +1,6 @@
 import React from "react";
 import "./Banner.css";
+import { Link } from "react-router-dom";
 
 function Banner() {
 	return (
@@ -12,9 +13,11 @@ function Banner() {
 					A room without books is like a body without a soul.
 				</h3>
 				<p className=''>-- Marcus Tullius Cicero --</p>
-				<button className='btn btn-primary btn-lg text-white float-end'>
-					Khám phá ngay
-				</button>
+				<Link to={"/search"}>
+					<button className='btn btn-primary btn-lg text-white float-end'>
+						Khám phá ngay
+					</button>
+				</Link>
 			</div>
 		</div>
 	);

@@ -15,21 +15,19 @@ import ProfilePage from "./layouts/user/ProfilePage";
 import ActiveAccount from "./layouts/user/ActiveAccount";
 import { useEffect, useState } from "react";
 import CartItemModel from "./model/CartItemModel";
-
+import Test from "./layouts/user/Test";
 function App() {
+	// XỬ LÝ GIỎ HÀNG //////////////////////////////
 	const [cartList, setCartList] = useState<CartItemModel[]>([]);
 	const [totalCart, setTotalCart] = useState(0);
 
 	useEffect(() => {
 		const cartData: string | null = localStorage.getItem("cart");
 		const cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
-		// let totalQuantity = cart.reduce(
-		// 	(total, currentValue) => total + currentValue.quantity,
-		// 	0
-		// );
 		setCartList(cart);
 		setTotalCart(cart.length);
 	}, []);
+	////////////////////////////////////////////////
 
 	return (
 		<BrowserRouter>
@@ -74,6 +72,7 @@ function App() {
 					path='/active/:email/:activationCode'
 					element={<ActiveAccount />}
 				/>
+				<Route path='/test' element={<Test />} />
 			</Routes>
 			<Footer />
 		</BrowserRouter>

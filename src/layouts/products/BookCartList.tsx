@@ -2,15 +2,20 @@ import React, { useState } from "react";
 import BookCartProps from "./components/BookCartProps";
 import { Button, TextField } from "@mui/material";
 import CartItemModel from "../../model/CartItemModel";
-import { Key } from "@mui/icons-material";
+import Toast from "../utils/Toast";
+import { Link } from "react-router-dom";
 
 interface BookCartListProps {
 	cartList: CartItemModel[];
 	setCartList: any;
 	setTotalCart: any;
+	totalPriceProduct: number;
 }
 
 const BookCartList: React.FC<BookCartListProps> = (props) => {
+	// Khai báo biến thông báo
+	const [statusToast, setstatusToast] = useState(false); // tắt/mở toast
+
 	// Xử lý xoá sách
 	function handleRemoveBook(idBook: number) {
 		const newCartList = props.cartList.filter(
@@ -18,6 +23,7 @@ const BookCartList: React.FC<BookCartListProps> = (props) => {
 		);
 		localStorage.setItem("cart", JSON.stringify(newCartList));
 		props.setTotalCart(newCartList.length);
+		setstatusToast(true);
 	}
 
 	return (
@@ -25,7 +31,20 @@ const BookCartList: React.FC<BookCartListProps> = (props) => {
 			{props.cartList.length !== 0 ? (
 				""
 			) : (
-				<h1 className='text-center'>Giỏ hàng rỗng</h1>
+				<div className='d-flex align-items-center justify-content-center flex-column position-relative'>
+					<img
+						src='https://newnet.vn/themes/newnet/assets/img/empty-cart.png'
+						alt=''
+						width='60%'
+					/>
+					<Link
+						to={"/search"}
+						className='position-absolute'
+						style={{ bottom: "100px" }}
+					>
+						<Button variant='contained'>Mua sắm ngay</Button>
+					</Link>
+				</div>
 			)}
 			<div
 				className='row my-4 pb-5 px-5'
@@ -75,20 +94,18 @@ const BookCartList: React.FC<BookCartListProps> = (props) => {
 						<div className='row'>
 							<span className='col-7'>Tổng sản phẩm:</span>
 							<strong className='col'>
-								{"400,000".toLocaleString()} đ
+								{props.totalPriceProduct.toLocaleString()} đ
 							</strong>
 						</div>
 						<div className='row'>
 							<span className='col-7'>Chi phí vận chuyển:</span>
-							<strong className='col'>
-								{"30,000".toLocaleString()} đ
-							</strong>
+							<strong className='col'>{"0".toLocaleString()} đ</strong>
 						</div>
 						<div className='row'>
 							<span className='col-7'>Khuyến mãi:</span>
 							<strong className='col'>
-								{"-10,000".toLocaleString()} đ{" "}
-								<span className='text-danger'>(5%)</span>
+								{"0".toLocaleString()} đ{" "}
+								<span className='text-danger'></span>
 							</strong>
 						</div>
 					</div>
@@ -96,7 +113,7 @@ const BookCartList: React.FC<BookCartListProps> = (props) => {
 					<div className='row'>
 						<span className='col-7'>Thành tiền (đã gồm VAT):</span>
 						<strong className='col'>
-							{"420,000".toLocaleString()} đ
+							{props.totalPriceProduct.toLocaleString()} đ
 						</strong>
 					</div>
 					<hr className='my-3' />
@@ -122,6 +139,12 @@ const BookCartList: React.FC<BookCartListProps> = (props) => {
 						Thanh toán
 					</Button>
 				</div>
+				<Toast
+					status={true}
+					statusToast={statusToast}
+					setstatusToast={setstatusToast}
+					message={"Xoá sản phẩm thành công ra khỏi giỏ hàng"}
+				/>
 			</div>
 		</div>
 	);

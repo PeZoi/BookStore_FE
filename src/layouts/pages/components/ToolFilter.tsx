@@ -79,7 +79,7 @@ const ToolFilter: React.FC<ToolFilterProps> = (props) => {
 		<div className='d-flex align-items-center justify-content-between'>
 			<div className='d-flex align-items-center'>
 				{/* Genre */}
-				<FormControl sx={{ m: 1, minWidth: 120 }}>
+				<FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
 					<InputLabel id='demo-simple-select-helper-label'>
 						Thể loại sách
 					</InputLabel>
@@ -106,7 +106,7 @@ const ToolFilter: React.FC<ToolFilterProps> = (props) => {
 				</FormControl>
 
 				{/* Filter */}
-				<FormControl sx={{ m: 1, minWidth: 120 }}>
+				<FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
 					<InputLabel id='demo-simple-select-helper-label'>Lọc</InputLabel>
 					<Select
 						labelId='demo-simple-select-helper-label'

@@ -1,4 +1,5 @@
 import { Button, TextField } from "@mui/material";
+import { log } from "console";
 import React, { FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -6,10 +7,40 @@ const LoginPage: React.FC = () => {
 	// Biến cần thiết
 	const [username, setUserName] = useState("");
 	const [password, setPassword] = useState("");
+	const [error, setError] = useState("");
 
 	// Biến thông báo lỗi
 	function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-		throw new Error("Function not implemented.");
+		event.preventDefault();
+
+		const loginRequest = {
+			username,
+			password,
+		};
+
+		fetch("http://localhost:8080/user/authenticate", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(loginRequest),
+		})
+			.then((response) => {
+				if (response.ok) {
+					return response.json();
+				}
+				setError("Tên đăng nhập hoặc mật khẩu không đúng");
+			})
+			.then((data) => {
+				const { jwtToken } = data;
+				console.log(jwtToken);
+
+				localStorage.setItem("token", jwtToken);
+			})
+			.catch((error) => {
+				console.log("Lỗi đăng nhập: " + error);
+				setError("Đăng nhập thất bại");
+			});
 	}
 
 	return (
@@ -18,6 +49,7 @@ const LoginPage: React.FC = () => {
 			style={{ width: "450px" }}
 		>
 			<h1 className='text-center'>ĐĂNG NHẬP</h1>
+			{error && <p className='text-danger text-center'>{error}</p>}
 			<form
 				onSubmit={handleSubmit}
 				className='form'

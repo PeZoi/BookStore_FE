@@ -12,7 +12,9 @@ const columns: GridColDef[] = [
 		headerName: "TRẠNG THÁI",
 		width: 180,
 		renderCell: (params) => {
-			return <Chip label='Thành công' color='success' variant='outlined' />;
+			return (
+				<Chip label={params.value} color='success' variant='outlined' />
+			);
 		},
 	},
 	{
@@ -35,19 +37,61 @@ const rows = [
 		id: 1,
 		total_price: 18900,
 		date_created: "01/01/1990",
-		status: "Đang giao",
+		status: "Đang xử lý",
 	},
 	{
 		id: 2,
-		total_price: 18900,
+		total_price: 12000,
 		date_created: "01/01/1990",
 		status: "Đang giao",
 	},
 	{
 		id: 3,
+		total_price: 20000,
+		date_created: "01/01/1990",
+		status: "Thành công",
+	},
+	{
+		id: 4,
 		total_price: 18900,
 		date_created: "01/01/1990",
+		status: "Đang xử lý",
+	},
+	{
+		id: 5,
+		total_price: 12000,
+		date_created: "01/01/1990",
 		status: "Đang giao",
+	},
+	{
+		id: 6,
+		total_price: 20000,
+		date_created: "01/01/1990",
+		status: "Thành công",
+	},
+	{
+		id: 7,
+		total_price: 18900,
+		date_created: "01/01/1990",
+		status: "Đang xử lý",
+	},
+	{
+		id: 8,
+		total_price: 12000,
+		date_created: "01/01/1990",
+		status: "Đang giao",
+	},
+	{
+		id: 9,
+		total_price: 20000,
+		date_created: "01/01/1990",
+		status: "Thành công",
+	},
+	{
+		id: 10,
+		total_price: 20000,
+		date_created: "01/01/1990",
+		status: "Thành công",
 	},
 ];
 

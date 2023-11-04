@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import TextEllipsis from "./text-ellipsis/TextEllipsis";
 import CartItemModel from "../../../model/CartItemModel";
+import Toast from "../../utils/Toast";
 
 interface BookProps {
 	book: BookModel;
@@ -19,6 +20,9 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 	const [imageList, setImageList] = useState<ImageModel[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [erroring, setErroring] = useState(null);
+
+	// Khai báo biến thông báo
+	const [statusToast, setstatusToast] = useState(false); // tắt/mở toast
 
 	useEffect(() => {
 		getAllImageByBook(book.idBook)
@@ -82,6 +86,8 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 		}
 		// Lưu vào localStorage
 		localStorage.setItem("cart", JSON.stringify(cart));
+		// Thông báo toast
+		setstatusToast(true);
 		setTotalCart(cart.length);
 	};
 
@@ -144,6 +150,12 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 							>
 								<i className='fas fa-shopping-cart'></i>
 							</button>
+							<Toast
+								status={true}
+								statusToast={statusToast}
+								setstatusToast={setstatusToast}
+								message={"Thêm thành công sản phẩm vào giỏ hàng"}
+							/>
 						</div>
 					</div>
 				</div>
