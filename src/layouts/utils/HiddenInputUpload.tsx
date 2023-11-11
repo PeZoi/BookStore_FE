@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 
 interface HiddenInputUploadProps {
 	handleImageUpload?: any;
+	required?: boolean;
 }
 
 const HiddenInputUpload: React.FC<HiddenInputUploadProps> = (props) => {
@@ -18,7 +19,12 @@ const HiddenInputUpload: React.FC<HiddenInputUploadProps> = (props) => {
 		width: 1,
 	});
 	return (
-		<VisuallyHiddenInput type='file' onChange={props.handleImageUpload} />
+		<VisuallyHiddenInput
+			required={props.required}
+			type='file'
+			accept='image/*'
+			onChange={props.handleImageUpload}
+		/>
 	);
 };
 

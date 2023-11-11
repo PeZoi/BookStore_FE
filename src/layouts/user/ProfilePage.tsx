@@ -19,7 +19,7 @@ import {
 	checkPassword,
 	checkPhoneNumber,
 	checkRepeatPassword,
-} from "./Validation";
+} from "../utils/Validation";
 import Tooltip from "@mui/material/Tooltip";
 import OrderTable from "./components/OrderTable";
 

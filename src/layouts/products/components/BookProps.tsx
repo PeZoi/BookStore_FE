@@ -9,7 +9,9 @@ import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import TextEllipsis from "./text-ellipsis/TextEllipsis";
 import CartItemModel from "../../../model/CartItemModel";
-import Toast from "../../utils/Toast";
+import { toast } from "react-toastify";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { IconButton } from "@mui/material";
 
 interface BookProps {
 	book: BookModel;
@@ -22,7 +24,6 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 	const [erroring, setErroring] = useState(null);
 
 	// Khai báo biến thông báo
-	const [statusToast, setstatusToast] = useState(false); // tắt/mở toast
 
 	useEffect(() => {
 		getAllImageByBook(book.idBook)
@@ -59,7 +60,7 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 		dataImage = imageList[0].dataImage;
 		// Duyệt qua tất cả các ảnh của sách đó nếu mà có ảnh nào có thumnail là true thì gán lại nó là thumnail
 		for (let img of imageList) {
-			if (img.isThumbnail === true) {
+			if (img.thumbnail === true) {
 				dataImage = img.dataImage;
 				break;
 			}
@@ -87,7 +88,7 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 		// Lưu vào localStorage
 		localStorage.setItem("cart", JSON.stringify(cart));
 		// Thông báo toast
-		setstatusToast(true);
+		toast.success("Thêm vào giỏ hàng thành công");
 		setTotalCart(cart.length);
 	};
 
@@ -139,23 +140,23 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 					</div>
 					<div className='row mt-2' role='group'>
 						<div className='col-6'>
-							<a href='#' className='btn btn-secondary btn-block'>
-								<i className='fas fa-heart'></i>
-							</a>
+							{/* <span className='btn btn-secondary btn-block'> */}
+							<Tooltip title='Yêu thích'>
+								<IconButton size='small'>
+									<FavoriteIcon />
+								</IconButton>
+							</Tooltip>
+							{/* </span> */}
 						</div>
 						<div className='col-6'>
-							<button
-								className='btn btn-primary btn-block'
-								onClick={() => handleAddProduct(book)}
-							>
-								<i className='fas fa-shopping-cart'></i>
-							</button>
-							<Toast
-								status={true}
-								statusToast={statusToast}
-								setstatusToast={setstatusToast}
-								message={"Thêm thành công sản phẩm vào giỏ hàng"}
-							/>
+							<Tooltip title='Thêm vào giỏ hàng'>
+								<button
+									className='btn btn-primary btn-block'
+									onClick={() => handleAddProduct(book)}
+								>
+									<i className='fas fa-shopping-cart'></i>
+								</button>
+							</Tooltip>
 						</div>
 					</div>
 				</div>

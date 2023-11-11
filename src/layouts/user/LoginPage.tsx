@@ -1,9 +1,13 @@
 import { Button, TextField } from "@mui/material";
-import { log } from "console";
+import { jwtDecode } from "jwt-decode";
 import React, { FormEvent, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { JwtPayload } from "../../admin/RequireAdmin";
 
 const LoginPage: React.FC = () => {
+	const navigation = useNavigate();
+
 	// Biến cần thiết
 	const [username, setUserName] = useState("");
 	const [password, setPassword] = useState("");
@@ -33,9 +37,16 @@ const LoginPage: React.FC = () => {
 			})
 			.then((data) => {
 				const { jwtToken } = data;
-				console.log(jwtToken);
-
+				toast.success("Đăng nhâp thành công");
 				localStorage.setItem("token", jwtToken);
+
+				// Kiểm tra role để chuyển về link
+				const decodedToken = jwtDecode(jwtToken) as JwtPayload;
+				if (decodedToken.role === "ADMIN") {
+					navigation("/admin/dashboard");
+				} else {
+					navigation("/");
+				}
 			})
 			.catch((error) => {
 				console.log("Lỗi đăng nhập: " + error);

@@ -3,6 +3,7 @@ import { request } from "./Request";
 
 interface resultInterface {
    genreList: GenreModel[];
+   genre: GenreModel;
 }
 
 async function getGenre(endpoint: string): Promise<resultInterface> {
@@ -14,13 +15,20 @@ async function getGenre(endpoint: string): Promise<resultInterface> {
       ...genreData,
    }))
 
-   return { genreList: genreList };
+   return { genreList: genreList, genre: response.genre };
 }
 
 export async function getAllGenres(): Promise<resultInterface> {
-   const endpoint = "http://localhost:8080/genre?sort=nameGenre";
+   const endpoint = "http://localhost:8080/genre?sort=idGenre";
 
    return getGenre(endpoint);
+}
+
+export async function get1Genre(idGenre: number): Promise<resultInterface> {
+   const endpoint = `http://localhost:8080/genre/${idGenre}`;
+   const response = await request(endpoint);
+
+   return { genre: response, genreList: response };
 }
 
 export async function getGenreByIdBook(idBook: number): Promise<resultInterface> {

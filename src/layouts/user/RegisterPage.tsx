@@ -3,14 +3,14 @@ import React, { useState } from "react";
 import "./Form.css";
 import { Link } from "react-router-dom";
 import LoadingButton from "@mui/lab/LoadingButton";
-import Toast from "../utils/Toast";
 import {
 	checkExistEmail,
 	checkExistUsername,
 	checkPassword,
 	checkPhoneNumber,
 	checkRepeatPassword,
-} from "./Validation";
+} from "../utils/Validation";
+import { toast } from "react-toastify";
 
 const RegisterPage: React.FC = () => {
 	// Khai báo biến cần đăng ký
@@ -30,8 +30,6 @@ const RegisterPage: React.FC = () => {
 	const [errorPhoneNumber, setErrorPhoneNumber] = useState("");
 
 	// Khai báo biến thông báo
-	const [status, setStatus] = useState<boolean>(false); // thành công hay thấy bại
-	const [statusToast, setstatusToast] = useState(false); // tắt/mở toast
 
 	// Khi submit thì btn loading ...
 	const [statusBtn, setStatusBtn] = useState(false);
@@ -98,21 +96,19 @@ const RegisterPage: React.FC = () => {
 				});
 
 				if (response.ok) {
-					setstatusToast(true);
+					toast.success("Đăng ký tài khoản thành công.");
+					toast.warning("Vui lòng kiểm tra email để kích hoạt tài khoản");
 					setStatusBtn(false);
-					setStatus(true);
 					return true;
 				} else {
-					setstatusToast(true);
+					toast.error("Đăng ký tài khoản thất bại");
 					setStatusBtn(false);
-					setStatus(false);
 					return false;
 				}
 			} catch (error) {
 				console.log(error);
-				setstatusToast(true);
 				setStatusBtn(false);
-				setStatus(false);
+				toast.error("Đăng ký tài khoản thất bại");
 			}
 		} else {
 			setStatusBtn(false);
@@ -278,16 +274,6 @@ const RegisterPage: React.FC = () => {
 					>
 						ĐĂNG KÝ
 					</LoadingButton>
-					<Toast
-						status={status}
-						statusToast={statusToast}
-						setstatusToast={setstatusToast}
-						message={
-							status
-								? "Đăng ký tài khoản thành công. Kiểm tra email để kích hoạt tài khoản"
-								: "Đăng ký tài khoản thất bại."
-						}
-					/>
 				</div>
 			</form>
 		</div>

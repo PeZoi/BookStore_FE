@@ -1,7 +1,8 @@
 import { VisibilityOutlined } from "@mui/icons-material";
 import { Button, Chip } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import React from "react";
+import { DataTable } from "../../utils/DataTable";
 
 const columns: GridColDef[] = [
 	{ field: "id", headerName: "ID", width: 100 },
@@ -13,7 +14,17 @@ const columns: GridColDef[] = [
 		width: 180,
 		renderCell: (params) => {
 			return (
-				<Chip label={params.value} color='success' variant='outlined' />
+				<Chip
+					label={params.value}
+					color={
+						params.value === "Thành công"
+							? "success"
+							: params.value === "Đang xử lý"
+							? "info"
+							: "warning"
+					}
+					variant='outlined'
+				/>
 			);
 		},
 	},
@@ -35,7 +46,7 @@ const columns: GridColDef[] = [
 const rows = [
 	{
 		id: 1,
-		total_price: 18900,
+		total_price: 18999,
 		date_created: "01/01/1990",
 		status: "Đang xử lý",
 	},
@@ -96,20 +107,7 @@ const rows = [
 ];
 
 const OrderTable: React.FC = () => {
-	return (
-		<div style={{ height: 400, width: "100%" }}>
-			<DataGrid
-				rows={rows}
-				columns={columns}
-				initialState={{
-					pagination: {
-						paginationModel: { page: 0, pageSize: 5 },
-					},
-				}}
-				pageSizeOptions={[5, 10]}
-			/>
-		</div>
-	);
+	return <DataTable columns={columns} rows={rows} />;
 };
 
 export default OrderTable;

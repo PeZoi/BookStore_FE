@@ -18,7 +18,7 @@ import RatingStar from "./components/rating/Rating";
 import React from "react";
 import ReactSimpleImageViewer from "react-simple-image-viewer";
 import CartItemModel from "../../model/CartItemModel";
-import Toast from "../utils/Toast";
+import { toast } from "react-toastify";
 
 interface BookDetailProps {
 	totalCart: number;
@@ -26,9 +26,6 @@ interface BookDetailProps {
 }
 
 const BookDetail: React.FC<BookDetailProps> = (props) => {
-	// Khai báo biến thông báo
-	const [statusToast, setstatusToast] = useState(false); // tắt/mở toast
-
 	// Lấy mã sách từ url
 	const { idBook } = useParams();
 	let idBookNumber: number = 0;
@@ -118,7 +115,7 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 		}
 		// Lưu vào localStorage
 		localStorage.setItem("cart", JSON.stringify(cart));
-		setstatusToast(true);
+		toast.success("Thêm vào giỏ hàng thành công");
 	};
 
 	// Viewer hình ảnh
@@ -321,12 +318,6 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 				<hr />
 				<Comment idBook={idBookNumber} />
 			</div>
-			<Toast
-				status={true}
-				statusToast={statusToast}
-				setstatusToast={setstatusToast}
-				message={"Thêm thành công sản phẩm vào giỏ hàng"}
-			/>
 		</>
 	);
 };

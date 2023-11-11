@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import BookCartProps from "./components/BookCartProps";
 import { Button, TextField } from "@mui/material";
 import CartItemModel from "../../model/CartItemModel";
-import Toast from "../utils/Toast";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface BookCartListProps {
 	cartList: CartItemModel[];
@@ -14,7 +14,6 @@ interface BookCartListProps {
 
 const BookCartList: React.FC<BookCartListProps> = (props) => {
 	// Khai báo biến thông báo
-	const [statusToast, setstatusToast] = useState(false); // tắt/mở toast
 
 	// Xử lý xoá sách
 	function handleRemoveBook(idBook: number) {
@@ -23,7 +22,7 @@ const BookCartList: React.FC<BookCartListProps> = (props) => {
 		);
 		localStorage.setItem("cart", JSON.stringify(newCartList));
 		props.setTotalCart(newCartList.length);
-		setstatusToast(true);
+		toast.success("Xoá sản phẩm thành công");
 	}
 
 	return (
@@ -139,12 +138,6 @@ const BookCartList: React.FC<BookCartListProps> = (props) => {
 						Thanh toán
 					</Button>
 				</div>
-				<Toast
-					status={true}
-					statusToast={statusToast}
-					setstatusToast={setstatusToast}
-					message={"Xoá sản phẩm thành công ra khỏi giỏ hàng"}
-				/>
 			</div>
 		</div>
 	);

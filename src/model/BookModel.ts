@@ -1,4 +1,5 @@
 class BookModel {
+   id?: any;
    idBook: number;
    nameBook?: string; // Có thể NULL
    author?: string;
@@ -10,8 +11,9 @@ class BookModel {
    avgRating?: number;
    soldQuantity?: number;
    discountPercent?: number;
+   thumbnail?: string;
 
-   constructor(idBook: number, nameBook: string, author: string, isbn: string, description: string, listPrice: number, sellPrice: number, quantity: number, avgRating: number, soldQuantity: number, discountPercent: number) {
+   constructor(idBook: number, nameBook: string, author: string, isbn: string, description: string, listPrice: number, sellPrice: number, quantity: number, avgRating: number, soldQuantity: number, discountPercent: number, thumbnail: string) {
       this.idBook = idBook;
       this.nameBook = nameBook;
       this.author = author;
@@ -23,6 +25,7 @@ class BookModel {
       this.avgRating = avgRating;
       this.soldQuantity = soldQuantity;
       this.discountPercent = discountPercent;
+      this.thumbnail = thumbnail;
    }
 }
 

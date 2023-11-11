@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import Navbar from "./layouts/header-footer/Navbar";
 import Footer from "./layouts/header-footer/Footer";
@@ -16,7 +16,16 @@ import ActiveAccount from "./layouts/user/ActiveAccount";
 import { useEffect, useState } from "react";
 import CartItemModel from "./model/CartItemModel";
 import Test from "./layouts/user/Test";
-function App() {
+import { Slidebar } from "./admin/components/Slidebar";
+import DashboardPage from "./admin/Dashboard";
+import { ToastContainer } from "react-toastify";
+import { ConfirmProvider } from "material-ui-confirm";
+import BookManagementPage from "./admin/BookManagement";
+import UserManagementPage from "./admin/UserManagement";
+import GenreManagementPage from "./admin/GenreManagement";
+import OrderManagementPage from "./admin/OrderManagement";
+
+const MyRoutes = () => {
 	// XỬ LÝ GIỎ HÀNG //////////////////////////////
 	const [cartList, setCartList] = useState<CartItemModel[]>([]);
 	const [totalCart, setTotalCart] = useState(0);
@@ -29,9 +38,17 @@ function App() {
 	}, []);
 	////////////////////////////////////////////////
 
+	// XỬ LÝ ẨN HIỆN NAV VÀ FOOTER /////////////////
+	const location = useLocation();
+
+	// Check if the current path starts with '/admin'
+	const isAdminPath = location.pathname.startsWith("/admin");
+	///////////////////////////////////////////////
+
 	return (
-		<BrowserRouter>
-			<Navbar totalCart={totalCart} />
+		<ConfirmProvider>
+			{/* Customer */}
+			{!isAdminPath && <Navbar totalCart={totalCart} />}
 			<Routes>
 				<Route
 					path='/'
@@ -74,7 +91,50 @@ function App() {
 				/>
 				<Route path='/test' element={<Test />} />
 			</Routes>
-			<Footer />
+			{!isAdminPath && <Footer />}
+
+			{/* Admin */}
+			{isAdminPath && (
+				<div className='row overflow-hidden w-100'>
+					<div className='col-2 col-md-3 col-lg-2'>
+						<Slidebar></Slidebar>
+					</div>
+					<div className='col-10 col-md-9 col-lg-10'>
+						<Routes>
+							<Route path='/admin' element={<DashboardPage />} />
+							<Route
+								path='/admin/dashboard'
+								element={<DashboardPage />}
+							/>
+							<Route
+								path='/admin/book'
+								element={<BookManagementPage />}
+							/>
+							<Route
+								path='/admin/user'
+								element={<UserManagementPage />}
+							/>
+							<Route
+								path='/admin/genre'
+								element={<GenreManagementPage />}
+							/>
+							<Route
+								path='/admin/order'
+								element={<OrderManagementPage />}
+							/>
+						</Routes>
+					</div>
+				</div>
+			)}
+			<ToastContainer autoClose={4000} />
+		</ConfirmProvider>
+	);
+};
+
+function App() {
+	return (
+		<BrowserRouter>
+			<MyRoutes />
 		</BrowserRouter>
 	);
 }

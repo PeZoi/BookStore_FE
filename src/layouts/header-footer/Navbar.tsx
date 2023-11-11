@@ -1,14 +1,24 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import GenreModel from "../../model/GenreModel";
 import { getAllGenres } from "../../api/GenreApi";
+import { AdminEnpoint } from "../../admin/AdminEnpoint";
+import {
+	getAvatarByToken,
+	getLastNameByToken,
+	isToken,
+	logout,
+} from "../utils/JwtService";
+import { Avatar, Button } from "@mui/material";
 
 interface NavbarProps {
 	totalCart: number | undefined;
 }
 
 const Navbar: React.FC<NavbarProps> = (props) => {
+	const navigate = useNavigate();
+
 	// Lấy tất cả thể loại
 	const [genreList, setGenreList] = useState<GenreModel[]>([]);
 	const [erroring, setErroring] = useState(null);
@@ -27,6 +37,13 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 		console.error(erroring);
 	}
 
+	const location = useLocation();
+	const adminEnpoint = AdminEnpoint; // Thêm các path bạn muốn ẩn Navbar vào đây
+
+	if (adminEnpoint.includes(location.pathname)) {
+		return null; // Nếu location.pathname nằm trong danh sách ẩn, trả về null để ẩn Navbar
+	}
+
 	return (
 		<nav className='navbar navbar-expand-lg navbar-light bg-light'>
 			{/* <!-- Container wrapper --> */}
@@ -43,7 +60,6 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 				>
 					<i className='fas fa-bars'></i>
 				</button>
-
 				{/* <!-- Collapsible wrapper --> */}
 				<div
 					className='collapse navbar-collapse'
@@ -104,7 +120,6 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 					{/* <!-- Left links --> */}
 				</div>
 				{/* <!-- Collapsible wrapper --> */}
-
 				{/* <!-- Right elements --> */}
 				<div className='d-flex align-items-center'>
 					{/* <!-- Shopping Cart --> */}
@@ -114,87 +129,114 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 							{props.totalCart ? props.totalCart : ""}
 						</span>
 					</Link>
+					{!isToken() && (
+						<div>
+							<Link to={"/login"}>
+								<Button>Đăng nhập</Button>
+							</Link>
+							<Link to={"/register"}>
+								<Button>Đăng ký</Button>
+							</Link>
+						</div>
+					)}
 
-					{/* <!-- Notifications --> */}
-					<div className='dropdown'>
-						<a
-							className='text-reset me-3 dropdown-toggle hidden-arrow'
-							href='#'
-							id='navbarDropdownMenuLink'
-							role='button'
-							data-mdb-toggle='dropdown'
-							aria-expanded='false'
-						>
-							<i className='fas fa-bell'></i>
-							<span className='badge rounded-pill badge-notification bg-danger'>
-								1
-							</span>
-						</a>
-						<ul
-							className='dropdown-menu dropdown-menu-end'
-							aria-labelledby='navbarDropdownMenuLink'
-						>
-							<li>
-								<a className='dropdown-item' href='#'>
-									Some news
+					{isToken() && (
+						<>
+							{/* <!-- Notifications --> */}
+							<div className='dropdown'>
+								<a
+									className='text-reset me-3 dropdown-toggle hidden-arrow'
+									href='#'
+									id='navbarDropdownMenuLink'
+									role='button'
+									data-mdb-toggle='dropdown'
+									aria-expanded='false'
+								>
+									<i className='fas fa-bell'></i>
+									<span className='badge rounded-pill badge-notification bg-danger'>
+										1
+									</span>
 								</a>
-							</li>
-							<li>
-								<a className='dropdown-item' href='#'>
-									Another news
+								<ul
+									className='dropdown-menu dropdown-menu-end'
+									aria-labelledby='navbarDropdownMenuLink'
+								>
+									<li>
+										<a className='dropdown-item' href='#'>
+											Some news
+										</a>
+									</li>
+									<li>
+										<a className='dropdown-item' href='#'>
+											Another news
+										</a>
+									</li>
+									<li>
+										<a className='dropdown-item' href='#'>
+											Something else here
+										</a>
+									</li>
+								</ul>
+							</div>
+							{/* <!-- Avatar --> */}
+							<div className='dropdown'>
+								<a
+									className='dropdown-toggle d-flex align-items-center hidden-arrow'
+									href='#'
+									id='navbarDropdownMenuAvatar'
+									role='button'
+									data-mdb-toggle='dropdown'
+									aria-expanded='false'
+								>
+									{/* <img
+										src='https://mdbcdn.b-cdn.net/img/new/avatars/2.webp'
+										className='rounded-circle'
+										height='25'
+										alt='Black and White Portrait of a Man'
+										loading='lazy'
+									/> */}
+									<Avatar
+										style={{ fontSize: "14px" }}
+										alt={getLastNameByToken()}
+										src={getAvatarByToken()}
+										sx={{ width: 30, height: 30 }}
+									/>
 								</a>
-							</li>
-							<li>
-								<a className='dropdown-item' href='#'>
-									Something else here
-								</a>
-							</li>
-						</ul>
-					</div>
-					{/* <!-- Avatar --> */}
-					<div className='dropdown'>
-						<a
-							className='dropdown-toggle d-flex align-items-center hidden-arrow'
-							href='#'
-							id='navbarDropdownMenuAvatar'
-							role='button'
-							data-mdb-toggle='dropdown'
-							aria-expanded='false'
-						>
-							<img
-								src='https://mdbcdn.b-cdn.net/img/new/avatars/2.webp'
-								className='rounded-circle'
-								height='25'
-								alt='Black and White Portrait of a Man'
-								loading='lazy'
-							/>
-						</a>
-						<ul
-							className='dropdown-menu dropdown-menu-end'
-							aria-labelledby='navbarDropdownMenuAvatar'
-						>
-							<li>
-								<Link to={"/profile"} className='dropdown-item'>
-									Thông tin cá nhân
-								</Link>
-							</li>
-							<li>
-								<Link className='dropdown-item' to='/my-favorite-books'>
-									Sách yêu thích của tôi
-								</Link>
-							</li>
-							<li>
-								<a className='dropdown-item' href='#'>
-									Cài đặt
-								</a>
-							</li>
-							<li>
-								<a className='dropdown-item' href='#'>
-									Logout
-								</a>
-							</li>
-						</ul>
-					</div>
+								<ul
+									className='dropdown-menu dropdown-menu-end'
+									aria-labelledby='navbarDropdownMenuAvatar'
+								>
+									<li>
+										<Link to={"/profile"} className='dropdown-item'>
+											Thông tin cá nhân
+										</Link>
+									</li>
+									<li>
+										<Link
+											className='dropdown-item'
+											to='/my-favorite-books'
+										>
+											Sách yêu thích của tôi
+										</Link>
+									</li>
+									<li>
+										<a className='dropdown-item' href='#'>
+											Cài đặt
+										</a>
+									</li>
+									<li>
+										<a
+											className='dropdown-item'
+											style={{ cursor: "pointer" }}
+											onClick={() => logout(navigate)}
+										>
+											Logout
+										</a>
+									</li>
+								</ul>
+							</div>
+						</>
+					)}
 				</div>
 				{/* <!-- Right elements --> */}
 			</div>

@@ -1,4 +1,5 @@
 class GenreModel {
+   id?: number;
    idGenre: number;
    nameGenre: string;
 

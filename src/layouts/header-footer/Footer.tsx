@@ -1,7 +1,14 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { AdminEnpoint } from "../../admin/AdminEnpoint";
 
 function Footer() {
+	const location = useLocation();
+	const adminEnpoint = AdminEnpoint; // Thêm các path bạn muốn ẩn Navbar vào đây
+
+	if (adminEnpoint.includes(location.pathname)) {
+		return null; // Nếu location.pathname nằm trong danh sách ẩn, trả về null để ẩn Navbar
+	}
 	return (
 		// <!-- Footer -->
 		<footer className='bg-dark text-center text-white'>

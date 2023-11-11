@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-redeclare */
 import { Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -7,7 +8,7 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import CartItemModel from "../../../model/CartItemModel";
 import { getAllImageByBook } from "../../../api/ImageApi";
 import ImageModel from "../../../model/ImageModel";
-import ConfirmDialog from "../../utils/ConfirmDialog";
+import { useConfirm } from "material-ui-confirm";
 
 interface BookCartProps {
 	cartItem: CartItemModel;
@@ -16,27 +17,23 @@ interface BookCartProps {
 }
 
 const BookCartProps: React.FC<BookCartProps> = (props) => {
+	const confirm = useConfirm();
+
 	// Tạo các biến
 	const [quantity, setQuantity] = useState(props.cartItem.quantity);
 	const [imageList, setImageList] = useState<ImageModel[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [erroring, setErroring] = useState(null);
 
-	// Tạo các biến của confirm dialog
-	const [open, setOpen] = useState(false);
-
-	const handleClickOpenConfirm = () => {
-		setOpen(true);
-	};
-	const handleCloseConfirm = () => {
-		setOpen(false);
-	};
-
-	function handleStateConfirm(status: boolean) {
-		if (status === true) {
-			props.handleRemoveBook(props.cartItem.book.idBook);
-		}
-		handleCloseConfirm();
+	function handleConfirm() {
+		confirm({
+			title: "Xoá sản phẩm",
+			description: "Bạn muốn bỏ sản phẩm này khỏi giỏ hàng không",
+			confirmationText: "Xoá",
+			cancellationText: "Huỷ",
+		})
+			.then(() => props.handleRemoveBook(props.cartItem.book.idBook))
+			.catch(() => {});
 	}
 
 	// Lấy ảnh ra từ BE
@@ -50,7 +47,7 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 				setLoading(false);
 				setErroring(error.message);
 			});
-	}, []);
+	}, [props.cartItem.book.idBook]);
 
 	// Loading ảnh thumbnail
 	let dataImage;
@@ -59,7 +56,7 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 		dataImage = imageList[0].dataImage;
 		// Duyệt qua tất cả các ảnh của sách đó nếu mà có ảnh nào có thumnail là true thì gán lại nó là thumnail
 		for (let img of imageList) {
-			if (img.isThumbnail === true) {
+			if (img.thumbnail === true) {
 				dataImage = img.dataImage;
 				break;
 			}
@@ -107,6 +104,21 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 		localStorage.setItem("cart", JSON.stringify(cart));
 	}
 
+	if (loading) {
+		return (
+			<>
+				<h4>Đang loadding ...</h4>
+			</>
+		);
+	}
+
+	if (erroring) {
+		return (
+			<>
+				<h4>Lỗi ...</h4>
+			</>
+		);
+	}
 	return (
 		<>
 			<div className='col'>
@@ -164,27 +176,18 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 				</span>
 			</div>
 			<div className='col-2 text-center my-auto'>
-				<ConfirmDialog
-					open={open}
-					setOpen={setOpen}
-					handleClickOpenConfirm={handleClickOpenConfirm}
-					handleCloseConfirm={handleCloseConfirm}
-					handleStateConfirm={handleStateConfirm}
-					notification='BẠN MUỐN XOÁ SẢN PHẨM NÀY KHỎI GIỎ HÀNG?'
-				>
-					<Tooltip title={"Xoá sản phẩm"} arrow>
-						<span
-							style={{
-								outline: 0,
-								backgroundColor: "transparent",
-								border: 0,
-							}}
-							onClick={() => handleClickOpenConfirm}
-						>
-							<DeleteOutlineOutlinedIcon sx={{ cursor: "pointer" }} />
-						</span>
-					</Tooltip>
-				</ConfirmDialog>
+				<Tooltip title={"Xoá sản phẩm"} arrow>
+					<button
+						style={{
+							outline: 0,
+							backgroundColor: "transparent",
+							border: 0,
+						}}
+						onClick={() => handleConfirm()}
+					>
+						<DeleteOutlineOutlinedIcon sx={{ cursor: "pointer" }} />
+					</button>
+				</Tooltip>
 			</div>
 			<hr className='my-3' />
 		</>
