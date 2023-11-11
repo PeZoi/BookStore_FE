@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { Box, Button } from "@mui/material";
 import { CloudUpload } from "@mui/icons-material";
+import { toast } from "react-toastify";
 
 interface BookFormProps {
 	option: string;
@@ -33,32 +34,15 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 
 		const token = localStorage.getItem("token");
 
-		if (!token) {
-			alert("Bạn chưa đăng nhập!");
-			return;
-		}
-		if (!isTokenExpired(token)) {
-			alert("Token đã hết hạn. Vui lòng đăng nhập lại!");
-			return;
-		}
-
-		const data = new FormData();
-		data.append("book", JSON.stringify(book));
-
-		// Nếu mà có upload ảnh thì cho thumbnail vào data
-		if (thumbnail) {
-			data.append("thumbnail", thumbnail);
-		}
-
-		console.log(book);
-		console.log(thumbnail);
+		// console.log(book);
 
 		fetch("http://localhost:8080/book/add-book", {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${token}`,
+				"content-type": "application/json",
 			},
-			body: data,
+			body: JSON.stringify(book),
 		})
 			.then((response) => {
 				if (response.ok) {
@@ -76,11 +60,11 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 						thumbnail: "",
 					});
 					setThumbnail(null);
-
-					alert("Thêm sách thành công!");
+					setPreviewThumbnail("");
+					toast.success("Thêm sách thành công!");
 					props.setKeyCountReload(Math.random());
 				} else {
-					alert("Gặp lỗi trong quá trình thêm sách");
+					toast.error("Gặp lỗi trong quá trình xử lý sách");
 				}
 			})
 			.catch((error) => console.log(error));
@@ -91,12 +75,25 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 
 		if (inputElement.files && inputElement.files.length > 0) {
 			const selectedFile = inputElement.files[0];
-			// Tiếp tục xử lý tệp đã chọn
-			setThumbnail(selectedFile);
-			const dataThumbnail = URL.createObjectURL(selectedFile);
-			setPreviewThumbnail(dataThumbnail);
+
+			const reader = new FileReader();
+
+			// Xử lý sự kiện khi tệp đã được đọc thành công
+			reader.onload = (e) => {
+				// e.target.result chính là chuỗi base64
+				const thumnailBase64 = e.target?.result as string;
+
+				setBook({ ...book, thumbnail: thumnailBase64 });
+
+				setThumbnail(selectedFile);
+				setPreviewThumbnail(URL.createObjectURL(selectedFile));
+			};
+
+			// Đọc tệp dưới dạng chuỗi base64
+			reader.readAsDataURL(selectedFile);
 		}
 	}
+
 	return (
 		<div>
 			<Typography className='text-center' variant='h4' component='h2'>

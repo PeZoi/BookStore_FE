@@ -197,7 +197,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 									/> */}
 									<Avatar
 										style={{ fontSize: "14px" }}
-										alt={getLastNameByToken()}
+										alt={getLastNameByToken()?.toUpperCase()}
 										src={getAvatarByToken()}
 										sx={{ width: 30, height: 30 }}
 									/>

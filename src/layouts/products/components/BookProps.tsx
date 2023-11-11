@@ -122,18 +122,20 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 							</Tooltip>
 						</h5>
 					</Link>
-					<div className='price mb-3'>
-						<span className='discounted-price text-danger'>
-							<strong style={{ fontSize: "22px" }}>
-								{book.sellPrice?.toLocaleString()}đ
-							</strong>
-						</span>
-						<span className='original-price ms-3 small fw-bolder'>
-							<del>{book.listPrice?.toLocaleString()}đ</del>
-						</span>
+					<div className='price mb-3 d-flex align-items-center justify-content-between'>
+						<div className='d-flex align-items-center'>
+							<span className='discounted-price text-danger'>
+								<strong style={{ fontSize: "22px" }}>
+									{book.sellPrice?.toLocaleString()}đ
+								</strong>
+							</span>
+							<span className='original-price ms-3 small fw-bolder'>
+								<del>{book.listPrice?.toLocaleString()}đ</del>
+							</span>
+						</div>
 						<span
-							className='ms-4'
-							style={{ fontSize: "13px", color: "#aaa" }}
+							className='ms-2'
+							style={{ fontSize: "12px", color: "#aaa" }}
 						>
 							Đã bán {book.soldQuantity}
 						</span>
