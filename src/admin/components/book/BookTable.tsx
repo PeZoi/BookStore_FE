@@ -15,6 +15,7 @@ interface BookTableProps {
 	handleOpenModal: any;
 	setKeyCountReload?: any;
 	keyCountReload?: any;
+	setId: any;
 }
 
 export const BookTable: React.FC<BookTableProps> = (props) => {
@@ -123,6 +124,7 @@ export const BookTable: React.FC<BookTableProps> = (props) => {
 								color='primary'
 								onClick={() => {
 									props.setOption("update");
+									props.setId(item.id);
 									props.handleOpenModal();
 								}}
 							>

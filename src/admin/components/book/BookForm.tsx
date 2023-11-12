@@ -9,10 +9,13 @@ import GenreModel from "../../../model/GenreModel";
 import { getAllGenres } from "../../../api/GenreApi";
 import { SelectMultiple } from "../../../layouts/utils/SelectMultiple";
 import { LoadingButton } from "@mui/lab";
+import { getBookByIdTest } from "../../../api/BookApi";
 
 interface BookFormProps {
+	id: number;
 	option: string;
 	setKeyCountReload?: any;
+	handleCloseModal: any;
 }
 
 export const BookForm: React.FC<BookFormProps> = (props) => {
@@ -33,17 +36,36 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 	});
 	const [genresList, setGenresList] = useState<GenreModel[]>([]);
 	const [genresListSelected, setGenresListSelected] = useState<number[]>([]);
-
 	const [previewThumbnail, setPreviewThumbnail] = useState("");
-
 	const [previewRelatedImages, setPreviewRelatedImages] = useState<string[]>(
 		[]
 	);
+	// Giá trị khi đã chọn ở trong select multiple
+	const [SelectedListName, setSelectedListName] = useState<any[]>([]);
 	// Khi submit thì btn loading ...
 	const [statusBtn, setStatusBtn] = useState(false);
-
-	// Biến reload
+	// Biến reload (cho selectMultiple)
 	const [reloadCount, setReloadCount] = useState(0);
+
+	// Lấy dữ liệu khi update
+	useEffect(() => {
+		if (props.option === "update") {
+			getBookByIdTest(props.id).then((response) => {
+				setBook(response as BookModel);
+				setPreviewThumbnail(response?.thumbnail as string);
+				setPreviewRelatedImages(response?.relatedImg as string[]);
+				response?.genresList?.forEach((data) => {
+					setSelectedListName((prev) => [...prev, data.nameGenre]);
+					setBook((prevBook) => {
+						return {
+							...prevBook,
+							idGenres: [...(prevBook.idGenres || []), data.idGenre],
+						};
+					});
+				});
+			});
+		}
+	}, [props.option, props.id]);
 
 	// Khúc này lấy ra tất cả thể loại để cho vào select
 	useEffect(() => {
@@ -66,9 +88,14 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 
 		setStatusBtn(true);
 
+		const endpoint =
+			props.option === "add"
+				? "http://localhost:8080/book/add-book"
+				: "http://localhost:8080/book/update-book";
+		const method = props.option === "add" ? "POST" : "PUT";
 		toast.promise(
-			fetch("http://localhost:8080/book/add-book", {
-				method: "POST",
+			fetch(endpoint, {
+				method: method,
 				headers: {
 					Authorization: `Bearer ${token}`,
 					"content-type": "application/json",
@@ -96,8 +123,11 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 						setPreviewRelatedImages([]);
 						setReloadCount(Math.random());
 						setStatusBtn(false);
-						toast.success("Thêm sách thành công!");
 						props.setKeyCountReload(Math.random());
+						props.handleCloseModal();
+						props.option === "add"
+							? toast.success("Thêm sách thành công")
+							: toast.success("Cập nhật sách thành công");
 					} else {
 						toast.error("Gặp lỗi trong quá trình xử lý sách");
 						setStatusBtn(false);
@@ -109,7 +139,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 					toast.error("Gặp lỗi trong quá trình xử lý sách");
 				}),
 			{
-				pending: "Đang trong quá trình thêm sách ...",
+				pending: "Đang trong quá trình xử lý ...",
 			}
 		);
 	}
@@ -267,6 +297,8 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 								<SelectMultiple
 									selectedList={genresListSelected}
 									setSelectedList={setGenresListSelected}
+									selectedListName={SelectedListName}
+									setSelectedListName={setSelectedListName}
 									values={genresList}
 									setValue={setBook}
 									key={reloadCount}
@@ -319,7 +351,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 								Tải ảnh thumbnail
 								<input
 									style={{ opacity: "0", width: "10px" }}
-									required
+									required={props.option === "update" ? false : true}
 									type='file'
 									accept='image/*'
 									onChange={handleThumnailImageUpload}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -25,12 +25,14 @@ interface SelectMultipleProps {
 	setSelectedList: any; // Hàm gán dữ liệu đã select
 	setValue: any; // Hàm gán lại dữ liệu
 	required: boolean; // có bắt buộc chọn không
+	selectedListName: any[]; // Biến để lúc chọn thì nó sẽ hiện ra (kiểu tag)
+	setSelectedListName: any; // Hàm để gán những gì mình chọn bằng tên
 }
 
 export const SelectMultiple: React.FC<SelectMultipleProps> = (props) => {
-	const [SelectedListName, setSelectedListName] = React.useState<string[]>([]);
-
-	const handleChange = (event: SelectChangeEvent<typeof SelectedListName>) => {
+	const handleChange = (
+		event: SelectChangeEvent<typeof props.selectedListName>
+	) => {
 		const value = event.target.value;
 
 		// Lọc từ dữ liệu vào so sánh với dữ liệu đã chọn
@@ -42,7 +44,7 @@ export const SelectMultiple: React.FC<SelectMultipleProps> = (props) => {
 
 		props.setSelectedList(dataSelectedId);
 
-		setSelectedListName(
+		props.setSelectedListName(
 			// On autofill we get a stringified value.
 			typeof value === "string" ? value.split(",") : value
 		);
@@ -56,7 +58,7 @@ export const SelectMultiple: React.FC<SelectMultipleProps> = (props) => {
 					labelId='demo-multiple-checkbox-label'
 					id='demo-multiple-checkbox'
 					multiple
-					value={SelectedListName}
+					value={Array.from(new Set(props.selectedListName))}
 					onChange={handleChange}
 					input={<OutlinedInput label='Thể loại' />}
 					renderValue={(selected) => selected.join(", ")}
@@ -66,7 +68,9 @@ export const SelectMultiple: React.FC<SelectMultipleProps> = (props) => {
 					{props.values.map((genre) => (
 						<MenuItem key={genre.idGenre} value={genre.nameGenre}>
 							<Checkbox
-								checked={SelectedListName.indexOf(genre.nameGenre) > -1}
+								checked={
+									props.selectedListName.indexOf(genre.nameGenre) > -1
+								}
 							/>
 							<ListItemText primary={genre.nameGenre} />
 						</MenuItem>

@@ -22,6 +22,7 @@ export const GenreForm: React.FC<GenreFormProps> = (props) => {
 		nameGenre: "",
 	});
 
+	// Lấy dữ liệu khi mà update
 	useEffect(() => {
 		if (props.option === "update") {
 			get1Genre(props.id).then((response) =>
@@ -67,11 +68,11 @@ export const GenreForm: React.FC<GenreFormProps> = (props) => {
 						idGenre: 0,
 						nameGenre: "",
 					});
-					{
-						props.option === "add"
-							? toast.success("Thêm thể loại thành công")
-							: toast.success("Cập nhật thể loại thành công");
-					}
+
+					props.option === "add"
+						? toast.success("Thêm thể loại thành công")
+						: toast.success("Cập nhật thể loại thành công");
+
 					props.setKeyCountReload(Math.random());
 					props.handleCloseModal();
 				} else {

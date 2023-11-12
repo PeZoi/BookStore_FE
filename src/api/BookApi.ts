@@ -1,4 +1,7 @@
 import BookModel from '../model/BookModel'
+import GenreModel from '../model/GenreModel';
+import { getGenreByIdBook } from './GenreApi';
+import { getAllImageByBook } from './ImageApi';
 import { request } from './Request';
 
 interface resultInterface { // Tạo ra các biến trả về
@@ -117,6 +120,63 @@ export async function getBookById(idBook: number): Promise<BookModel | null> {
       if (response) {
          // Trả về quyển sách
          return response;
+      } else {
+         throw new Error("Sách không tồn tại");
+      }
+
+   } catch (error) {
+      console.error('Error: ', error);
+      return null;
+   }
+}
+
+export async function getBookByIdTest(idBook: number): Promise<BookModel | null> {
+   let bookResponse: BookModel = {
+      idBook: 0,
+      nameBook: "",
+      author: "",
+      description: "",
+      listPrice: NaN,
+      sellPrice: NaN,
+      quantity: NaN,
+      avgRating: NaN,
+      soldQuantity: NaN,
+      discountPercent: NaN,
+      thumbnail: "",
+      relatedImg: [],
+      idGenres: [],
+      genresList: [],
+   }
+
+   try {
+      // Gọi phương thức request()
+      const response = await getBookById(idBook);
+
+      // Kiểm tra xem dữ liệu endpoint trả về có dữ liệu không
+      if (response) {
+         // Lưu dữ liệu sách
+         bookResponse = response;
+
+         // Lấy tất cả hình ảnh của sách
+         const imagesList = await getAllImageByBook(response.idBook);
+         const thumbnail = imagesList.find((image) => image.thumbnail);
+         const relatedImg = imagesList.map((image) => {
+            // Sử dụng conditional (ternary) để trả về giá trị
+            return !image.thumbnail ? image.urlImage || image.dataImage : null;
+         }).filter(Boolean); // Loại bỏ các giá trị null
+
+
+
+         bookResponse = { ...bookResponse, relatedImg: relatedImg as string[], thumbnail: thumbnail?.urlImage || thumbnail?.dataImage };
+
+         // Lấy tất cả thể loại của sách
+         const genresList = await getGenreByIdBook(response.idBook);
+         genresList.genreList.forEach((genre) => {
+            const dataGenre: GenreModel = { idGenre: genre.idGenre, nameGenre: genre.nameGenre };
+            bookResponse = { ...bookResponse, genresList: [...bookResponse.genresList || [], dataGenre] };
+         })
+
+         return bookResponse;
       } else {
          throw new Error("Sách không tồn tại");
       }

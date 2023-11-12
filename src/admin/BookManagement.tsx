@@ -15,6 +15,8 @@ const BookManagement: React.FC = () => {
 	const handleOpenModal = () => setOpenModal(true);
 	const handleCloseModal = () => setOpenModal(false);
 
+	const [id, setId] = useState<number>(0);
+
 	return (
 		<div className='conatiner p-5'>
 			<div className='shadow-4-strong rounded p-5'>
@@ -35,6 +37,7 @@ const BookManagement: React.FC = () => {
 					<BookTable
 						keyCountReload={keyCountReload}
 						setOption={setOption}
+						setId={setId}
 						handleOpenModal={handleOpenModal}
 						setKeyCountReload={setKeyCountReload}
 					/>
@@ -45,7 +48,12 @@ const BookManagement: React.FC = () => {
 				handleOpen={handleOpenModal}
 				handleClose={handleCloseModal}
 			>
-				<BookForm option={option} setKeyCountReload={setKeyCountReload} />
+				<BookForm
+					id={id}
+					handleCloseModal={handleCloseModal}
+					option={option}
+					setKeyCountReload={setKeyCountReload}
+				/>
 			</FadeModal>
 		</div>
 	);
