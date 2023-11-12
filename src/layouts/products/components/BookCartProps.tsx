@@ -122,15 +122,17 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 	return (
 		<>
 			<div className='col'>
-				<Link to={"/"}>
-					<div className='d-flex'>
+				<div className='d-flex'>
+					<Link to={`/book/${props.cartItem.book.idBook}`}>
 						<img
 							src={dataImage}
 							className='card-img-top'
 							alt={props.cartItem.book.nameBook}
 							style={{ width: "100px" }}
 						/>
-						<div className='d-flex flex-column pb-2'>
+					</Link>
+					<div className='d-flex flex-column pb-2'>
+						<Link to={`/book/${props.cartItem.book.idBook}`}>
 							<Tooltip title={props.cartItem.book.nameBook} arrow>
 								<span className='d-inline'>
 									<TextEllipsis
@@ -139,24 +141,24 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 									/>
 								</span>
 							</Tooltip>
-							<div className='mt-auto'>
-								<span className='discounted-price text-danger'>
-									<strong style={{ fontSize: "22px" }}>
-										{props.cartItem.book.sellPrice.toLocaleString()}đ
-									</strong>
-								</span>
-								<span
-									className='original-price ms-3 small'
-									style={{ color: "#000" }}
-								>
-									<del>
-										{props.cartItem.book.listPrice.toLocaleString()}đ
-									</del>
-								</span>
-							</div>
+						</Link>
+						<div className='mt-auto'>
+							<span className='discounted-price text-danger'>
+								<strong style={{ fontSize: "22px" }}>
+									{props.cartItem.book.sellPrice.toLocaleString()}đ
+								</strong>
+							</span>
+							<span
+								className='original-price ms-3 small'
+								style={{ color: "#000" }}
+							>
+								<del>
+									{props.cartItem.book.listPrice.toLocaleString()}đ
+								</del>
+							</span>
 						</div>
 					</div>
-				</Link>
+				</div>
 			</div>
 			<div className='col-3 text-center my-auto d-flex align-items-center justify-content-center'>
 				<SelectQuantity

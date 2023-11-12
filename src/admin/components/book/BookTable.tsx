@@ -7,6 +7,8 @@ import { DataTable } from "../../../layouts/utils/DataTable";
 import BookModel from "../../../model/BookModel";
 import { getAllBook } from "../../../api/BookApi";
 import { getAllImageByBook } from "../../../api/ImageApi";
+import { toast } from "react-toastify";
+import { useConfirm } from "material-ui-confirm";
 
 interface BookTableProps {
 	setOption: any;
@@ -16,13 +18,16 @@ interface BookTableProps {
 }
 
 export const BookTable: React.FC<BookTableProps> = (props) => {
+	// Tạo các biến của confirm dialog
+	const confirm = useConfirm();
 	// Tạo biến để lấy tất cả data
 	const [data, setData] = useState<BookModel[]>([]);
 
+	// Hàm để lấy tất cả các sách render ra table
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const bookResponse = await getAllBook();
+				const bookResponse = await getAllBook(1000, 0);
 
 				const promises = bookResponse.bookList.map(async (book) => {
 					const imagesList = await getAllImageByBook(book.idBook);
@@ -32,7 +37,7 @@ export const BookTable: React.FC<BookTableProps> = (props) => {
 					return {
 						...book,
 						id: book.idBook,
-						thumbnail: thumbnail?.dataImage,
+						thumbnail: thumbnail?.urlImage || thumbnail?.dataImage,
 					};
 				});
 				// Promise.all(promises) nghĩa là đợi cho những Promise trên kia hoàn thành hết thì mới tới
@@ -46,6 +51,39 @@ export const BookTable: React.FC<BookTableProps> = (props) => {
 
 		fetchData();
 	}, [props.keyCountReload]);
+
+	// Xử lý xoá sách
+	const handleDeleteBook = (id: any) => {
+		const token = localStorage.getItem("token");
+		confirm({
+			title: "Xoá sách",
+			description: `Bạn chắc chắn xoá sách này chứ?`,
+			confirmationText: ["Xoá"],
+			cancellationText: ["Huỷ"],
+		})
+			.then(() => {
+				fetch(`http://localhost:8080/books/${id}`, {
+					method: "DELETE",
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+					.then((response) => {
+						if (response.ok) {
+							toast.success("Xoá sách thành công");
+							props.setKeyCountReload(Math.random());
+						} else {
+							toast.error("Lỗi khi xoá sách");
+						}
+					})
+					.catch((error) => {
+						toast.error("Lỗi khi xoá sách");
+						console.log(error);
+					});
+			})
+			.catch(() => {});
+	};
+
 	const columns: GridColDef[] = [
 		{ field: "id", headerName: "ID", width: 80 },
 		{
@@ -65,7 +103,7 @@ export const BookTable: React.FC<BookTableProps> = (props) => {
 			renderCell: (params) => {
 				return (
 					<span>
-						{Number.parseInt(params.value).toLocaleString("vi-vn")} đ
+						{Number.parseInt(params.value).toLocaleString("vi-vn")}đ
 					</span>
 				);
 			},
@@ -80,17 +118,6 @@ export const BookTable: React.FC<BookTableProps> = (props) => {
 			renderCell: (item) => {
 				return (
 					<div>
-						<Tooltip title={"Xem chi tiết"}>
-							<IconButton
-								color='secondary'
-								onClick={() => {
-									props.setOption("view");
-									props.handleOpenModal();
-								}}
-							>
-								<VisibilityOutlined />
-							</IconButton>
-						</Tooltip>
 						<Tooltip title={"Chỉnh sửa"}>
 							<IconButton
 								color='primary'
@@ -105,7 +132,7 @@ export const BookTable: React.FC<BookTableProps> = (props) => {
 						<Tooltip title={"Xoá"}>
 							<IconButton
 								color='error'
-								onClick={() => console.log("Xoá: " + item.id)}
+								onClick={() => handleDeleteBook(item.id)}
 							>
 								<DeleteOutlineOutlined />
 							</IconButton>

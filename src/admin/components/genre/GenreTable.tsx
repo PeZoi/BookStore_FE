@@ -6,7 +6,6 @@ import React, { useEffect, useState } from "react";
 import { DataTable } from "../../../layouts/utils/DataTable";
 import GenreModel from "../../../model/GenreModel";
 import { getAllGenres } from "../../../api/GenreApi";
-import { isTokenExpired } from "../../../layouts/utils/JwtService";
 import { toast } from "react-toastify";
 import { useConfirm } from "material-ui-confirm";
 
@@ -36,14 +35,7 @@ export const GenreTable: React.FC<GenreTableProps> = (props) => {
 
 	const handleDeleteGenre = (id: any) => {
 		const token = localStorage.getItem("token");
-		if (!token) {
-			alert("Bạn chưa đăng nhập!");
-			return;
-		}
-		if (!isTokenExpired(token)) {
-			alert("Token đã hết hạn. Vui lòng đăng nhập lại!");
-			return;
-		}
+
 		confirm({
 			title: "Xoá thể loại",
 			description: `Bạn chắc chắn xoá thể loại này chứ?`,

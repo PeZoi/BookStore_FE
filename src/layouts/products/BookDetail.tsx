@@ -125,7 +125,7 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 	let imageList: string[] = [];
 	if (images !== undefined && images !== null) {
 		imageList = images.map((image) => {
-			return image.dataImage || image.urlImage;
+			return image.urlImage || image.dataImage;
 		}) as string[];
 	}
 
@@ -219,7 +219,9 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 									ratingPoint={book.avgRating}
 								/>
 
-								<p className='text-danger ms-2 mb-0'>(4.5)</p>
+								<p className='text-danger ms-2 mb-0'>
+									({book.avgRating})
+								</p>
 							</div>
 							<div className='d-flex align-items-center'>
 								<span className='mx-3 mb-1 text-secondary'>|</span>
