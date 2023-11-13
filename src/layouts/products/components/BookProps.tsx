@@ -88,12 +88,16 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 	return (
 		<div className='col-md-6 col-lg-3 mt-3'>
 			<div className='card position-relative'>
-				<h4
-					className='my-0 d-inline-block position-absolute end-0'
-					style={{ top: "15px" }}
-				>
-					<span className='badge bg-primary'>{book.discountPercent}%</span>
-				</h4>
+				{book.discountPercent !== 0 && (
+					<h4
+						className='my-0 d-inline-block position-absolute end-0'
+						style={{ top: "15px" }}
+					>
+						<span className='badge bg-primary'>
+							{book.discountPercent}%
+						</span>
+					</h4>
+				)}
 				<Link to={`/book/${book.idBook}`}>
 					<img
 						src={dataImage}
@@ -122,9 +126,11 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 									{book.sellPrice?.toLocaleString()}đ
 								</strong>
 							</span>
-							<span className='original-price ms-3 small fw-bolder'>
-								<del>{book.listPrice?.toLocaleString()}đ</del>
-							</span>
+							{book.discountPercent !== 0 && (
+								<span className='original-price ms-3 small fw-bolder'>
+									<del>{book.listPrice?.toLocaleString()}đ</del>
+								</span>
+							)}
 						</div>
 						<span
 							className='ms-2'

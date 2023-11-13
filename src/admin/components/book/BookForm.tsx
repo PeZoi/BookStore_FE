@@ -29,7 +29,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 		quantity: NaN,
 		avgRating: NaN,
 		soldQuantity: NaN,
-		discountPercent: NaN,
+		discountPercent: 0,
 		thumbnail: "",
 		relatedImg: [],
 		idGenres: [],
@@ -84,6 +84,11 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 
 		const token = localStorage.getItem("token");
 
+		let bookRequest: BookModel = book;
+		if (bookRequest.discountPercent === 0) {
+			bookRequest = { ...book, sellPrice: book.listPrice };
+		}
+
 		// console.log(book);
 
 		setStatusBtn(true);
@@ -100,7 +105,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 					Authorization: `Bearer ${token}`,
 					"content-type": "application/json",
 				},
-				body: JSON.stringify(book),
+				body: JSON.stringify(bookRequest),
 			})
 				.then((response) => {
 					if (response.ok) {
@@ -114,7 +119,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 							quantity: NaN,
 							avgRating: NaN,
 							soldQuantity: NaN,
-							discountPercent: NaN,
+							discountPercent: 0,
 							thumbnail: "",
 							relatedImg: [],
 							idGenres: [],
@@ -222,7 +227,9 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 				>
 					<input type='hidden' id='idBook' value={book?.idBook} hidden />
 					<div className='row'>
-						<div className='col-6'>
+						<div
+							className={props.option === "update" ? "col-4" : "col-6"}
+						>
 							<Box
 								sx={{
 									"& .MuiTextField-root": { mb: 3 },
@@ -271,7 +278,9 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 								/>
 							</Box>
 						</div>
-						<div className='col-6'>
+						<div
+							className={props.option === "update" ? "col-4" : "col-6"}
+						>
 							<Box
 								sx={{
 									"& .MuiTextField-root": { mb: 3 },
@@ -315,16 +324,66 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 											? ""
 											: book.discountPercent
 									}
-									onChange={(e) =>
+									onChange={(e) => {
 										setBook({
 											...book,
 											discountPercent: parseInt(e.target.value),
-										})
-									}
+											sellPrice:
+												book.listPrice -
+												Math.round(
+													(book.listPrice *
+														Number.parseInt(e.target.value)) /
+														100
+												),
+										});
+									}}
 									size='small'
 								/>
 							</Box>
 						</div>
+						{props.option === "update" && (
+							<div className='col-4'>
+								<Box
+									sx={{
+										"& .MuiTextField-root": { mb: 3 },
+									}}
+								>
+									<TextField
+										id='filled-required'
+										label='Giá bán'
+										style={{ width: "100%" }}
+										value={book.sellPrice.toLocaleString("vi-vn")}
+										type='number'
+										InputProps={{
+											disabled: true,
+										}}
+										size='small'
+									/>
+
+									<TextField
+										id='filled-required'
+										label='Đã bán'
+										style={{ width: "100%" }}
+										value={book.soldQuantity}
+										InputProps={{
+											disabled: true,
+										}}
+										size='small'
+									/>
+
+									<TextField
+										id='filled-required'
+										label='Điểm đánh giá'
+										style={{ width: "100%" }}
+										value={book.avgRating}
+										InputProps={{
+											disabled: true,
+										}}
+										size='small'
+									/>
+								</Box>
+							</div>
+						)}
 						<div className='col-12'>
 							<Box>
 								<TextField

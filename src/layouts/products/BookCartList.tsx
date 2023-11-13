@@ -13,8 +13,6 @@ interface BookCartListProps {
 }
 
 const BookCartList: React.FC<BookCartListProps> = (props) => {
-	// Khai báo biến thông báo
-
 	// Xử lý xoá sách
 	function handleRemoveBook(idBook: number) {
 		const newCartList = props.cartList.filter(
