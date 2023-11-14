@@ -8,7 +8,7 @@ interface DataTableProps {
 
 export const DataTable: React.FC<DataTableProps> = (props) => {
 	return (
-		<div style={{ height: "100%", width: "100%" }}>
+		<div style={{ width: "100%" }}>
 			<DataGrid
 				rows={props.rows}
 				columns={props.columns}
@@ -17,7 +17,7 @@ export const DataTable: React.FC<DataTableProps> = (props) => {
 						paginationModel: { page: 0, pageSize: 10 },
 					},
 				}}
-				pageSizeOptions={[10, 20, 30, 100]}
+				pageSizeOptions={[10, 15, 20, 30]}
 			/>
 		</div>
 	);

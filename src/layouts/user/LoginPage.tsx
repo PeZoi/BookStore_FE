@@ -7,7 +7,6 @@ import { JwtPayload } from "../../admin/RequireAdmin";
 
 const LoginPage: React.FC = () => {
 	const navigation = useNavigate();
-
 	// Biến cần thiết
 	const [username, setUserName] = useState("");
 	const [password, setPassword] = useState("");
@@ -33,7 +32,6 @@ const LoginPage: React.FC = () => {
 				if (response.ok) {
 					return response.json();
 				}
-				setError("Tên đăng nhập hoặc mật khẩu không đúng");
 			})
 			.then((data) => {
 				const { jwtToken } = data;
@@ -50,7 +48,8 @@ const LoginPage: React.FC = () => {
 			})
 			.catch((error) => {
 				console.log("Lỗi đăng nhập: " + error);
-				setError("Đăng nhập thất bại");
+				setError("Tài khoản hoặc mật khẩu không đúng");
+				toast.error("Tài khoản hoặc mật khẩu không đúng");
 			});
 	}
 
@@ -73,7 +72,7 @@ const LoginPage: React.FC = () => {
 					label='Tên đăng nhập'
 					placeholder='Nhập tên đăng nhập'
 					value={username}
-					onChange={(e) => setUserName(e.target.value)}
+					onChange={(e: any) => setUserName(e.target.value)}
 					className='input-field'
 				/>
 				<TextField
@@ -84,7 +83,7 @@ const LoginPage: React.FC = () => {
 					label='Mật khẩu'
 					placeholder='Nhập mật khẩu'
 					value={password}
-					onChange={(e) => setPassword(e.target.value)}
+					onChange={(e: any) => setPassword(e.target.value)}
 					className='input-field'
 				/>
 				<div className='d-flex justify-content-end mt-2 px-3'>

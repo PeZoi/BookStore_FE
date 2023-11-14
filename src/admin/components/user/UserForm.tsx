@@ -1,6 +1,4 @@
-import React, { FormEvent, useState } from "react";
-import BookModel from "../../../model/BookModel";
-import { isTokenExpired } from "../../../layouts/utils/JwtService";
+import React, { FormEvent, useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import {
@@ -13,16 +11,31 @@ import {
 } from "@mui/material";
 import { CloudUpload } from "@mui/icons-material";
 import UserModel from "../../../model/UserModel";
+import {
+	checkExistEmail,
+	checkExistUsername,
+	checkPassword,
+	checkPhoneNumber,
+} from "../../../layouts/utils/Validation";
+import { getAllRoles } from "../../../api/RoleApi";
+import RoleModel from "../../../model/RoleModel";
+import { toast } from "react-toastify";
+import { LoadingButton } from "@mui/lab";
+import { get1User } from "../../../api/UserApi";
+import { getUsernameByToken } from "../../../layouts/utils/JwtService";
 
 interface UserFormProps {
 	option: string;
 	setKeyCountReload?: any;
+	id: number;
+	handleCloseModal: any;
 }
 
 export const UserForm: React.FC<UserFormProps> = (props) => {
+	// Các biến cần thiết
 	const [user, setUser] = useState<UserModel>({
 		idUser: 0,
-		dateOfBirth: new Date("01/01/1990"),
+		dateOfBirth: new Date("2000-01-01"),
 		deliveryAddress: "",
 		purchaseAddress: "",
 		email: "",
@@ -33,64 +46,105 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 		username: "",
 		password: "",
 		avatar: "",
+		role: 3,
 	});
 	const [avatar, setAvatar] = useState<File | null>(null);
 	const [previewAvatar, setPreviewAvatar] = useState("");
+	const [roles, setRoles] = useState<RoleModel[]>([]);
+	// Khi submit thì btn loading ...
+	const [statusBtn, setStatusBtn] = useState(false);
+
+	// Khai báo các biến lỗi
+	const [errorUsername, setErrorUsername] = useState("");
+	const [errorEmail, setErrorEmail] = useState("");
+	const [errorPassword, setErrorPassword] = useState("");
+	const [errorPhoneNumber, setErrorPhoneNumber] = useState("");
+
+	// Lấy ra role
+	useEffect(() => {
+		getAllRoles().then((response) => {
+			setRoles(response);
+		});
+	}, []);
+
+	// Load user lên khi update
+	useEffect(() => {
+		if (props.option === "update") {
+			get1User(props.id).then((response) => {
+				setUser({
+					...response,
+					dateOfBirth: new Date(response.dateOfBirth),
+				});
+				setPreviewAvatar(response.avatar);
+			});
+		}
+	}, [props.id]);
 
 	function hanleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 
 		const token = localStorage.getItem("token");
 
-		if (!token) {
-			alert("Bạn chưa đăng nhập!");
+		if (getUsernameByToken() === user.username) {
+			toast.warning("Bạn không thể cập nhật tài khoản bạn đang sử dụng");
 			return;
 		}
-		if (!isTokenExpired(token)) {
-			alert("Token đã hết hạn. Vui lòng đăng nhập lại!");
-			return;
-		}
+		// console.log(user);
+		setStatusBtn(true);
 
-		const data = new FormData();
-		data.append("user", JSON.stringify(user));
-
-		// Nếu mà có upload ảnh thì cho thumbnail vào data
-		if (user.avatar) {
-			data.append("avatar", user.avatar);
-		}
-
-		fetch("http://localhost:8080/", {
-			method: "POST",
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-			body: data,
-		})
-			.then((response) => {
-				if (response.ok) {
-					setUser({
-						idUser: 0,
-						dateOfBirth: new Date(),
-						deliveryAddress: "",
-						purchaseAddress: "",
-						email: "",
-						firstName: "",
-						lastName: "",
-						gender: "M",
-						phoneNumber: "",
-						username: "",
-						password: "",
-						avatar: "",
-					});
-					setAvatar(null);
-					setPreviewAvatar("");
-					alert("Thêm người dùng thành công!");
-					props.setKeyCountReload(Math.random());
-				} else {
-					alert("Gặp lỗi trong quá trình thêm người dùng");
-				}
+		const endpoint =
+			props.option === "add"
+				? "http://localhost:8080/user/add-user"
+				: "http://localhost:8080/user/update-user";
+		const method = props.option === "add" ? "POST" : "PUT";
+		toast.promise(
+			fetch(endpoint, {
+				method: method,
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"content-type": "application/json",
+				},
+				body: JSON.stringify(user),
 			})
-			.catch((error) => console.log(error));
+				.then((response) => {
+					if (response.ok) {
+						setUser({
+							idUser: 0,
+							dateOfBirth: new Date("2000-01-01"),
+							deliveryAddress: "",
+							purchaseAddress: "",
+							email: "",
+							firstName: "",
+							lastName: "",
+							gender: "M",
+							phoneNumber: "",
+							username: "",
+							password: "",
+							avatar: "",
+							role: 3,
+						});
+						setAvatar(null);
+						setPreviewAvatar("");
+						setStatusBtn(false);
+						props.setKeyCountReload(Math.random());
+						props.handleCloseModal();
+						toast.success(
+							props.option === "add"
+								? "Thêm người dùng thành công"
+								: "Cập nhật người dùng thành công"
+						);
+					} else {
+						setStatusBtn(false);
+						toast.error("Gặp lỗi trong quá trình xử lý người dùng");
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+					setStatusBtn(false);
+					toast.error("Gặp lỗi trong quá trình xử lý người dùng");
+				}),
+			{ pending: "Đang trong quá trình xử lý ..." }
+		);
 	}
 
 	function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
@@ -98,12 +152,34 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 
 		if (inputElement.files && inputElement.files.length > 0) {
 			const selectedFile = inputElement.files[0];
-			// Tiếp tục xử lý tệp đã chọn
-			setAvatar(selectedFile);
-			const dataAvatar = URL.createObjectURL(selectedFile);
-			setPreviewAvatar(dataAvatar);
+
+			const reader = new FileReader();
+
+			reader.onload = (e: any) => {
+				// e.target.result chính là chuỗi base64
+				const thumnailBase64 = e.target?.result as string;
+				// Tiếp tục xử lý tệp đã chọn
+				setAvatar(selectedFile);
+				setPreviewAvatar(URL.createObjectURL(selectedFile));
+				setUser({ ...user, avatar: thumnailBase64 });
+			};
+			// Đọc tệp dưới dạng chuỗi base64
+			reader.readAsDataURL(selectedFile);
 		}
 	}
+	const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const dateString = e.target.value;
+		// Chuyển đổi chuỗi thành đối tượng Date
+		const dateObject = new Date(dateString);
+		if (!isNaN(dateObject.getTime())) {
+			// Nếu là một ngày hợp lệ, cập nhật state
+			setUser({
+				...user,
+				dateOfBirth: dateObject,
+			});
+		}
+	};
+
 	return (
 		<div>
 			<Typography className='text-center' variant='h4' component='h2'>
@@ -115,11 +191,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 			</Typography>
 			<hr />
 			<div className='container px-5'>
-				<form
-					onSubmit={hanleSubmit}
-					className='form'
-					encType='multipart/form-data'
-				>
+				<form onSubmit={hanleSubmit} className='form'>
 					<input type='hidden' value={user.idUser} hidden />
 					<div className='row'>
 						<div className='col-6'>
@@ -133,22 +205,42 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 									id='filled-required'
 									label='Tên tài khoản'
 									style={{ width: "100%" }}
+									error={errorUsername.length > 0 ? true : false}
+									helperText={errorUsername}
 									value={user.username}
-									onChange={(e) =>
-										setUser({ ...user, username: e.target.value })
-									}
+									InputProps={{
+										disabled:
+											props.option === "update" ? true : false,
+									}}
+									onChange={(e: any) => {
+										setUser({ ...user, username: e.target.value });
+										setErrorUsername("");
+									}}
+									onBlur={(e: any) => {
+										checkExistUsername(
+											setErrorUsername,
+											e.target.value
+										);
+									}}
 									size='small'
 								/>
 
 								<TextField
-									required
+									required={props.option === "update" ? false : true}
 									id='filled-required'
+									type='password'
 									label='Mật khẩu'
 									style={{ width: "100%" }}
+									error={errorPassword.length > 0 ? true : false}
+									helperText={errorPassword}
 									value={user.password}
-									onChange={(e) =>
-										setUser({ ...user, password: e.target.value })
-									}
+									onChange={(e: any) => {
+										setUser({ ...user, password: e.target.value });
+										setErrorPassword("");
+									}}
+									onBlur={(e: any) => {
+										checkPassword(setErrorPassword, e.target.value);
+									}}
 									size='small'
 								/>
 
@@ -156,22 +248,22 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 									required
 									id='filled-required'
 									label='Email'
+									type='email'
 									style={{ width: "100%" }}
+									error={errorEmail.length > 0 ? true : false}
+									helperText={errorEmail}
 									value={user.email}
-									onChange={(e) =>
-										setUser({ ...user, email: e.target.value })
-									}
-									size='small'
-								/>
-								<TextField
-									required
-									id='filled-required'
-									label='Số điện thoại'
-									style={{ width: "100%" }}
-									value={user.phoneNumber}
-									onChange={(e) =>
-										setUser({ ...user, phoneNumber: e.target.value })
-									}
+									InputProps={{
+										disabled:
+											props.option === "update" ? true : false,
+									}}
+									onChange={(e: any) => {
+										setUser({ ...user, email: e.target.value });
+										setErrorEmail("");
+									}}
+									onBlur={(e: any) => {
+										checkExistEmail(setErrorEmail, e.target.value);
+									}}
 									size='small'
 								/>
 
@@ -180,16 +272,33 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 									id='filled-required'
 									label='Số điện thoại'
 									style={{ width: "100%" }}
-									type='date'
-									value={user.dateOfBirth
-										.toISOString()
-										.substring(0, 10)}
-									onChange={(e) =>
+									error={errorPhoneNumber.length > 0 ? true : false}
+									helperText={errorPhoneNumber}
+									value={user.phoneNumber}
+									onChange={(e: any) => {
 										setUser({
 											...user,
-											dateOfBirth: new Date(e.target.value),
-										})
-									}
+											phoneNumber: e.target.value,
+										});
+										setErrorPhoneNumber("");
+									}}
+									onBlur={(e: any) => {
+										checkPhoneNumber(
+											setErrorPhoneNumber,
+											e.target.value
+										);
+									}}
+									size='small'
+								/>
+
+								<TextField
+									required
+									id='filled-required'
+									label='Ngày sinh'
+									style={{ width: "100%" }}
+									type='date'
+									value={user.dateOfBirth.toISOString().split("T")[0]}
+									onChange={handleDateChange}
 									size='small'
 								/>
 							</Box>
@@ -201,12 +310,11 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 								}}
 							>
 								<TextField
-									required
 									id='filled-required'
 									label='Họ đệm'
 									style={{ width: "100%" }}
 									value={user.firstName}
-									onChange={(e) =>
+									onChange={(e: any) =>
 										setUser({ ...user, firstName: e.target.value })
 									}
 									size='small'
@@ -218,19 +326,18 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 									label='Tên'
 									style={{ width: "100%" }}
 									value={user.lastName}
-									onChange={(e) =>
+									onChange={(e: any) =>
 										setUser({ ...user, lastName: e.target.value })
 									}
 									size='small'
 								/>
 
 								<TextField
-									required
 									id='filled-required'
 									label='Địa chỉ'
 									style={{ width: "100%" }}
 									value={user.deliveryAddress}
-									onChange={(e) =>
+									onChange={(e: any) =>
 										setUser({
 											...user,
 											deliveryAddress: e.target.value,
@@ -239,19 +346,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 									size='small'
 								/>
 
-								<TextField
-									required
-									id='filled-required'
-									label='Số điện thoại'
-									style={{ width: "100%" }}
-									value={user.phoneNumber}
-									onChange={(e) =>
-										setUser({ ...user, phoneNumber: e.target.value })
-									}
-									size='small'
-								/>
-
-								<FormControl fullWidth size='small'>
+								<FormControl fullWidth size='small' sx={{ mb: 3 }}>
 									<InputLabel id='demo-simple-select-label'>
 										Giới tính
 									</InputLabel>
@@ -260,12 +355,39 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 										id='demo-simple-select'
 										value={user.gender}
 										label='Giới tính'
-										onChange={(e) =>
+										onChange={(e: any) =>
 											setUser({ ...user, gender: e.target.value })
 										}
 									>
 										<MenuItem value={"M"}>Nam</MenuItem>
 										<MenuItem value={"F"}>Nữ</MenuItem>
+									</Select>
+								</FormControl>
+
+								<FormControl fullWidth size='small'>
+									<InputLabel id='demo-simple-select-label'>
+										Vai trò
+									</InputLabel>
+									<Select
+										labelId='demo-simple-select-label'
+										id='demo-simple-select'
+										value={user.role}
+										label='Vai trò'
+										onChange={(e: any) =>
+											setUser({
+												...user,
+												role: e.target.value as number,
+											})
+										}
+									>
+										{roles.map((role) => (
+											<MenuItem
+												value={role.idRole}
+												key={role.idRole}
+											>
+												{role.nameRole}
+											</MenuItem>
+										))}
 									</Select>
 								</FormControl>
 							</Box>
@@ -291,13 +413,15 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 							<img src={previewAvatar} alt='' width={100} />
 						</div>
 					</div>
-					{props.option !== "view" && (
-						<button className='btn btn-primary w-100 my-3' type='submit'>
-							{props.option === "add"
-								? "Tạo người dùng"
-								: "Lưu người dùng"}
-						</button>
-					)}
+					<LoadingButton
+						className='w-100 my-3'
+						type='submit'
+						loading={statusBtn}
+						variant='outlined'
+						sx={{ width: "25%", padding: "10px" }}
+					>
+						{props.option === "add" ? "Tạo người dùng" : "Lưu người dùng"}
+					</LoadingButton>
 				</form>
 			</div>
 		</div>

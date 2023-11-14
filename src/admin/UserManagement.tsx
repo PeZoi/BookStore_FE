@@ -10,10 +10,12 @@ const UserManagement = () => {
 	// Tạo ra biến để mỗi khi thao tác CRUD thì sẽ update lại table
 	const [keyCountReload, setKeyCountReload] = useState(0);
 
-	const [option, setOption] = useState(""); // Truyền vào là có thể là (add, update, view)
+	const [option, setOption] = useState(""); // Truyền vào là có thể là (add, update)
 	const [openModal, setOpenModal] = React.useState(false);
 	const handleOpenModal = () => setOpenModal(true);
 	const handleCloseModal = () => setOpenModal(false);
+
+	const [id, setId] = useState<number>(0);
 
 	return (
 		<div className='conatiner p-5'>
@@ -37,6 +39,7 @@ const UserManagement = () => {
 						setOption={setOption}
 						handleOpenModal={handleOpenModal}
 						setKeyCountReload={setKeyCountReload}
+						setId={setId}
 					/>
 				</div>
 			</div>
@@ -45,7 +48,12 @@ const UserManagement = () => {
 				handleOpen={handleOpenModal}
 				handleClose={handleCloseModal}
 			>
-				<UserForm option={option} setKeyCountReload={setKeyCountReload} />
+				<UserForm
+					option={option}
+					setKeyCountReload={setKeyCountReload}
+					id={id}
+					handleCloseModal={handleCloseModal}
+				/>
 			</FadeModal>
 		</div>
 	);

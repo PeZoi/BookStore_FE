@@ -38,6 +38,13 @@ export function getLastNameByToken() {
    }
 }
 
+export function getUsernameByToken() {
+   const token = localStorage.getItem('token');
+   if (token) {
+      return jwtDecode(token).sub;
+   }
+}
+
 export function logout(navigate: any) {
    navigate("/login");
    localStorage.removeItem('token');

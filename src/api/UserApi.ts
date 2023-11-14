@@ -1,6 +1,7 @@
 import BookModel from "../model/BookModel";
 import UserModel from "../model/UserModel";
 import { request, requestAdmin } from "./Request";
+import { getRoleByIdUser } from "./RoleApi";
 
 async function getUser(endpoint: string): Promise<UserModel> {
    // Gọi phương thức request()
@@ -13,7 +14,7 @@ export async function getAllUserRole(): Promise<UserModel[]> {
    const endpoint: string = `http://localhost:8080/roles`;
    const response = await requestAdmin(endpoint);
 
-   const datas = response._embedded.roles.map((roleData: any) => {
+   const data = response._embedded.roles.map((roleData: any) => {
       // Duyệt qua mảng listUsers trong mỗi vai trò (role)
       const users = roleData._embedded.listUsers.map((userData: any) => {
          // Xử lý các trường dữ liệu trong userData tại đây
@@ -35,8 +36,29 @@ export async function getAllUserRole(): Promise<UserModel[]> {
       return users;
    });
 
-   return datas;
+   return data;
+}
 
+export async function get1User(idUser: any): Promise<UserModel> {
+   const endpoint = `http://localhost:8080/users/${idUser}`;
+   const responseUser = await requestAdmin(endpoint);
+   const responseRole = await getRoleByIdUser(idUser);
+
+   const user: UserModel = {
+      idUser: responseUser.idUser,
+      avatar: responseUser.avatar,
+      dateOfBirth: responseUser.dateOfBirth,
+      deliveryAddress: responseUser.deliveryAddress,
+      email: responseUser.email,
+      firstName: responseUser.firstName,
+      lastName: responseUser.lastName,
+      gender: responseUser.gender,
+      phoneNumber: responseUser.phoneNumber,
+      username: responseUser.username,
+      role: responseRole.idRole,
+   };
+
+   return user;
 }
 
 export async function getUserByIdReview(idReview: number): Promise<UserModel> {

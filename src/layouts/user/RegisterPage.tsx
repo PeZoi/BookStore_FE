@@ -160,7 +160,7 @@ const RegisterPage: React.FC = () => {
 							placeholder='Nhập tên đăng nhập'
 							value={username}
 							onChange={handleUsernameChange}
-							onBlur={(e) => {
+							onBlur={(e: any) => {
 								checkExistUsername(setErrorUsername, e.target.value);
 							}}
 							className='input-field'
@@ -176,7 +176,7 @@ const RegisterPage: React.FC = () => {
 							placeholder='Nhập mật khẩu'
 							value={password}
 							onChange={handlePasswordChange}
-							onBlur={(e) => {
+							onBlur={(e: any) => {
 								checkPassword(setErrorPassword, e.target.value);
 							}}
 							className='input-field'
@@ -192,7 +192,7 @@ const RegisterPage: React.FC = () => {
 							placeholder='Nhập lại mật khẩu'
 							value={repeatPassword}
 							onChange={handleRepeatPasswordChange}
-							onBlur={(e) => {
+							onBlur={(e: any) => {
 								checkRepeatPassword(
 									setErrorRepeatPassword,
 									e.target.value,
@@ -210,7 +210,7 @@ const RegisterPage: React.FC = () => {
 							label='Họ đệm'
 							placeholder='Nhập họ đệm'
 							value={firstName}
-							onChange={(e) => {
+							onChange={(e: any) => {
 								setFirstName(e.target.value);
 							}}
 							className='input-field'
@@ -222,7 +222,7 @@ const RegisterPage: React.FC = () => {
 							label='Tên'
 							placeholder='Nhập tên'
 							value={lastName}
-							onChange={(e) => {
+							onChange={(e: any) => {
 								setLastName(e.target.value);
 							}}
 							className='input-field'
@@ -236,7 +236,7 @@ const RegisterPage: React.FC = () => {
 							placeholder='Nhập số điện thoại'
 							value={phoneNumber}
 							onChange={handlePhoneNumberChange}
-							onBlur={(e) => {
+							onBlur={(e: any) => {
 								checkPhoneNumber(setErrorPhoneNumber, e.target.value);
 							}}
 							className='input-field'
@@ -253,7 +253,7 @@ const RegisterPage: React.FC = () => {
 							type='email'
 							value={email}
 							onChange={handleEmailChange}
-							onBlur={(e) => {
+							onBlur={(e: any) => {
 								checkExistEmail(setErrorEmail, e.target.value);
 							}}
 							className='input-field'

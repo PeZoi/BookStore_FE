@@ -10,6 +10,7 @@ import { getAllGenres } from "../../../api/GenreApi";
 import { SelectMultiple } from "../../../layouts/utils/SelectMultiple";
 import { LoadingButton } from "@mui/lab";
 import { getBookByIdTest } from "../../../api/BookApi";
+import { endpointBE } from "../../../layouts/utils/Constant";
 
 interface BookFormProps {
 	id: number;
@@ -95,8 +96,8 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 
 		const endpoint =
 			props.option === "add"
-				? "http://localhost:8080/book/add-book"
-				: "http://localhost:8080/book/update-book";
+				? endpointBE + "/book/add-book"
+				: endpointBE + "/book/update-book";
 		const method = props.option === "add" ? "POST" : "PUT";
 		toast.promise(
 			fetch(endpoint, {
@@ -160,7 +161,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 			const reader = new FileReader();
 
 			// Xử lý sự kiện khi tệp đã được đọc thành công
-			reader.onload = (e) => {
+			reader.onload = (e: any) => {
 				// e.target.result chính là chuỗi base64
 				const thumnailBase64 = e.target?.result as string;
 
@@ -192,7 +193,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 				const reader = new FileReader();
 
 				// Xử lý sự kiện khi tệp đã được đọc thành công
-				reader.onload = (e) => {
+				reader.onload = (e: any) => {
 					// e.target.result chính là chuỗi base64
 					const thumbnailBase64 = e.target?.result as string;
 
@@ -241,7 +242,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 									label='Tên sách'
 									style={{ width: "100%" }}
 									value={book.nameBook}
-									onChange={(e) =>
+									onChange={(e: any) =>
 										setBook({ ...book, nameBook: e.target.value })
 									}
 									size='small'
@@ -253,7 +254,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 									label='Tên tác giả'
 									style={{ width: "100%" }}
 									value={book.author}
-									onChange={(e) =>
+									onChange={(e: any) =>
 										setBook({ ...book, author: e.target.value })
 									}
 									size='small'
@@ -268,7 +269,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 									value={
 										Number.isNaN(book.listPrice) ? "" : book.listPrice
 									}
-									onChange={(e) =>
+									onChange={(e: any) =>
 										setBook({
 											...book,
 											listPrice: parseInt(e.target.value),
@@ -295,7 +296,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 									value={
 										Number.isNaN(book.quantity) ? "" : book.quantity
 									}
-									onChange={(e) =>
+									onChange={(e: any) =>
 										setBook({
 											...book,
 											quantity: parseInt(e.target.value),
@@ -324,7 +325,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 											? ""
 											: book.discountPercent
 									}
-									onChange={(e) => {
+									onChange={(e: any) => {
 										setBook({
 											...book,
 											discountPercent: parseInt(e.target.value),
@@ -393,7 +394,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 									multiline
 									maxRows={5}
 									value={book.description}
-									onChange={(e) =>
+									onChange={(e: any) =>
 										setBook({ ...book, description: e.target.value })
 									}
 									required
