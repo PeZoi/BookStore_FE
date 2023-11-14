@@ -6,6 +6,7 @@ import MenuBookRoundedIcon from "@mui/icons-material/MenuBookRounded";
 import CategoryRoundedIcon from "@mui/icons-material/CategoryRounded";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LocalMallRoundedIcon from "@mui/icons-material/LocalMallRounded";
+import FeedbackIcon from "@mui/icons-material/Feedback";
 import { logout } from "../../layouts/utils/JwtService";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -85,6 +86,15 @@ export const Slidebar: React.FC<SlidebarProps> = (props) => {
 							<span className='ms-2 d-none d-sm-inline'>
 								Quản lý đơn hàng
 							</span>
+						</NavLink>
+					</li>
+					<li className='nav-item '>
+						<NavLink
+							to={"/admin/feedback"}
+							className={`nav-link d-flex align-items-center justify-content-center `}
+						>
+							<FeedbackIcon fontSize='small' />
+							<span className='ms-2 d-none d-sm-inline'>Feedback</span>
 						</NavLink>
 					</li>
 				</ul>

@@ -116,6 +116,11 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 								Liên hệ
 							</a>
 						</li>
+						<li className='nav-item'>
+							<NavLink className='nav-link' to={"/feedback"}>
+								Feedback
+							</NavLink>
+						</li>
 					</ul>
 					{/* <!-- Left links --> */}
 				</div>

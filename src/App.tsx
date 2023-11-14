@@ -24,6 +24,9 @@ import BookManagementPage from "./admin/BookManagement";
 import UserManagementPage from "./admin/UserManagement";
 import GenreManagementPage from "./admin/GenreManagement";
 import OrderManagementPage from "./admin/OrderManagement";
+import PolicyPage from "./layouts/pages/PolicyPage";
+import FeedbackPage from "./admin/FeedbackManagement";
+import { FeedbackCustomerPage } from "./layouts/pages/FeedbackCustomerPage";
 
 const MyRoutes = () => {
 	// XỬ LÝ GIỎ HÀNG //////////////////////////////
@@ -89,7 +92,8 @@ const MyRoutes = () => {
 					path='/active/:email/:activationCode'
 					element={<ActiveAccount />}
 				/>
-				<Route path='/test' element={<Test />} />
+				<Route path='/policy' element={<PolicyPage />} />
+				<Route path='/feedback' element={<FeedbackCustomerPage />} />
 			</Routes>
 			{!isAdminPath && <Footer />}
 
@@ -122,6 +126,7 @@ const MyRoutes = () => {
 								path='/admin/order'
 								element={<OrderManagementPage />}
 							/>
+							<Route path='/admin/feedback' element={<FeedbackPage />} />
 						</Routes>
 					</div>
 				</div>

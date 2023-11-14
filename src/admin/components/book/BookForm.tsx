@@ -224,7 +224,6 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 				<form
 					onSubmit={hanleSubmit}
 					className='form'
-					encType='multipart/form-data'
 				>
 					<input type='hidden' id='idBook' value={book?.idBook} hidden />
 					<div className='row'>
