@@ -3,6 +3,7 @@ import React, { FormEvent, useState } from "react";
 import FeedbackModel from "../../model/FeedbackModel";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
+import { endpointBE } from "../utils/Constant";
 
 export const FeedbackCustomerPage: React.FC = () => {
 	const token = localStorage.getItem("token");
@@ -21,7 +22,7 @@ export const FeedbackCustomerPage: React.FC = () => {
 		const token = localStorage.getItem("token");
 
 		toast.promise(
-			fetch("http://localhost:8080/feedback/add-feedback", {
+			fetch(endpointBE + "/feedback/add-feedback", {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${token}`,

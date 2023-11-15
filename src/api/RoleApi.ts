@@ -1,8 +1,9 @@
+import { endpointBE } from "../layouts/utils/Constant";
 import RoleModel from "../model/RoleModel";
 import { requestAdmin } from "./Request";
 
 export async function getAllRoles(): Promise<RoleModel[]> {
-   const endpoint = "http://localhost:8080/roles";
+   const endpoint = endpointBE + "/roles";
    // Gọi phương thức request()
    const response = await requestAdmin(endpoint);
 
@@ -14,7 +15,7 @@ export async function getAllRoles(): Promise<RoleModel[]> {
 }
 
 export async function getRoleByIdUser(idUser: any): Promise<RoleModel> {
-   const endpoint = `http://localhost:8080/users/${idUser}/listRoles`;
+   const endpoint = endpointBE + `/users/${idUser}/listRoles`;
    // Gọi phương thức request()
    const response = await requestAdmin(endpoint);
 

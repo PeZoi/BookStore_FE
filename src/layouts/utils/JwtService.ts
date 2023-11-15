@@ -45,7 +45,16 @@ export function getUsernameByToken() {
    }
 }
 
+export function getIdUserByToken() {
+   const token = localStorage.getItem('token');
+   if (token) {
+      const decodedToken = jwtDecode(token) as JwtPayload;
+      return decodedToken.id;
+   }
+}
+
 export function logout(navigate: any) {
    navigate("/login");
    localStorage.removeItem('token');
+   localStorage.removeItem('cart');
 }

@@ -7,6 +7,7 @@ import FeedbackModel from "../../../model/FeedbackModel";
 import { getAllFeedback } from "../../../api/FeedbackApi";
 import CheckIcon from "@mui/icons-material/Check";
 import { VisibilityOutlined } from "@mui/icons-material";
+import { endpointBE } from "../../../layouts/utils/Constant";
 
 export const FeedbackTable: React.FC = (props) => {
 	// Tạo biến để lấy tất cả data
@@ -31,7 +32,7 @@ export const FeedbackTable: React.FC = (props) => {
 		}
 
 		toast.promise(
-			fetch(`http://localhost:8080/feedback/update-feedback/${idFeedback}`, {
+			fetch(endpointBE + `/feedback/update-feedback/${idFeedback}`, {
 				method: "PUT",
 				headers: {
 					Authorization: `Bearer ${token}`,

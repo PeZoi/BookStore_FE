@@ -11,6 +11,7 @@ import {
 	checkRepeatPassword,
 } from "../utils/Validation";
 import { toast } from "react-toastify";
+import { endpointBE } from "../utils/Constant";
 
 const RegisterPage: React.FC = () => {
 	// Khai báo biến cần đăng ký
@@ -77,7 +78,7 @@ const RegisterPage: React.FC = () => {
 				// 	phoneNumber,
 				// });
 
-				const endpoint = "http://localhost:8080/user/register";
+				const endpoint = endpointBE + "/user/register";
 
 				const response = await fetch(endpoint, {
 					method: "POST",

@@ -4,15 +4,21 @@ import React, { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { JwtPayload } from "../../admin/RequireAdmin";
+import { endpointBE } from "../utils/Constant";
+import CartItemModel from "../../model/CartItemModel";
+import { getCartAllByIdUser } from "../../api/CartApi";
 
-const LoginPage: React.FC = () => {
+interface LoginPageProps {
+	setTotalCart: any;
+}
+
+const LoginPage: React.FC<LoginPageProps> = (props) => {
 	const navigation = useNavigate();
 	// Biến cần thiết
 	const [username, setUserName] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 
-	// Biến thông báo lỗi
 	function handleSubmit(event: FormEvent<HTMLFormElement>): void {
 		event.preventDefault();
 
@@ -21,7 +27,7 @@ const LoginPage: React.FC = () => {
 			password,
 		};
 
-		fetch("http://localhost:8080/user/authenticate", {
+		fetch(endpointBE + "/user/authenticate", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -37,9 +43,42 @@ const LoginPage: React.FC = () => {
 				const { jwtToken } = data;
 				toast.success("Đăng nhâp thành công");
 				localStorage.setItem("token", jwtToken);
+				const decodedToken = jwtDecode(jwtToken) as JwtPayload;
+
+				const cartData: string | null = localStorage.getItem("cart");
+				let cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
+				// Khi đăng nhập thành công mà trước đó đã thêm sản phẩm vào giỏ hàng thì các sản phẩm đó sẽ được thêm vào db
+				if (cart.length !== 0) {
+					cart = cart.map((c) => ({ ...c, idUser: decodedToken.id }));
+
+					const endpoint = endpointBE + "/cart-item/add-item";
+					fetch(endpoint, {
+						method: "POST",
+						headers: {
+							Authorization: `Bearer ${jwtToken}`,
+							"content-type": "application/json",
+						},
+						body: JSON.stringify(cart),
+					})
+						.then((response) => {
+							// Lấy giỏ hàng của user khi đăng nhâp thành công
+							async function getCart() {
+								const response = await getCartAllByIdUser();
+								// Xoá cart mà lúc chưa đăng nhập
+								localStorage.removeItem("cart");
+								cart = response;
+								// Thêm cart lúc đăng nhập
+								localStorage.setItem("cart", JSON.stringify(cart));
+								props.setTotalCart(cart.length);
+							}
+							getCart();
+						})
+						.catch((err) => {
+							console.log(err);
+						});
+				}
 
 				// Kiểm tra role để chuyển về link
-				const decodedToken = jwtDecode(jwtToken) as JwtPayload;
 				if (decodedToken.role === "ADMIN") {
 					navigation("/admin/dashboard");
 				} else {

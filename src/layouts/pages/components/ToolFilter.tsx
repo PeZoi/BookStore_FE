@@ -107,12 +107,14 @@ const ToolFilter: React.FC<ToolFilterProps> = (props) => {
 
 				{/* Filter */}
 				<FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
-					<InputLabel id='demo-simple-select-helper-label'>Lọc</InputLabel>
+					<InputLabel id='demo-simple-select-helper-label'>
+						Sắp xếp theo
+					</InputLabel>
 					<Select
 						labelId='demo-simple-select-helper-label'
 						id='demo-simple-select-helper'
 						value={props.filter ? props.filter + "" : ""}
-						label='Lọc'
+						label='Sắp xếp theo'
 						autoWidth
 						onChange={handleChangeFilter}
 						sx={{ minWidth: "150px" }}

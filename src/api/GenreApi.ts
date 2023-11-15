@@ -1,3 +1,4 @@
+import { endpointBE } from "../layouts/utils/Constant";
 import GenreModel from "../model/GenreModel";
 import { request } from "./Request";
 
@@ -19,20 +20,20 @@ async function getGenre(endpoint: string): Promise<resultInterface> {
 }
 
 export async function getAllGenres(): Promise<resultInterface> {
-   const endpoint = "http://localhost:8080/genre?sort=idGenre";
+   const endpoint = endpointBE + "/genre?sort=idGenre";
 
    return getGenre(endpoint);
 }
 
 export async function get1Genre(idGenre: number): Promise<resultInterface> {
-   const endpoint = `http://localhost:8080/genre/${idGenre}`;
+   const endpoint = endpointBE + `/genre/${idGenre}`;
    const response = await request(endpoint);
 
    return { genre: response, genreList: response };
 }
 
 export async function getGenreByIdBook(idBook: number): Promise<resultInterface> {
-   const endpoint = `http://localhost:8080/books/${idBook}/listGenres`;
+   const endpoint = endpointBE + `/books/${idBook}/listGenres`;
 
    return getGenre(endpoint);
 }

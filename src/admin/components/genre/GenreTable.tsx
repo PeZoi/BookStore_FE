@@ -8,6 +8,7 @@ import GenreModel from "../../../model/GenreModel";
 import { getAllGenres } from "../../../api/GenreApi";
 import { toast } from "react-toastify";
 import { useConfirm } from "material-ui-confirm";
+import { endpointBE } from "../../../layouts/utils/Constant";
 
 interface GenreTableProps {
 	setOption: any;
@@ -43,7 +44,7 @@ export const GenreTable: React.FC<GenreTableProps> = (props) => {
 			cancellationText: ["Huỷ"],
 		})
 			.then(() => {
-				fetch(`http://localhost:8080/genre/${id}`, {
+				fetch(endpointBE + `/genre/${id}`, {
 					method: "DELETE",
 					headers: {
 						Authorization: `Bearer ${token}`,

@@ -14,6 +14,7 @@ import { Avatar, Button } from "@mui/material";
 
 interface NavbarProps {
 	totalCart: number | undefined;
+	setTotalCart: any;
 }
 
 const Navbar: React.FC<NavbarProps> = (props) => {
@@ -226,7 +227,10 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 										<a
 											className='dropdown-item'
 											style={{ cursor: "pointer" }}
-											onClick={() => logout(navigate)}
+											onClick={() => {
+												props.setTotalCart(0);
+												logout(navigate);
+											}}
 										>
 											Logout
 										</a>

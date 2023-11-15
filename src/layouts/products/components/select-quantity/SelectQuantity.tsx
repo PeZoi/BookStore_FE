@@ -6,6 +6,8 @@ import "./SelectQuantity.css";
 import Icon from "@mui/material/Icon";
 import CartItemModel from "../../../../model/CartItemModel";
 import BookModel from "../../../../model/BookModel";
+import { isToken } from "../../../utils/JwtService";
+import { endpointBE } from "../../../utils/Constant";
 
 interface SelectQuantityProps {
 	max: number | undefined;
@@ -36,6 +38,22 @@ const SelectQuantity: React.FC<SelectQuantityProps> = (props) => {
 			if (isExistBook) {
 				// nếu có rồi thì sẽ gán là số lượng mới
 				isExistBook.quantity = newQuantity;
+
+				// Cập nhật trong db
+				if (isToken()) {
+					const token = localStorage.getItem("token");
+					fetch(endpointBE + `/cart-item/update-item`, {
+						method: "PUT",
+						headers: {
+							Authorization: `Bearer ${token}`,
+							"content-type": "application/json",
+						},
+						body: JSON.stringify({
+							idCart: isExistBook.idCart,
+							quantity: isExistBook.quantity,
+						}),
+					}).catch((err) => console.log(err));
+				}
 			}
 			// Cập nhật lại
 			localStorage.setItem("cart", JSON.stringify(cart));

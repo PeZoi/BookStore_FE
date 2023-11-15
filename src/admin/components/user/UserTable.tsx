@@ -8,6 +8,7 @@ import UserModel from "../../../model/UserModel";
 import { getAllUserRole } from "../../../api/UserApi";
 import { useConfirm } from "material-ui-confirm";
 import { toast } from "react-toastify";
+import { endpointBE } from "../../../layouts/utils/Constant";
 
 interface UserTableProps {
 	setOption: any;
@@ -34,7 +35,7 @@ export const UserTable: React.FC<UserTableProps> = (props) => {
 		})
 			.then(() => {
 				toast.promise(
-					fetch(`http://localhost:8080/user/delete-user/${idUser}`, {
+					fetch(endpointBE + `/user/delete-user/${idUser}`, {
 						method: "DELETE",
 						headers: {
 							Authorization: `Bearer ${token}`,

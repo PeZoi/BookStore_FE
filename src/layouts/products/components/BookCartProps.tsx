@@ -9,6 +9,8 @@ import CartItemModel from "../../../model/CartItemModel";
 import { getAllImageByBook } from "../../../api/ImageApi";
 import ImageModel from "../../../model/ImageModel";
 import { useConfirm } from "material-ui-confirm";
+import { getIdUserByToken, isToken } from "../../utils/JwtService";
+import { endpointBE } from "../../utils/Constant";
 
 interface BookCartProps {
 	cartItem: CartItemModel;
@@ -32,7 +34,19 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 			confirmationText: "Xoá",
 			cancellationText: "Huỷ",
 		})
-			.then(() => props.handleRemoveBook(props.cartItem.book.idBook))
+			.then(() => {
+				props.handleRemoveBook(props.cartItem.book.idBook);
+				if (isToken()) {
+					const token = localStorage.getItem("token");
+					fetch(endpointBE + `/cart-items/${props.cartItem.idCart}`, {
+						method: "DELETE",
+						headers: {
+							Authorization: `Bearer ${token}`,
+							"content-type": "application/json",
+						},
+					}).catch((err) => console.log(err));
+				}
+			})
 			.catch(() => {});
 	}
 
@@ -63,7 +77,7 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 		}
 	}
 
-	// Xử lý tăng/giảm số lượng
+	// Xử lý tăng số lượng
 	const add = () => {
 		if (quantity) {
 			if (
@@ -76,10 +90,12 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 		}
 	};
 
+	// Xử lý giảm số lượng
 	const reduce = () => {
 		if (quantity) {
+			// Nếu số lượng về không thì xoá sản phẩm đó
 			if (quantity - 1 === 0) {
-				props.handleRemoveBook(props.cartItem.book.idBook);
+				handleConfirm();
 			} else if (quantity > 1) {
 				setQuantity(quantity - 1);
 				handleModifiedQuantity(props.cartItem.book.idBook, -1);
@@ -99,6 +115,22 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 		if (isExistBook) {
 			// nếu có rồi thì sẽ tăng số lượng
 			isExistBook.quantity += quantity;
+
+			// Cập nhật trong db
+			if (isToken()) {
+				const token = localStorage.getItem("token");
+				fetch(endpointBE + `/cart-item/update-item`, {
+					method: "PUT",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"content-type": "application/json",
+					},
+					body: JSON.stringify({
+						idCart: props.cartItem.idCart,
+						quantity: isExistBook.quantity,
+					}),
+				}).catch((err) => console.log(err));
+			}
 		}
 		// Cập nhật lại
 		localStorage.setItem("cart", JSON.stringify(cart));

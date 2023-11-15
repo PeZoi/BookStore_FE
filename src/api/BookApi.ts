@@ -1,3 +1,4 @@
+import { endpointBE } from '../layouts/utils/Constant';
 import BookModel from '../model/BookModel'
 import GenreModel from '../model/GenreModel';
 import { getGenreByIdBook } from './GenreApi';
@@ -33,21 +34,21 @@ export async function getAllBook(size?: number, page?: number): Promise<resultIn
    }
 
    // Xác định endpoint
-   const endpoint: string = `http://localhost:8080/books?sort=idBook,desc&size=${size}&page=${page}`;
+   const endpoint: string = endpointBE + `/books?sort=idBook,desc&size=${size}&page=${page}`;
 
    return getBook(endpoint);
 }
 
 export async function getHotBook(): Promise<resultInterface> {
    // Xác định endpoint
-   const endpoint: string = "http://localhost:8080/books?sort=avgRating,desc&size=4";
+   const endpoint: string = endpointBE + "/books?sort=avgRating,desc&size=4";
 
    return getBook(endpoint);
 }
 
 export async function getNewBook(): Promise<resultInterface> {
    // Xác định endpoint
-   const endpoint: string = "http://localhost:8080/books?sort=idBook,desc&size=4";
+   const endpoint: string = endpointBE + "/books?sort=idBook,desc&size=4";
 
    return getBook(endpoint);
 }
@@ -62,7 +63,7 @@ export async function searchBook(keySearch?: string, idGenre?: number, filter?: 
    const optionsShow = `size=${size}&page=${page}`;
 
    // Endpoint mặc định
-   let endpoint: string = `http://localhost:8080/books?` + optionsShow;
+   let endpoint: string = endpointBE + `/books?` + optionsShow;
 
    let filterEndpoint = '';
    if (filter === 1) {
@@ -80,7 +81,7 @@ export async function searchBook(keySearch?: string, idGenre?: number, filter?: 
    // Nếu có key search và không có lọc thể loại
    if (keySearch !== '') {
       // Mặc đinh nếu không có filter
-      endpoint = `http://localhost:8080/books/search/findByNameBookContaining?nameBook=${keySearch}&` + optionsShow + '&' + filterEndpoint;
+      endpoint = endpointBE + `/books/search/findByNameBookContaining?nameBook=${keySearch}&` + optionsShow + '&' + filterEndpoint;
    }
 
    // Nếu idGenre không undifined
@@ -88,17 +89,17 @@ export async function searchBook(keySearch?: string, idGenre?: number, filter?: 
       // Nếu có không có key search và có lọc thể loại
       if (keySearch === '' && idGenre > 0) {
          // Mặc định nếu không có filter
-         endpoint = `http://localhost:8080/books/search/findByListGenres_idGenre?idGenre=${idGenre}&` + optionsShow + '&' + filterEndpoint;
+         endpoint = endpointBE + `/books/search/findByListGenres_idGenre?idGenre=${idGenre}&` + optionsShow + '&' + filterEndpoint;
       }
 
       // Nếu có key search và có lọc thể loại
       if (keySearch !== '' && idGenre > 0) {
-         endpoint = `http://localhost:8080/books/search/findByNameBookContainingAndListGenres_idGenre?nameBook=${keySearch}&idGenre=${idGenre}&` + optionsShow + '&' + filterEndpoint;
+         endpoint = endpointBE + `/books/search/findByNameBookContainingAndListGenres_idGenre?nameBook=${keySearch}&idGenre=${idGenre}&` + optionsShow + '&' + filterEndpoint;
       }
 
       // Chỉ lọc filter
       if (keySearch === '' && (idGenre === 0 || typeof (idGenre) === 'string')) {
-         endpoint = "http://localhost:8080/books?" + optionsShow + '&' + filterEndpoint;
+         endpoint = endpointBE + "/books?" + optionsShow + '&' + filterEndpoint;
       }
 
       // console.log("idGenre: " + typeof (idGenre) + idGenre + ", filter: " + typeof (filter) + filter + ", keySearch" + +typeof (keySearch) + keySearch);
@@ -110,7 +111,7 @@ export async function searchBook(keySearch?: string, idGenre?: number, filter?: 
 }
 
 export async function getBookById(idBook: number): Promise<BookModel | null> {
-   const endpoint = `http://localhost:8080/books/${idBook}`;
+   const endpoint = endpointBE + `/books/${idBook}`;
 
    try {
       // Gọi phương thức request()
@@ -118,6 +119,28 @@ export async function getBookById(idBook: number): Promise<BookModel | null> {
 
       // Kiểm tra xem dữ liệu endpoint trả về có dữ liệu không
       if (response) {
+         // Trả về quyển sách
+         return response;
+      } else {
+         throw new Error("Sách không tồn tại");
+      }
+
+   } catch (error) {
+      console.error('Error: ', error);
+      return null;
+   }
+}
+
+export async function getBookByIdCartItem(idCart: number): Promise<BookModel | null> {
+   const endpoint = endpointBE + `/cart-items/${idCart}/book`;
+
+   try {
+      // Gọi phương thức request()
+      const response = await request(endpoint);
+
+      // Kiểm tra xem dữ liệu endpoint trả về có dữ liệu không
+      if (response) {
+
          // Trả về quyển sách
          return response;
       } else {

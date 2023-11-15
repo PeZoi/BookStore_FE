@@ -12,6 +12,8 @@ import CartItemModel from "../../../model/CartItemModel";
 import { toast } from "react-toastify";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { IconButton } from "@mui/material";
+import { endpointBE } from "../../utils/Constant";
+import { getIdUserByToken, isToken } from "../../utils/JwtService";
 
 interface BookProps {
 	book: BookModel;
@@ -23,7 +25,6 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [erroring, setErroring] = useState(null);
 
-	// Khai báo biến thông báo
 
 	useEffect(() => {
 		getAllImageByBook(book.idBook)
@@ -61,7 +62,7 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 	}
 
 	// Xử lý thêm sản phẩm vào giỏ hàng
-	const handleAddProduct = (newBook: BookModel) => {
+	const handleAddProduct = async (newBook: BookModel) => {
 		const cartData: string | null = localStorage.getItem("cart");
 		const cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
 		// cái isExistBook này sẽ tham chiếu đến cái cart ở trên, nên khi update thì cart nó cũng update theo
@@ -72,11 +73,64 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 		if (isExistBook) {
 			// nếu có rồi thì sẽ tăng số lượng
 			isExistBook.quantity += 1;
+
+			// Lưu vào db
+			if (isToken()) {
+				const request = {
+					idCart: isExistBook.idCart,
+					quantity: isExistBook.quantity,
+				};
+				const token = localStorage.getItem("token");
+				fetch(endpointBE + `/cart-item/update-item`, {
+					method: "PUT",
+					headers: {
+						Authorization: `Bearer ${token}`,
+						"content-type": "application/json",
+					},
+					body: JSON.stringify(request),
+				}).catch((err) => console.log(err));
+			}
 		} else {
-			cart.push({
-				quantity: 1,
-				book: newBook,
-			});
+			// Lưu vào db
+			if (isToken()) {
+				try {
+					const request = [
+						{
+							quantity: 1,
+							book: newBook,
+							idUser: getIdUserByToken(),
+						},
+					];
+					const token = localStorage.getItem("token");
+					const response = await fetch(
+						endpointBE + "/cart-item/add-item",
+						{
+							method: "POST",
+							headers: {
+								Authorization: `Bearer ${token}`,
+								"content-type": "application/json",
+							},
+							body: JSON.stringify(request),
+						}
+					);
+
+					if (response.ok) {
+						const idCart = await response.json();
+						cart.push({
+							idCart: idCart,
+							quantity: 1,
+							book: newBook,
+						});
+					}
+				} catch (error) {
+					console.log(error);
+				}
+			} else {
+				cart.push({
+					quantity: 1,
+					book: newBook,
+				});
+			}
 		}
 		// Lưu vào localStorage
 		localStorage.setItem("cart", JSON.stringify(cart));

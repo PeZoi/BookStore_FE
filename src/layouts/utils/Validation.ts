@@ -1,6 +1,8 @@
+import { endpointBE } from "./Constant";
+
 // Hàm check email xem tồn tại chưa
 export const checkExistEmail = async (setErrorEmail: any, email: string) => {
-   const endpoint = `http://localhost:8080/users/search/existsByEmail?email=${email}`;
+   const endpoint = endpointBE + `/users/search/existsByEmail?email=${email}`;
    // Call api
    try {
       const response = await fetch(endpoint);
@@ -24,7 +26,7 @@ export const checkExistUsername = async (setErrorUsername: any, username: string
       setErrorUsername("Tên đăng nhập phải chứa ít nhất 8 ký tự");
       return true;
    }
-   const endpoint = `http://localhost:8080/users/search/existsByUsername?username=${username}`;
+   const endpoint = endpointBE + `/users/search/existsByUsername?username=${username}`;
    // Call api
    try {
       const response = await fetch(endpoint);

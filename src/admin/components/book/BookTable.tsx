@@ -9,6 +9,7 @@ import { getAllBook } from "../../../api/BookApi";
 import { getAllImageByBook } from "../../../api/ImageApi";
 import { toast } from "react-toastify";
 import { useConfirm } from "material-ui-confirm";
+import { endpointBE } from "../../../layouts/utils/Constant";
 
 interface BookTableProps {
 	setOption: any;
@@ -63,7 +64,7 @@ export const BookTable: React.FC<BookTableProps> = (props) => {
 			cancellationText: ["Huỷ"],
 		})
 			.then(() => {
-				fetch(`http://localhost:8080/books/${id}`, {
+				fetch(endpointBE + `/books/${id}`, {
 					method: "DELETE",
 					headers: {
 						Authorization: `Bearer ${token}`,

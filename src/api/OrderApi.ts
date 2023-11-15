@@ -1,8 +1,9 @@
+import { endpointBE } from "../layouts/utils/Constant";
 import OrderModel from "../model/OrderModel";
 import { requestAdmin } from "./Request";
 
 export async function getAllOrders(): Promise<OrderModel[]> {
-   const endpoint: string = "http://localhost:8080/orders";
+   const endpoint: string = endpointBE + "/orders";
    const response = await requestAdmin(endpoint);
 
    const datas = response._embedded.orders.map((data: any) => {

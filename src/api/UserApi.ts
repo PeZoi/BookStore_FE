@@ -1,3 +1,4 @@
+import { endpointBE } from "../layouts/utils/Constant";
 import BookModel from "../model/BookModel";
 import UserModel from "../model/UserModel";
 import { request, requestAdmin } from "./Request";
@@ -11,7 +12,7 @@ async function getUser(endpoint: string): Promise<UserModel> {
 }
 
 export async function getAllUserRole(): Promise<UserModel[]> {
-   const endpoint: string = `http://localhost:8080/roles`;
+   const endpoint: string = endpointBE + `/roles`;
    const response = await requestAdmin(endpoint);
 
    const data = response._embedded.roles.map((roleData: any) => {
@@ -40,7 +41,7 @@ export async function getAllUserRole(): Promise<UserModel[]> {
 }
 
 export async function get1User(idUser: any): Promise<UserModel> {
-   const endpoint = `http://localhost:8080/users/${idUser}`;
+   const endpoint = endpointBE + `/users/${idUser}`;
    const responseUser = await requestAdmin(endpoint);
    const responseRole = await getRoleByIdUser(idUser);
 
@@ -63,7 +64,7 @@ export async function get1User(idUser: any): Promise<UserModel> {
 
 export async function getUserByIdReview(idReview: number): Promise<UserModel> {
    // Xác định endpoint
-   const endpoint: string = `http://localhost:8080/reviews/${idReview}/user`;
+   const endpoint: string = endpointBE + `/reviews/${idReview}/user`;
 
    return getUser(endpoint);
 }

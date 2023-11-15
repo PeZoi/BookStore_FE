@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import { LoadingButton } from "@mui/lab";
 import { get1User } from "../../../api/UserApi";
 import { getUsernameByToken } from "../../../layouts/utils/JwtService";
+import { endpointBE } from "../../../layouts/utils/Constant";
 
 interface UserFormProps {
 	option: string;
@@ -94,8 +95,8 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 
 		const endpoint =
 			props.option === "add"
-				? "http://localhost:8080/user/add-user"
-				: "http://localhost:8080/user/update-user";
+				? endpointBE + "/user/add-user"
+				: endpointBE + "/user/update-user";
 		const method = props.option === "add" ? "POST" : "PUT";
 		toast.promise(
 			fetch(endpoint, {

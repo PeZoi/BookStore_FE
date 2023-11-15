@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { endpointBE } from "../utils/Constant";
 
 const ActiveAccount: React.FC = () => {
 	const [enabled, setEnabled] = useState(false);
@@ -16,7 +17,7 @@ const ActiveAccount: React.FC = () => {
 
 	const handleActiveAccount = async () => {
 		try {
-			const url = `http://localhost:8080/user/active-account?email=${email}&activationCode=${activationCode}`;
+			const url = endpointBE + `/user/active-account?email=${email}&activationCode=${activationCode}`;
 			const response = await fetch(url, { method: "GET" });
 
 			if (response.ok) {

@@ -7,6 +7,7 @@ import { Box, Button } from "@mui/material";
 import { CloudUpload } from "@mui/icons-material";
 import GenreModel from "../../../model/GenreModel";
 import OrderModel from "../../../model/OrderModel";
+import { endpointBE } from "../../../layouts/utils/Constant";
 
 interface OrderFormProps {
 	option: string;
@@ -39,7 +40,7 @@ export const OrderForm: React.FC<OrderFormProps> = (props) => {
 			return;
 		}
 
-		fetch("http://localhost:8080/", {
+		fetch(endpointBE + "/", {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${token}`,

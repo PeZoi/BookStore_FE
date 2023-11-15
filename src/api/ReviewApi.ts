@@ -1,3 +1,4 @@
+import { endpointBE } from "../layouts/utils/Constant";
 import ReviewModel from "../model/ReviewModel";
 import { request } from "./Request";
 
@@ -12,7 +13,7 @@ async function getReview(endpoint: string): Promise<ReviewModel[]> {
 
 export async function getAllReview(idBook: number): Promise<ReviewModel[]> {
    // Xác định endpoint
-   const endpoint: string = `http://localhost:8080/books/${idBook}/listReviews`;
+   const endpoint: string = endpointBE + `/books/${idBook}/listReviews`;
 
    return getReview(endpoint);
 }

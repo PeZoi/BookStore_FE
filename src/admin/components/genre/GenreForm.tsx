@@ -8,6 +8,7 @@ import GenreModel from "../../../model/GenreModel";
 import { get1Genre } from "../../../api/GenreApi";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { endpointBE } from "../../../layouts/utils/Constant";
 
 interface GenreFormProps {
 	option: string;
@@ -51,8 +52,8 @@ export const GenreForm: React.FC<GenreFormProps> = (props) => {
 		const method = props.option === "add" ? "POST" : "PUT";
 		const endpoint =
 			props.option === "add"
-				? "http://localhost:8080/genre"
-				: `http://localhost:8080/genre/${props.id}`;
+				? endpointBE + "/genre"
+				: endpointBE + `/genre/${props.id}`;
 
 		fetch(endpoint, {
 			method: method,

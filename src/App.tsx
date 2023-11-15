@@ -27,6 +27,8 @@ import OrderManagementPage from "./admin/OrderManagement";
 import PolicyPage from "./layouts/pages/PolicyPage";
 import FeedbackPage from "./admin/FeedbackManagement";
 import { FeedbackCustomerPage } from "./layouts/pages/FeedbackCustomerPage";
+import { isToken } from "./layouts/utils/JwtService";
+import { getCartAllByIdUser } from "./api/CartApi";
 
 const MyRoutes = () => {
 	// XỬ LÝ GIỎ HÀNG //////////////////////////////
@@ -35,7 +37,8 @@ const MyRoutes = () => {
 
 	useEffect(() => {
 		const cartData: string | null = localStorage.getItem("cart");
-		const cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
+		let cart: CartItemModel[] = [];
+		cart = cartData ? JSON.parse(cartData) : [];
 		setCartList(cart);
 		setTotalCart(cart.length);
 	}, []);
@@ -51,7 +54,9 @@ const MyRoutes = () => {
 	return (
 		<ConfirmProvider>
 			{/* Customer */}
-			{!isAdminPath && <Navbar totalCart={totalCart} />}
+			{!isAdminPath && (
+				<Navbar totalCart={totalCart} setTotalCart={setTotalCart} />
+			)}
 			<Routes>
 				<Route
 					path='/'
@@ -86,7 +91,10 @@ const MyRoutes = () => {
 					element={<CartPage setTotalCart={setTotalCart} />}
 				/>
 				<Route path='/register' element={<RegisterPage />} />
-				<Route path='/login' element={<LoginPage />} />
+				<Route
+					path='/login'
+					element={<LoginPage setTotalCart={setTotalCart} />}
+				/>
 				<Route path='/profile' element={<ProfilePage />} />
 				<Route
 					path='/active/:email/:activationCode'

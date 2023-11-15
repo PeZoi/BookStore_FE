@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import BookCartList from "../products/BookCartList";
 import CartItemModel from "../../model/CartItemModel";
+import { isToken } from "../utils/JwtService";
+import { getCartAllByIdUser } from "../../api/CartApi";
 
 interface CartPageProps {
-	// cartList: CartItemModel[];
+	// cartList: CartItemModel[]; // Trường hợp truyền dữ liệu trước từ app vào cart page là không được vì bắt buộc phải load trang chủ trước thì mới load được dữ liệu, còn nếu load dữ liệu trực tiếp ở trên cart page thì sẽ không load được dữ liệu
 	setTotalCart: any;
 }
 
@@ -13,12 +15,15 @@ const CartPage: React.FC<CartPageProps> = (props) => {
 
 	useEffect(() => {
 		const cartData: string | null = localStorage.getItem("cart");
-		const cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
+		let cart: CartItemModel[] = [];
+		cart = cartData ? JSON.parse(cartData) : [];
+
 		const total = cart.reduce((totalPrice, cartItem) => {
 			return totalPrice + cartItem.quantity * cartItem.book.sellPrice;
 		}, 0);
 		setTotalPriceProduct(total);
 		setCartList(cart);
+		props.setTotalCart(cart.length);
 	}, [cartList]);
 	return (
 		<BookCartList

@@ -53,7 +53,7 @@ const BookCartList: React.FC<BookCartListProps> = (props) => {
 			>
 				{/* Bên trái */}
 				<h2 className='mt-2 px-3 py-3 mb-0'>
-					GIỎ HÀNG <span>(2 sản phẩm)</span>
+					GIỎ HÀNG <span>({props.cartList.length} sản phẩm)</span>
 				</h2>
 				<div className='col-8 me-3'>
 					<div className='container-book bg-light'>

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 export interface JwtPayload {
+	id: any;
 	role: string;
 	avatar: string;
 	lastName: string;
