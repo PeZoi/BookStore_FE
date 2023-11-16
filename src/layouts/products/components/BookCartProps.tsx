@@ -9,7 +9,7 @@ import CartItemModel from "../../../model/CartItemModel";
 import { getAllImageByBook } from "../../../api/ImageApi";
 import ImageModel from "../../../model/ImageModel";
 import { useConfirm } from "material-ui-confirm";
-import { getIdUserByToken, isToken } from "../../utils/JwtService";
+import { isToken } from "../../utils/JwtService";
 import { endpointBE } from "../../utils/Constant";
 
 interface BookCartProps {

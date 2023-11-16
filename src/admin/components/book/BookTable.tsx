@@ -1,6 +1,6 @@
 import { DeleteOutlineOutlined, VisibilityOutlined } from "@mui/icons-material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { IconButton, Tooltip } from "@mui/material";
+import { Box, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { DataTable } from "../../../layouts/utils/DataTable";
@@ -20,6 +20,8 @@ interface BookTableProps {
 }
 
 export const BookTable: React.FC<BookTableProps> = (props) => {
+	const [loading, setLoading] = useState(true);
+
 	// Tạo các biến của confirm dialog
 	const confirm = useConfirm();
 	// Tạo biến để lấy tất cả data
@@ -46,6 +48,7 @@ export const BookTable: React.FC<BookTableProps> = (props) => {
 				// câu lệnh này
 				const books = await Promise.all(promises);
 				setData(books);
+				setLoading(false);
 			} catch (error) {
 				console.error(error);
 			}
@@ -145,6 +148,20 @@ export const BookTable: React.FC<BookTableProps> = (props) => {
 			},
 		},
 	];
+
+	if (loading) {
+		return (
+			<Box
+				sx={{
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+			>
+				<CircularProgress />
+			</Box>
+		);
+	}
 
 	return <DataTable columns={columns} rows={data} />;
 };

@@ -1,3 +1,5 @@
+import BookModel from "./BookModel";
+import CartItemModel from "./CartItemModel";
 import UserModel from "./UserModel";
 
 class OrderModel {
@@ -11,6 +13,10 @@ class OrderModel {
    dateCreated: Date;
    status: string;
    user?: UserModel;
+   fullName?: string;
+   phoneNumber?: string;
+   note?: string;
+   cartItems?: CartItemModel[]; // để tạm
 
 
    constructor(idOrder: number,

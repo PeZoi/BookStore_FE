@@ -22,6 +22,8 @@ import {
 } from "../utils/Validation";
 import Tooltip from "@mui/material/Tooltip";
 import OrderTable from "./components/OrderTable";
+import { FadeModal } from "../utils/FadeModal";
+import { OrderForm } from "../../admin/components/order/OrderForm";
 
 const ProfilePage: React.FC = () => {
 	// Các biến thông tin cá nhân
@@ -35,6 +37,15 @@ const ProfilePage: React.FC = () => {
 	const [avatar, setAvatar] = useState("");
 	const [newPassword, setNewPassword] = useState("");
 	const [repeatPassword, setRepeatPassword] = useState("");
+
+	// reload lại component order table
+	const [keyCountReload, setKeyCountReload] = useState(0);
+
+	// Xử lý order table
+	const [id, setId] = useState(0);
+	const [openModal, setOpenModal] = React.useState(false);
+	const handleOpenModal = () => setOpenModal(true);
+	const handleCloseModal = () => setOpenModal(false);
 
 	// Các biến trạng thái
 	const [modifiedStatus, setModifiedStatus] = useState(false);
@@ -338,8 +349,25 @@ const ProfilePage: React.FC = () => {
 								</TabPanel>
 								<TabPanel value='2'>
 									<div>
-										<OrderTable />
+										<OrderTable
+											handleOpenModal={handleOpenModal}
+											keyCountReload={keyCountReload}
+											setKeyCountReload={setKeyCountReload}
+											setId={setId}
+										/>
 									</div>
+									<FadeModal
+										open={openModal}
+										handleOpen={handleOpenModal}
+										handleClose={handleCloseModal}
+									>
+										<OrderForm
+											id={id}
+											setKeyCountReload={setKeyCountReload}
+											handleCloseModal={handleCloseModal}
+											option='view-customer'
+										/>
+									</FadeModal>
 								</TabPanel>
 								<TabPanel value='3'>
 									<form

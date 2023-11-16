@@ -1,6 +1,12 @@
 import { DeleteOutlineOutlined } from "@mui/icons-material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { Chip, IconButton, Tooltip } from "@mui/material";
+import {
+	Box,
+	Chip,
+	CircularProgress,
+	IconButton,
+	Tooltip,
+} from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { DataTable } from "../../../layouts/utils/DataTable";
@@ -19,6 +25,7 @@ interface UserTableProps {
 }
 
 export const UserTable: React.FC<UserTableProps> = (props) => {
+	const [loading, setLoading] = useState(true);
 	// Tạo biến để lấy tất cả data
 	const [data, setData] = useState<UserModel[]>([]);
 
@@ -67,6 +74,7 @@ export const UserTable: React.FC<UserTableProps> = (props) => {
 					.map((user) => ({ ...user, id: user.idUser }));
 				users = users.sort((u1, u2) => u1.idUser - u2.idUser);
 				setData(users);
+				setLoading(false);
 			})
 			.catch((error) => console.log(error));
 	}, [props.keyCountReload]);
@@ -130,6 +138,20 @@ export const UserTable: React.FC<UserTableProps> = (props) => {
 			},
 		},
 	];
+
+	if (loading) {
+		return (
+			<Box
+				sx={{
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+			>
+				<CircularProgress />
+			</Box>
+		);
+	}
 
 	return <DataTable columns={columns} rows={data} />;
 };

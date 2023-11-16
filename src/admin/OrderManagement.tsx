@@ -7,6 +7,7 @@ import RequireAdmin from "./RequireAdmin";
 const OrderManagement = () => {
 	// Tạo ra biến để mỗi khi thao tác CRUD thì sẽ update lại table
 	const [keyCountReload, setKeyCountReload] = useState(0);
+	const [id, setId] = useState(0);
 
 	const [option, setOption] = useState(""); // Truyền vào là có thể là (add, update, view)
 	const [openModal, setOpenModal] = React.useState(false);
@@ -22,6 +23,7 @@ const OrderManagement = () => {
 						setOption={setOption}
 						handleOpenModal={handleOpenModal}
 						setKeyCountReload={setKeyCountReload}
+						setId={setId}
 					/>
 				</div>
 			</div>
@@ -30,7 +32,12 @@ const OrderManagement = () => {
 				handleOpen={handleOpenModal}
 				handleClose={handleCloseModal}
 			>
-				<OrderForm option={option} setKeyCountReload={setKeyCountReload} />
+				<OrderForm
+					id={id}
+					option={option}
+					setKeyCountReload={setKeyCountReload}
+					handleCloseModal={handleCloseModal}
+				/>
 			</FadeModal>
 		</div>
 	);

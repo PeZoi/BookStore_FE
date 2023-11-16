@@ -1,6 +1,6 @@
 import { DeleteOutlineOutlined } from "@mui/icons-material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { IconButton, Tooltip } from "@mui/material";
+import { Box, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { DataTable } from "../../../layouts/utils/DataTable";
@@ -19,6 +19,7 @@ interface GenreTableProps {
 }
 
 export const GenreTable: React.FC<GenreTableProps> = (props) => {
+	const [loading, setLoading] = useState(true);
 	// Tạo các biến của confirm dialog
 	const confirm = useConfirm();
 
@@ -31,6 +32,7 @@ export const GenreTable: React.FC<GenreTableProps> = (props) => {
 				id: genre.idGenre,
 			}));
 			setData(genres);
+			setLoading(false);
 		});
 	}, [props.keyCountReload]);
 
@@ -102,6 +104,20 @@ export const GenreTable: React.FC<GenreTableProps> = (props) => {
 			},
 		},
 	];
+
+	if (loading) {
+		return (
+			<Box
+				sx={{
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+			>
+				<CircularProgress />
+			</Box>
+		);
+	}
 
 	return <DataTable columns={columns} rows={data} />;
 };

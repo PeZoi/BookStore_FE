@@ -1,4 +1,4 @@
-import { IconButton, Tooltip } from "@mui/material";
+import { Box, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { DataTable } from "../../../layouts/utils/DataTable";
@@ -10,6 +10,8 @@ import { VisibilityOutlined } from "@mui/icons-material";
 import { endpointBE } from "../../../layouts/utils/Constant";
 
 export const FeedbackTable: React.FC = (props) => {
+	const [loading, setLoading] = useState(true);
+
 	// Tạo biến để lấy tất cả data
 	const [data, setData] = useState<FeedbackModel[]>([]);
 	useEffect(() => {
@@ -19,6 +21,7 @@ export const FeedbackTable: React.FC = (props) => {
 				id: feedback.idFeedback,
 			}));
 			setData(feedbacks);
+			setLoading(false);
 		});
 	}, [data]);
 
@@ -94,6 +97,20 @@ export const FeedbackTable: React.FC = (props) => {
 			},
 		},
 	];
+
+	if (loading) {
+		return (
+			<Box
+				sx={{
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+			>
+				<CircularProgress />
+			</Box>
+		);
+	}
 
 	return <DataTable columns={columns} rows={data} />;
 };

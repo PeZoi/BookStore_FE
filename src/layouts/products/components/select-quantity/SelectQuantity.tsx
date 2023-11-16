@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
+import React from "react";
 import "./SelectQuantity.css";
 import Icon from "@mui/material/Icon";
 import CartItemModel from "../../../../model/CartItemModel";

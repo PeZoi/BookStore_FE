@@ -39,7 +39,7 @@ const LoginPage: React.FC<LoginPageProps> = (props) => {
 					return response.json();
 				}
 			})
-			.then((data) => {
+			.then(async (data) => {
 				const { jwtToken } = data;
 				toast.success("Đăng nhâp thành công");
 				localStorage.setItem("token", jwtToken);
@@ -76,6 +76,15 @@ const LoginPage: React.FC<LoginPageProps> = (props) => {
 						.catch((err) => {
 							console.log(err);
 						});
+				} else {
+					// Lấy giỏ hàng của user khi đăng nhâp thành công
+					const response = await getCartAllByIdUser();
+					// Xoá cart mà lúc chưa đăng nhập
+					localStorage.removeItem("cart");
+					cart = response;
+					// Thêm cart lúc đăng nhập
+					localStorage.setItem("cart", JSON.stringify(cart));
+					props.setTotalCart(cart.length);
 				}
 
 				// Kiểm tra role để chuyển về link
