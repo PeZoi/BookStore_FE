@@ -25,7 +25,6 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [erroring, setErroring] = useState(null);
 
-
 	useEffect(() => {
 		getAllImageByBook(book.idBook)
 			.then((response) => {

@@ -203,9 +203,18 @@ const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 				}),
 			})
 				.then((response) => {
+					if (response.ok) {
+						return response.json();
+					}
+				})
+				.then((data) => {
+					const { jwtToken } = data;
+					localStorage.setItem("token", jwtToken);
+
 					toast.success("Cập nhật ảnh đại diện thành công");
 					setPreviewAvatar(previewAvatar);
 					setIsUploadAvatar(false);
+					props.setReloadAvatar(Math.random());
 				})
 				.catch((error) => {
 					toast.error("Cập nhật ảnh đại diện thất bại");
