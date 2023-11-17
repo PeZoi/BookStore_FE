@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import BookModel from "../../../model/BookModel";
 import Tooltip from "@mui/material/Tooltip";
 import TextEllipsis from "./text-ellipsis/TextEllipsis";
 import CartItemModel from "../../../model/CartItemModel";

@@ -22,7 +22,7 @@ const CartPage: React.FC<CartPageProps> = (props) => {
 		setTotalPriceProduct(total);
 		setCartList(cart);
 		props.setTotalCart(cart.length);
-	}, [cartList]);
+	}, [cartList]); // Khúc này đang bị overloading
 	return (
 		<BookCartList
 			cartList={cartList}

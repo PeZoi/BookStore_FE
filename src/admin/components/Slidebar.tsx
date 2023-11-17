@@ -8,7 +8,7 @@ import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LocalMallRoundedIcon from "@mui/icons-material/LocalMallRounded";
 import FeedbackIcon from "@mui/icons-material/Feedback";
 import { logout } from "../../layouts/utils/JwtService";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 interface SlidebarProps {
 	active?: string;
@@ -112,6 +112,13 @@ export const Slidebar: React.FC<SlidebarProps> = (props) => {
 					<span className='ms-2'>ADMIN</span>
 				</a>
 				<div className='dropdown-menu' aria-labelledby='triggerId'>
+					<Link
+						className='dropdown-item'
+						style={{ cursor: "pointer" }}
+						to={"/profile"}
+					>
+						Thông tin cá nhân
+					</Link>
 					<a
 						className='dropdown-item'
 						style={{ cursor: "pointer" }}

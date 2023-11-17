@@ -1,8 +1,7 @@
 import { endpointBE } from "../layouts/utils/Constant";
-import BookModel from "../model/BookModel";
 import CartItemModel from "../model/CartItemModel";
 import OrderModel from "../model/OrderModel";
-import { request, requestAdmin } from "./Request";
+import { request } from "./Request";
 
 export async function getAllOrders(): Promise<OrderModel[]> {
    const endpoint: string = endpointBE + "/orders?sort=idOrder,desc";

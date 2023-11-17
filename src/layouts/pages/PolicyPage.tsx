@@ -1,4 +1,3 @@
-import { Padding } from "@mui/icons-material";
 import React from "react";
 
 const PolicyPage: React.FC = () => {

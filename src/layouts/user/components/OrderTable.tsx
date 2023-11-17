@@ -1,7 +1,6 @@
 import { VisibilityOutlined } from "@mui/icons-material";
 import {
 	Box,
-	Button,
 	Chip,
 	CircularProgress,
 	IconButton,
@@ -10,7 +9,7 @@ import {
 import { GridColDef } from "@mui/x-data-grid";
 import React, { useEffect, useState } from "react";
 import { DataTable } from "../../utils/DataTable";
-import { getAllOrders, getAllOrdersByIdUser } from "../../../api/OrderApi";
+import { getAllOrdersByIdUser } from "../../../api/OrderApi";
 import OrderModel from "../../../model/OrderModel";
 import { getIdUserByToken } from "../../utils/JwtService";
 

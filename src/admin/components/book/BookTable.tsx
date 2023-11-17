@@ -1,4 +1,4 @@
-import { DeleteOutlineOutlined, VisibilityOutlined } from "@mui/icons-material";
+import { DeleteOutlineOutlined } from "@mui/icons-material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { Box, CircularProgress, IconButton, Tooltip } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";

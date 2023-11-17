@@ -221,10 +221,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 			</Typography>
 			<hr />
 			<div className='container px-5'>
-				<form
-					onSubmit={hanleSubmit}
-					className='form'
-				>
+				<form onSubmit={hanleSubmit} className='form'>
 					<input type='hidden' id='idBook' value={book?.idBook} hidden />
 					<div className='row'>
 						<div

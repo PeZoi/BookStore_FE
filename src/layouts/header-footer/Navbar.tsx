@@ -108,20 +108,17 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 							</ul>
 						</li>
 						<li className='nav-item'>
-							<a className='nav-link' href='#'>
+							<Link className='nav-link' to={"/policy"}>
 								Chính sách
-							</a>
+							</Link>
 						</li>
-						<li className='nav-item'>
-							<a className='nav-link' href='#'>
-								Liên hệ
-							</a>
-						</li>
-						<li className='nav-item'>
-							<NavLink className='nav-link' to={"/feedback"}>
-								Feedback
-							</NavLink>
-						</li>
+						{isToken() && (
+							<li className='nav-item'>
+								<NavLink className='nav-link' to={"/feedback"}>
+									Feedback
+								</NavLink>
+							</li>
+						)}
 					</ul>
 					{/* <!-- Left links --> */}
 				</div>
@@ -217,11 +214,6 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 										>
 											Sách yêu thích của tôi
 										</Link>
-									</li>
-									<li>
-										<a className='dropdown-item' href='#'>
-											Cài đặt
-										</a>
 									</li>
 									<li>
 										<a

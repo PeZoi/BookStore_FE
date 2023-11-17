@@ -79,7 +79,7 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 				setPreviewAvatar(response.avatar);
 			});
 		}
-	}, [props.id]);
+	}, [props.id, props.option]);
 
 	function hanleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
@@ -90,7 +90,6 @@ export const UserForm: React.FC<UserFormProps> = (props) => {
 			toast.warning("Bạn không thể cập nhật tài khoản bạn đang sử dụng");
 			return;
 		}
-		// console.log(user);
 		setStatusBtn(true);
 
 		const endpoint =

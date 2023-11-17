@@ -7,6 +7,7 @@ export interface JwtPayload {
 	role: string;
 	avatar: string;
 	lastName: string;
+	enabled: boolean;
 }
 
 const RequireAdmin = <P extends object>(

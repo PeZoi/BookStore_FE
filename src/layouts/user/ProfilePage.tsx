@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Tab from "@mui/material/Tab";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import HiddenInputUpload from "../utils/HiddenInputUpload";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -24,19 +24,38 @@ import Tooltip from "@mui/material/Tooltip";
 import OrderTable from "./components/OrderTable";
 import { FadeModal } from "../utils/FadeModal";
 import { OrderForm } from "../../admin/components/order/OrderForm";
+import { get1User } from "../../api/UserApi";
+import { getIdUserByToken } from "../utils/JwtService";
+import UserModel from "../../model/UserModel";
+import { endpointBE } from "../utils/Constant";
+import { toast } from "react-toastify";
+import CloseIcon from "@mui/icons-material/Close";
+import CheckIcon from "@mui/icons-material/Check";
 
-const ProfilePage: React.FC = () => {
+interface ProfilePageProps {
+	setReloadAvatar: any;
+}
+
+const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 	// Các biến thông tin cá nhân
-	const [dateOfBirth, setDateOfBirth] = useState("1990-01-01");
-	const [deliveryAddress, setDeliveryAddress] = useState("");
-	const [purchaseAddress, setPurchaseAddress] = useState("");
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
-	const [gender, setGender] = useState("M");
-	const [phoneNumber, setPhoneNumber] = useState("");
-	const [avatar, setAvatar] = useState("");
+	const [user, setUser] = useState<UserModel>({
+		idUser: 0,
+		dateOfBirth: new Date(),
+		deliveryAddress: "",
+		purchaseAddress: "",
+		email: "",
+		firstName: "",
+		lastName: "",
+		gender: "",
+		password: "",
+		phoneNumber: "",
+		username: "",
+		avatar: "",
+	});
 	const [newPassword, setNewPassword] = useState("");
 	const [repeatPassword, setRepeatPassword] = useState("");
+	const [dataAvatar, setDataAvatar] = useState("");
+	const [previewAvatar, setPreviewAvatar] = useState("");
 
 	// reload lại component order table
 	const [keyCountReload, setKeyCountReload] = useState(0);
@@ -49,25 +68,69 @@ const ProfilePage: React.FC = () => {
 
 	// Các biến trạng thái
 	const [modifiedStatus, setModifiedStatus] = useState(false);
+	const [isUploadAvatar, setIsUploadAvatar] = useState(false);
 
 	// Các biến thông báo lỗi
 	const [errorPhoneNumber, setErrorPhoneNumber] = useState("");
 	const [errorNewPassword, setErrorNewPassword] = useState("");
 	const [errorRepeatPassword, setErrorRepeatPassword] = useState("");
 
+	// Lấy data user lên
+	useEffect(() => {
+		const idUser = getIdUserByToken();
+		get1User(idUser)
+			.then((response) => {
+				setUser({
+					...response,
+					dateOfBirth: new Date(response.dateOfBirth),
+				});
+				setPreviewAvatar(response.avatar);
+			})
+			.catch((error) => console.log(error));
+	}, []);
+
 	// Xử lý change só điện thoại
 	const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setPhoneNumber(e.target.value);
+		setUser({ ...user, phoneNumber: e.target.value });
 		setErrorPhoneNumber("");
 	};
 
 	// Xử lý upload hình ảnh (preview)
-	const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const file = e.target.files?.[0];
+	function handleImageUpload(event: React.ChangeEvent<HTMLInputElement>) {
+		const inputElement = event.target as HTMLInputElement;
 
-		if (file) {
-			const imageUrl = URL.createObjectURL(file);
-			setAvatar(imageUrl);
+		if (inputElement.files && inputElement.files.length > 0) {
+			const selectedFile = inputElement.files[0];
+
+			const reader = new FileReader();
+
+			// Xử lý sự kiện khi tệp đã được đọc thành công
+			reader.onload = (e: any) => {
+				// e.target.result chính là chuỗi base64
+				const avatarBase64 = e.target?.result as string;
+
+				setDataAvatar(avatarBase64);
+				setPreviewAvatar(URL.createObjectURL(selectedFile));
+				setIsUploadAvatar(true);
+				props.setReloadAvatar(Math.random());
+			};
+
+			// Đọc tệp dưới dạng chuỗi base64
+			reader.readAsDataURL(selectedFile);
+		}
+	}
+
+	// Xử lý ngày sinh
+	const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const dateString = e.target.value;
+		// Chuyển đổi chuỗi thành đối tượng Date
+		const dateObject = new Date(dateString);
+		if (!isNaN(dateObject.getTime())) {
+			// Nếu là một ngày hợp lệ, cập nhật state
+			setUser({
+				...user,
+				dateOfBirth: dateObject,
+			});
 		}
 	};
 
@@ -92,14 +155,100 @@ const ProfilePage: React.FC = () => {
 
 	// Xử lý khi form submit (thay đổi thông tin)
 	function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-		throw new Error("Function not implemented.");
+		event.preventDefault();
+		const token = localStorage.getItem("token");
+		toast.promise(
+			fetch(endpointBE + `/user/update-profile`, {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"content-type": "application/json",
+				},
+				body: JSON.stringify({
+					idUser: getIdUserByToken(),
+					firstName: user.firstName,
+					lastName: user.lastName,
+					dateOfBirth: user.dateOfBirth,
+					phoneNumber: user.phoneNumber,
+					deliveryAddress: user.deliveryAddress,
+					gender: user.gender,
+				}),
+			})
+				.then((response) => {
+					toast.success("Cập nhật thông tin thành công");
+					setModifiedStatus(!modifiedStatus);
+				})
+				.catch((error) => {
+					toast.error("Cập nhật thông tin thất bại");
+					setModifiedStatus(!modifiedStatus);
+					console.log(error);
+				}),
+			{ pending: "Đang trong quá trình xử lý ..." }
+		);
+	}
+
+	// Xử lý khi thay đổi avatar (thay đổi avatar)
+	function handleSubmitAvatar() {
+		const token = localStorage.getItem("token");
+		toast.promise(
+			fetch(endpointBE + "/user/change-avatar", {
+				method: "PUT",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"content-type": "application/json",
+				},
+				body: JSON.stringify({
+					idUser: getIdUserByToken(),
+					avatar: dataAvatar,
+				}),
+			})
+				.then((response) => {
+					toast.success("Cập nhật ảnh đại diện thành công");
+					setPreviewAvatar(previewAvatar);
+					setIsUploadAvatar(false);
+				})
+				.catch((error) => {
+					toast.error("Cập nhật ảnh đại diện thất bại");
+					setPreviewAvatar(user.avatar);
+					setIsUploadAvatar(false);
+					console.log(error);
+				}),
+			{ pending: "Đang trong quá trình xử lý ..." }
+		);
 	}
 
 	// Xử lý khi form sumbit (thay đổi mật khẩu)
 	function handleSubmitChangePassword(
 		event: FormEvent<HTMLFormElement>
 	): void {
-		throw new Error("Function not implemented.");
+		event.preventDefault();
+
+		if (errorNewPassword.length > 0 || errorRepeatPassword.length > 0) {
+			toast.warning("Xem lại mật khẩu vừa nhập");
+			return;
+		}
+
+		const token = localStorage.getItem("token");
+		fetch(endpointBE + "/user/change-password", {
+			method: "PUT",
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"content-type": "application/json",
+			},
+			body: JSON.stringify({
+				idUser: getIdUserByToken(),
+				newPassword: newPassword,
+			}),
+		})
+			.then((response) => {
+				setNewPassword("");
+				setRepeatPassword("");
+				toast.success("Đổi mật khẩu thành công");
+			})
+			.catch((error) => {
+				console.log(error);
+				toast.error("Thay đổi mật khẩu không thành công");
+			});
 	}
 
 	return (
@@ -110,29 +259,53 @@ const ProfilePage: React.FC = () => {
 						<div className='d-flex align-items-center justify-content-center flex-column'>
 							<Avatar
 								style={{ fontSize: "50px" }}
-								alt='Remy Sharp'
-								src={
-									avatar ||
-									"https://bootdey.com/img/Content/avatar/avatar7.png"
-								}
+								alt={user.lastName.toUpperCase()}
+								src={previewAvatar}
 								sx={{ width: 100, height: 100 }}
 							/>
-							<Button
-								className='mt-3'
-								size='small'
-								component='label'
-								variant='outlined'
-								startIcon={<CloudUpload />}
-							>
-								Upload avatar
-								<HiddenInputUpload
-									handleImageUpload={handleImageUpload}
-								/>
-							</Button>
+							{!isUploadAvatar ? (
+								<Button
+									className='mt-3'
+									size='small'
+									component='label'
+									variant='outlined'
+									startIcon={<CloudUpload />}
+								>
+									Upload avatar
+									<HiddenInputUpload
+										handleImageUpload={handleImageUpload}
+									/>
+								</Button>
+							) : (
+								<div>
+									<Button
+										className='mt-4 me-2'
+										size='small'
+										variant='outlined'
+										startIcon={<CloseIcon />}
+										onClick={() => {
+											setPreviewAvatar(user.avatar);
+											setIsUploadAvatar(false);
+										}}
+										color='error'
+									>
+										Huỷ
+									</Button>
+									<Button
+										className='mt-4 ms-2'
+										size='small'
+										variant='outlined'
+										startIcon={<CheckIcon />}
+										color='success'
+										onClick={handleSubmitAvatar}
+									>
+										Thay đổi
+									</Button>
+								</div>
+							)}
 						</div>
 						<div className='text-center mt-3'>
-							<strong>Phạm Ngọc Viễn Đông</strong>
-							<p>Email: pezoiks1@gmail.com</p>
+							<p>Email: {user.email}</p>
 						</div>
 					</div>
 				</Grid>
@@ -192,7 +365,7 @@ const ProfilePage: React.FC = () => {
 													required
 													fullWidth
 													label='ID'
-													value={1}
+													value={user.idUser}
 													disabled={true}
 													className='input-field'
 													InputProps={{
@@ -203,9 +376,12 @@ const ProfilePage: React.FC = () => {
 													required
 													fullWidth
 													label='Họ đệm'
-													value={firstName}
+													value={user.firstName}
 													onChange={(e) =>
-														setFirstName(e.target.value)
+														setUser({
+															...user,
+															firstName: e.target.value,
+														})
 													}
 													disabled={modifiedStatus ? false : true}
 													className='input-field'
@@ -221,7 +397,7 @@ const ProfilePage: React.FC = () => {
 													required={true}
 													label='Số điện thoại'
 													placeholder='Nhập số điện thoại'
-													value={phoneNumber}
+													value={user.phoneNumber}
 													onChange={handlePhoneNumberChange}
 													onBlur={(e) => {
 														checkPhoneNumber(
@@ -232,6 +408,72 @@ const ProfilePage: React.FC = () => {
 													disabled={modifiedStatus ? false : true}
 													className='input-field'
 												/>
+											</div>
+											<div className='col-sm-12 col-md-6 col-lg-4'>
+												<TextField
+													required
+													fullWidth
+													label='Tên tài khoản'
+													value={user.username}
+													disabled={true}
+													className='input-field'
+												/>
+												<TextField
+													required
+													fullWidth
+													label='Tên'
+													value={user.lastName}
+													onChange={(e) =>
+														setUser({
+															...user,
+															lastName: e.target.value,
+														})
+													}
+													disabled={modifiedStatus ? false : true}
+													className='input-field'
+												/>
+												<TextField
+													required
+													fullWidth
+													label='Địa chỉ giao hàng'
+													value={user.deliveryAddress}
+													onChange={(e) =>
+														setUser({
+															...user,
+															deliveryAddress: e.target.value,
+														})
+													}
+													disabled={modifiedStatus ? false : true}
+													className='input-field'
+												/>
+											</div>
+											<div className='col-sm-12 col-md-6 col-lg-4'>
+												<TextField
+													required
+													fullWidth
+													label='Email'
+													value={user.email}
+													className='input-field'
+													disabled={true}
+													InputProps={{
+														readOnly: true,
+													}}
+												/>
+												<TextField
+													required
+													fullWidth
+													className='input-field'
+													label='Ngày sinh'
+													style={{ width: "100%" }}
+													type='date'
+													value={
+														user.dateOfBirth
+															.toISOString()
+															.split("T")[0]
+													}
+													onChange={handleDateChange}
+													disabled={modifiedStatus ? false : true}
+												/>
 												<FormControl>
 													<FormLabel id='demo-row-radio-buttons-group-label'>
 														Giới tính
@@ -240,9 +482,12 @@ const ProfilePage: React.FC = () => {
 														row
 														aria-labelledby='demo-row-radio-buttons-group-label'
 														name='row-radio-buttons-group'
-														value={gender}
+														value={user.gender}
 														onChange={(e) =>
-															setGender(e.target.value)
+															setUser({
+																...user,
+																gender: e.target.value,
+															})
 														}
 													>
 														<FormControlLabel
@@ -263,74 +508,6 @@ const ProfilePage: React.FC = () => {
 														/>
 													</RadioGroup>
 												</FormControl>
-											</div>
-											<div className='col-sm-12 col-md-6 col-lg-4'>
-												<TextField
-													required
-													fullWidth
-													label='Tên tài khoản'
-													value={"pezoiks1"}
-													disabled={true}
-													className='input-field'
-												/>
-												<TextField
-													required
-													fullWidth
-													label='Tên'
-													value={lastName}
-													onChange={(e) =>
-														setLastName(e.target.value)
-													}
-													disabled={modifiedStatus ? false : true}
-													className='input-field'
-												/>
-												<TextField
-													required
-													fullWidth
-													label='Địa chỉ mua hàng'
-													value={purchaseAddress}
-													onChange={(e) =>
-														setPurchaseAddress(e.target.value)
-													}
-													disabled={modifiedStatus ? false : true}
-													className='input-field'
-												/>
-											</div>
-											<div className='col-sm-12 col-md-6 col-lg-4'>
-												<TextField
-													required
-													fullWidth
-													label='Email'
-													value={"pezoiks1@gmail.com"}
-													className='input-field'
-													disabled={true}
-													InputProps={{
-														readOnly: true,
-													}}
-												/>
-												<TextField
-													required
-													fullWidth
-													type='date'
-													label='Ngày sinh'
-													value={dateOfBirth}
-													onChange={(e) =>
-														setDateOfBirth(e.target.value)
-													}
-													disabled={modifiedStatus ? false : true}
-													className='input-field'
-												/>
-												<TextField
-													required
-													fullWidth
-													label='Địa chỉ giao hàng'
-													value={deliveryAddress}
-													onChange={(e) =>
-														setDeliveryAddress(e.target.value)
-													}
-													disabled={modifiedStatus ? false : true}
-													className='input-field'
-												/>
 											</div>
 										</div>
 										{modifiedStatus && (

@@ -41,9 +41,17 @@ const LoginPage: React.FC<LoginPageProps> = (props) => {
 			})
 			.then(async (data) => {
 				const { jwtToken } = data;
+				const decodedToken = jwtDecode(jwtToken) as JwtPayload;
+
+				// Kiểm tra xem tài khoản kích hoạt chưa
+				if (decodedToken.enabled === false) {
+					toast.warning(
+						"Tài khoản của bạn chưa kích hoạt hoặc đã bị vô hiệu hoá"
+					);
+					return;
+				}
 				toast.success("Đăng nhâp thành công");
 				localStorage.setItem("token", jwtToken);
-				const decodedToken = jwtDecode(jwtToken) as JwtPayload;
 
 				const cartData: string | null = localStorage.getItem("cart");
 				let cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];

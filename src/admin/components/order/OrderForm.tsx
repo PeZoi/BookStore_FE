@@ -169,7 +169,7 @@ export const OrderForm: React.FC<OrderFormProps> = (props) => {
 							/>
 						</>
 					)}
-					{props.option !== "view-customer" && (
+					{props.option !== "view-customer" && props.option !== "view" && (
 						<button className='btn btn-primary w-100 my-3' type='submit'>
 							Cập nhật đơn hàng
 						</button>

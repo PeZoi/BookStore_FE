@@ -15,7 +15,6 @@ import ProfilePage from "./layouts/user/ProfilePage";
 import ActiveAccount from "./layouts/user/ActiveAccount";
 import { useEffect, useState } from "react";
 import CartItemModel from "./model/CartItemModel";
-import Test from "./layouts/user/Test";
 import { Slidebar } from "./admin/components/Slidebar";
 import DashboardPage from "./admin/Dashboard";
 import { ToastContainer } from "react-toastify";
@@ -27,10 +26,10 @@ import OrderManagementPage from "./admin/OrderManagement";
 import PolicyPage from "./layouts/pages/PolicyPage";
 import FeedbackPage from "./admin/FeedbackManagement";
 import { FeedbackCustomerPage } from "./layouts/pages/FeedbackCustomerPage";
-import { isToken } from "./layouts/utils/JwtService";
-import { getCartAllByIdUser } from "./api/CartApi";
 
 const MyRoutes = () => {
+	const [reloadAvatar, setReloadAvatar] = useState(0);
+
 	// XỬ LÝ GIỎ HÀNG //////////////////////////////
 	const [cartList, setCartList] = useState<CartItemModel[]>([]);
 	const [totalCart, setTotalCart] = useState(0);
@@ -55,7 +54,11 @@ const MyRoutes = () => {
 		<ConfirmProvider>
 			{/* Customer */}
 			{!isAdminPath && (
-				<Navbar totalCart={totalCart} setTotalCart={setTotalCart} />
+				<Navbar
+					totalCart={totalCart}
+					setTotalCart={setTotalCart}
+					key={reloadAvatar}
+				/>
 			)}
 			<Routes>
 				<Route
@@ -95,7 +98,10 @@ const MyRoutes = () => {
 					path='/login'
 					element={<LoginPage setTotalCart={setTotalCart} />}
 				/>
-				<Route path='/profile' element={<ProfilePage />} />
+				<Route
+					path='/profile'
+					element={<ProfilePage setReloadAvatar={setReloadAvatar} />}
+				/>
 				<Route
 					path='/active/:email/:activationCode'
 					element={<ActiveAccount />}
