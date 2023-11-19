@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Form.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LoadingButton from "@mui/lab/LoadingButton";
 import {
 	checkExistEmail,
@@ -12,8 +12,17 @@ import {
 } from "../utils/Validation";
 import { toast } from "react-toastify";
 import { endpointBE } from "../utils/Constant";
+import { useAuth } from "../utils/AuthContext";
 
 const RegisterPage: React.FC = () => {
+	const { isLoggedIn } = useAuth();
+	const navigation = useNavigate();
+
+	useEffect(() => {
+		if (isLoggedIn) {
+			navigation("/");
+		}
+	});
 	// Khai báo biến cần đăng ký
 	const [username, setUserName] = useState("");
 	const [password, setPassword] = useState("");

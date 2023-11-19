@@ -21,44 +21,44 @@ interface BookProps {
 }
 
 const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
-	const [imageList, setImageList] = useState<ImageModel[]>([]);
-	const [loading, setLoading] = useState<boolean>(true);
-	const [erroring, setErroring] = useState(null);
+	// const [imageList, setImageList] = useState<ImageModel[]>([]);
+	// const [loading, setLoading] = useState<boolean>(true);
+	// const [erroring, setErroring] = useState(null);
 
-	useEffect(() => {
-		getAllImageByBook(book.idBook)
-			.then((response) => {
-				setImageList(response);
-				setLoading(false);
-			})
-			.catch((error) => {
-				setLoading(false);
-				setErroring(error.message);
-			});
-	}, []);
+	// useEffect(() => {
+	// 	getAllImageByBook(book.idBook)
+	// 		.then((response) => {
+	// 			setImageList(response);
+	// 			setLoading(false);
+	// 		})
+	// 		.catch((error) => {
+	// 			setLoading(false);
+	// 			setErroring(error.message);
+	// 		});
+	// }, []);
 
-	if (loading) {
-		return (
-			<div>
-				<h1>Đang tải dữ liệu</h1>
-			</div>
-		);
-	}
+	// if (loading) {
+	// 	return (
+	// 		<div>
+	// 			<h1>Đang tải dữ liệu</h1>
+	// 		</div>
+	// 	);
+	// }
 
-	if (erroring) {
-		return (
-			<div>
-				<h1>Gặp lỗi: {erroring}</h1>
-			</div>
-		);
-	}
+	// if (erroring) {
+	// 	return (
+	// 		<div>
+	// 			<h1>Gặp lỗi: {erroring}</h1>
+	// 		</div>
+	// 	);
+	// }
 
 	// Loading ảnh thumbnail
-	let dataImage;
-	if (imageList[0]) {
-		const thumbnail = imageList.filter((i) => i.thumbnail);
-		dataImage = thumbnail[0].urlImage || thumbnail[0].dataImage;
-	}
+	// let dataImage;
+	// if (imageList[0]) {
+	// 	const thumbnail = imageList.filter((i) => i.thumbnail);
+	// 	dataImage = thumbnail[0].urlImage || thumbnail[0].dataImage;
+	// }
 
 	// Xử lý thêm sản phẩm vào giỏ hàng
 	const handleAddProduct = async (newBook: BookModel) => {
@@ -153,7 +153,7 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 				)}
 				<Link to={`/book/${book.idBook}`}>
 					<img
-						src={dataImage}
+						src={book.thumbnail}
 						className='card-img-top mt-3'
 						alt={book.nameBook}
 						style={{ height: "300px" }}

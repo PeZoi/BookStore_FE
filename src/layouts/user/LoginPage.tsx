@@ -1,12 +1,13 @@
 import { Button, TextField } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { JwtPayload } from "../../admin/RequireAdmin";
 import { endpointBE } from "../utils/Constant";
 import CartItemModel from "../../model/CartItemModel";
 import { getCartAllByIdUser } from "../../api/CartApi";
+import { useAuth } from "../utils/AuthContext";
 
 interface LoginPageProps {
 	setTotalCart: any;
@@ -14,6 +15,13 @@ interface LoginPageProps {
 
 const LoginPage: React.FC<LoginPageProps> = (props) => {
 	const navigation = useNavigate();
+	const { isLoggedIn, setLoggedIn } = useAuth();
+
+	useEffect(() => {
+		if (isLoggedIn) {
+			navigation("/");
+		}
+	});
 	// Biến cần thiết
 	const [username, setUserName] = useState("");
 	const [password, setPassword] = useState("");
@@ -51,6 +59,7 @@ const LoginPage: React.FC<LoginPageProps> = (props) => {
 					return;
 				}
 				toast.success("Đăng nhâp thành công");
+				setLoggedIn(true); // Đã đăng nhập
 				localStorage.setItem("token", jwtToken);
 
 				const cartData: string | null = localStorage.getItem("cart");

@@ -1,9 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { endpointBE } from "../utils/Constant";
+import { useAuth } from "../utils/AuthContext";
 
 const ActiveAccount: React.FC = () => {
+	const { isLoggedIn } = useAuth();
+	const navigation = useNavigate();
+
+	useEffect(() => {
+		if (isLoggedIn) {
+			navigation("/");
+		}
+	});
+
 	const [enabled, setEnabled] = useState(false);
 	const [notifications, setNotifications] = useState("");
 	const { email } = useParams();
@@ -17,7 +27,9 @@ const ActiveAccount: React.FC = () => {
 
 	const handleActiveAccount = async () => {
 		try {
-			const url = endpointBE + `/user/active-account?email=${email}&activationCode=${activationCode}`;
+			const url =
+				endpointBE +
+				`/user/active-account?email=${email}&activationCode=${activationCode}`;
 			const response = await fetch(url, { method: "GET" });
 
 			if (response.ok) {

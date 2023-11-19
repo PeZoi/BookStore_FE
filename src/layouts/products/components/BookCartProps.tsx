@@ -65,16 +65,9 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 
 	// Loading ảnh thumbnail
 	let dataImage;
-	if (imageList[0] && imageList[0].dataImage) {
-		// Từ đầu hình ảnh sẽ mặc định thumbnail là ảnh đầu tiên
-		dataImage = imageList[0].dataImage;
-		// Duyệt qua tất cả các ảnh của sách đó nếu mà có ảnh nào có thumnail là true thì gán lại nó là thumnail
-		for (let img of imageList) {
-			if (img.thumbnail === true) {
-				dataImage = img.dataImage;
-				break;
-			}
-		}
+	if (imageList[0]) {
+		const thumbnail = imageList.filter((i) => i.thumbnail);
+		dataImage = thumbnail[0].urlImage || thumbnail[0].dataImage;
 	}
 
 	// Xử lý tăng số lượng

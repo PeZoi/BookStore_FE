@@ -11,6 +11,7 @@ import {
 	logout,
 } from "../utils/JwtService";
 import { Avatar, Button } from "@mui/material";
+import { useAuth } from "../utils/AuthContext";
 
 interface NavbarProps {
 	totalCart: number | undefined;
@@ -18,6 +19,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = (props) => {
+	const { setLoggedIn } = useAuth();
 	const navigate = useNavigate();
 
 	// Lấy tất cả thể loại
@@ -222,6 +224,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 											onClick={() => {
 												props.setTotalCart(0);
 												logout(navigate);
+												setLoggedIn(false);
 											}}
 										>
 											Logout

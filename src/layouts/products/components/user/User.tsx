@@ -21,6 +21,19 @@ const User: React.FC<CommentProps> = (props) => {
 		});
 	}, []);
 
+	const formatDate = (timestamp: string) => {
+		const date = new Date(timestamp);
+
+		const year = date.getFullYear();
+		const month = date.getMonth() + 1; // Tháng bắt đầu từ 0, nên cộng thêm 1
+		const day = date.getDate();
+		const hours = date.getHours();
+		const minutes = date.getMinutes();
+		const seconds = date.getSeconds();
+
+		return `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`;
+	};
+
 	return (
 		<>
 			<div className='me-4 mt-1'>
@@ -29,7 +42,7 @@ const User: React.FC<CommentProps> = (props) => {
 			<div>
 				<strong>{user?.username}</strong>
 				<span className='ms-2' style={{ fontSize: "12px", color: "#aaa" }}>
-					1 tháng trước
+					{formatDate(props.review.timestamp + "")}
 				</span>
 				{props.children}
 			</div>

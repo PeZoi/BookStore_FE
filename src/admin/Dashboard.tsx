@@ -21,11 +21,13 @@ const Dashboard = () => {
 			const newDataTotalPrice = new Array(12).fill(0);
 
 			orders.forEach((order) => {
-				const orderDate = new Date(order.dateCreated);
-				const month = orderDate.getMonth();
+				if (order.status !== "Bị huỷ") {
+					const orderDate = new Date(order.dateCreated);
+					const month = orderDate.getMonth();
 
-				newDataNumberOfOrder[month] += 1;
-				newDataTotalPrice[month] += order.totalPrice;
+					newDataNumberOfOrder[month] += 1;
+					newDataTotalPrice[month] += order.totalPrice;
+				}
 			});
 
 			dataNumberOfOrderOrderByMonth.current = newDataNumberOfOrder;

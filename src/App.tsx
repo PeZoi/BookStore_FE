@@ -26,6 +26,9 @@ import OrderManagementPage from "./admin/OrderManagement";
 import PolicyPage from "./layouts/pages/PolicyPage";
 import FeedbackPage from "./admin/FeedbackManagement";
 import { FeedbackCustomerPage } from "./layouts/pages/FeedbackCustomerPage";
+import { Error403Page } from "./layouts/pages/403Page";
+import { AuthProvider } from "./layouts/utils/AuthContext";
+import { Error404Page } from "./layouts/pages/404Page";
 
 const MyRoutes = () => {
 	const [reloadAvatar, setReloadAvatar] = useState(0);
@@ -51,102 +54,115 @@ const MyRoutes = () => {
 	///////////////////////////////////////////////
 
 	return (
-		<ConfirmProvider>
-			{/* Customer */}
-			{!isAdminPath && (
-				<Navbar
-					totalCart={totalCart}
-					setTotalCart={setTotalCart}
-					key={reloadAvatar}
-				/>
-			)}
-			<Routes>
-				<Route
-					path='/'
-					element={
-						<HomePage setTotalCart={setTotalCart} totalCart={totalCart} />
-					}
-				/>
-				<Route
-					path='/book/:idBook'
-					element={
-						<BookDetail
-							setTotalCart={setTotalCart}
-							totalCart={totalCart}
-						/>
-					}
-				/>
-				<Route path='/about' element={<About />} />
-				<Route
-					path='/search/:idGenreParam'
-					element={<FilterPage setTotalCart={setTotalCart} />}
-				/>
-				<Route
-					path='/search'
-					element={<FilterPage setTotalCart={setTotalCart} />}
-				/>
-				<Route
-					path='/my-favorite-books'
-					element={<MyFavoriteBooksPage setTotalCart={setTotalCart} />}
-				/>
-				<Route
-					path='/cart'
-					element={<CartPage setTotalCart={setTotalCart} />}
-				/>
-				<Route path='/register' element={<RegisterPage />} />
-				<Route
-					path='/login'
-					element={<LoginPage setTotalCart={setTotalCart} />}
-				/>
-				<Route
-					path='/profile'
-					element={<ProfilePage setReloadAvatar={setReloadAvatar} />}
-				/>
-				<Route
-					path='/active/:email/:activationCode'
-					element={<ActiveAccount />}
-				/>
-				<Route path='/policy' element={<PolicyPage />} />
-				<Route path='/feedback' element={<FeedbackCustomerPage />} />
-			</Routes>
-			{!isAdminPath && <Footer />}
+		<AuthProvider>
+			<ConfirmProvider>
+				{/* Customer */}
+				{!isAdminPath && (
+					<Navbar
+						totalCart={totalCart}
+						setTotalCart={setTotalCart}
+						key={reloadAvatar}
+					/>
+				)}
+				<Routes>
+					<Route
+						path='/'
+						element={
+							<HomePage
+								setTotalCart={setTotalCart}
+								totalCart={totalCart}
+							/>
+						}
+					/>
+					<Route
+						path='/book/:idBook'
+						element={
+							<BookDetail
+								setTotalCart={setTotalCart}
+								totalCart={totalCart}
+							/>
+						}
+					/>
+					<Route path='/about' element={<About />} />
+					<Route
+						path='/search/:idGenreParam'
+						element={<FilterPage setTotalCart={setTotalCart} />}
+					/>
+					<Route
+						path='/search'
+						element={<FilterPage setTotalCart={setTotalCart} />}
+					/>
+					<Route
+						path='/my-favorite-books'
+						element={<MyFavoriteBooksPage setTotalCart={setTotalCart} />}
+					/>
+					<Route
+						path='/cart'
+						element={<CartPage setTotalCart={setTotalCart} />}
+					/>
+					<Route path='/register' element={<RegisterPage />} />
+					<Route
+						path='/login'
+						element={<LoginPage setTotalCart={setTotalCart} />}
+					/>
+					<Route
+						path='/profile'
+						element={<ProfilePage setReloadAvatar={setReloadAvatar} />}
+					/>
+					<Route
+						path='/active/:email/:activationCode'
+						element={<ActiveAccount />}
+					/>
+					<Route path='/policy' element={<PolicyPage />} />
+					<Route path='/feedback' element={<FeedbackCustomerPage />} />
+					<Route path='/error-403' element={<Error403Page />} />
+					{!isAdminPath && <Route path='*' element={<Error404Page />} />}
+				</Routes>
+				{!isAdminPath && <Footer />}
 
-			{/* Admin */}
-			{isAdminPath && (
-				<div className='row overflow-hidden w-100'>
-					<div className='col-2 col-md-3 col-lg-2'>
-						<Slidebar></Slidebar>
+				{/* Admin */}
+				{isAdminPath && (
+					<div className='row overflow-hidden w-100'>
+						<div className='col-2 col-md-3 col-lg-2'>
+							<Slidebar />
+						</div>
+						<div className='col-10 col-md-9 col-lg-10'>
+							<Routes>
+								<Route path='/admin' element={<DashboardPage />} />
+								<Route
+									path='/admin/dashboard'
+									element={<DashboardPage />}
+								/>
+								<Route
+									path='/admin/book'
+									element={<BookManagementPage />}
+								/>
+								<Route
+									path='/admin/user'
+									element={<UserManagementPage />}
+								/>
+								<Route
+									path='/admin/genre'
+									element={<GenreManagementPage />}
+								/>
+								<Route
+									path='/admin/order'
+									element={<OrderManagementPage />}
+								/>
+								<Route
+									path='/admin/feedback'
+									element={<FeedbackPage />}
+								/>
+								{isAdminPath && (
+									<Route path='*' element={<Error404Page />} />
+								)}
+							</Routes>
+						</div>
 					</div>
-					<div className='col-10 col-md-9 col-lg-10'>
-						<Routes>
-							<Route path='/admin' element={<DashboardPage />} />
-							<Route
-								path='/admin/dashboard'
-								element={<DashboardPage />}
-							/>
-							<Route
-								path='/admin/book'
-								element={<BookManagementPage />}
-							/>
-							<Route
-								path='/admin/user'
-								element={<UserManagementPage />}
-							/>
-							<Route
-								path='/admin/genre'
-								element={<GenreManagementPage />}
-							/>
-							<Route
-								path='/admin/order'
-								element={<OrderManagementPage />}
-							/>
-							<Route path='/admin/feedback' element={<FeedbackPage />} />
-						</Routes>
-					</div>
-				</div>
-			)}
-			<ToastContainer autoClose={4000} />
-		</ConfirmProvider>
+				)}
+				<ToastContainer autoClose={4000} />
+			</ConfirmProvider>
+		</AuthProvider>
 	);
 };
 

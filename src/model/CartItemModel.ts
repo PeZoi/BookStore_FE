@@ -5,7 +5,7 @@ class CartItemModel {
    quantity: number;
    book: BookModel;
    idUser?: number;
-
+   review?: boolean;
 
    constructor(quantity: number, book: BookModel) {
       this.quantity = quantity;

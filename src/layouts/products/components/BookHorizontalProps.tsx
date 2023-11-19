@@ -4,12 +4,28 @@ import TextEllipsis from "./text-ellipsis/TextEllipsis";
 import CartItemModel from "../../../model/CartItemModel";
 import ImageModel from "../../../model/ImageModel";
 import { getAllImageByBook } from "../../../api/ImageApi";
+import { Button, Chip } from "@mui/material";
+import RateReviewRoundedIcon from "@mui/icons-material/RateReviewRounded";
+import DoneIcon from "@mui/icons-material/Done";
+import { FadeModal } from "../../utils/FadeModal";
+import { ReviewForm } from "./review/ReviewForm";
 
 interface BookHorizontalProps {
 	cartItem: CartItemModel;
+	type?: any;
+	idOrder?: number;
+	handleCloseModalOrderDetail?: any;
+	statusOrder?: string;
 }
 
 export const BookHorizontal: React.FC<BookHorizontalProps> = (props) => {
+	// Mở/Đóng modal
+	const [openModal, setOpenModal] = React.useState(false);
+	const handleOpenModal = () => setOpenModal(true);
+	const handleCloseModal = () => setOpenModal(false);
+
+	const [cartItem, setCartItem] = useState<CartItemModel>(props.cartItem);
+
 	const [imageList, setImageList] = useState<ImageModel[]>([]);
 	// Lấy ảnh ra từ BE
 	useEffect(() => {
@@ -23,16 +39,9 @@ export const BookHorizontal: React.FC<BookHorizontalProps> = (props) => {
 	}, [props.cartItem.book.idBook]);
 	// Loading ảnh thumbnail
 	let dataImage;
-	if (imageList[0] && imageList[0].dataImage) {
-		// Từ đầu hình ảnh sẽ mặc định thumbnail là ảnh đầu tiên
-		dataImage = imageList[0].dataImage;
-		// Duyệt qua tất cả các ảnh của sách đó nếu mà có ảnh nào có thumnail là true thì gán lại nó là thumnail
-		for (let img of imageList) {
-			if (img.thumbnail === true) {
-				dataImage = img.dataImage;
-				break;
-			}
-		}
+	if (imageList[0]) {
+		const thumbnail = imageList.filter((i) => i.thumbnail);
+		dataImage = thumbnail[0].urlImage || thumbnail[0].dataImage;
 	}
 	return (
 		<div className='row'>
@@ -84,6 +93,46 @@ export const BookHorizontal: React.FC<BookHorizontalProps> = (props) => {
 					</strong>
 				</span>
 			</div>
+			{props.type === "review-customer" &&
+				props.statusOrder === "Thành công" && (
+					<div className='d-flex flex-row-reverse'>
+						{props.cartItem.review === false ? (
+							<>
+								<Button
+									variant='outlined'
+									size='small'
+									startIcon={<RateReviewRoundedIcon />}
+									style={{ width: "150px" }}
+									onClick={handleOpenModal}
+								>
+									Viết đánh giá
+								</Button>
+								<FadeModal
+									open={openModal}
+									handleOpen={handleOpenModal}
+									handleClose={handleCloseModal}
+								>
+									<ReviewForm
+										idOrder={props.idOrder ? props.idOrder : 0}
+										idBook={props.cartItem.book.idBook}
+										handleCloseModal={handleCloseModal}
+										handleCloseModalOrderDetail={
+											props.handleCloseModalOrderDetail
+										}
+										cartItem={cartItem}
+										setCartItem={setCartItem}
+									/>
+								</FadeModal>
+							</>
+						) : (
+							<Chip
+								color='primary'
+								label='Bạn đã đánh giá sản phẩm này rồi'
+								icon={<DoneIcon />}
+							/>
+						)}
+					</div>
+				)}
 			<hr className='mt-3' />
 		</div>
 	);

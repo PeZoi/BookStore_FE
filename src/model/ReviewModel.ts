@@ -2,6 +2,7 @@ class ReviewModel {
    idReview: number;
    content: string;
    ratingPoint: number;
+   timestamp?: string;
 
    constructor(idReview: number,
       content: string,

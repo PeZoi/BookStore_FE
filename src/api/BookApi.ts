@@ -20,11 +20,23 @@ async function getBook(endpoint: string): Promise<resultInterface> {
    const size: number = response.page.totalElements;
 
    // Lấy ra danh sách quyển sách
-   const bookList: any = response._embedded.books.map((bookData: any) => ({
+   const bookList: BookModel[] = response._embedded.books.map((bookData: BookModel) => ({
       ...bookData,
    }))
 
-   return { bookList: bookList, totalPage: totalPage, size: size };
+   // Lấy ra ảnh của từng quyển sách
+   const bookList1 = await Promise.all(
+      bookList.map(async (book: BookModel) => {
+         const responseImg = await getAllImageByBook(book.idBook);
+         const thumbnail = responseImg.filter(image => image.thumbnail);
+         return {
+            ...book,
+            thumbnail: thumbnail[0].urlImage,
+         };
+      })
+   );
+
+   return { bookList: bookList1, totalPage: totalPage, size: size };
 }
 
 export async function getAllBook(size?: number, page?: number): Promise<resultInterface> {

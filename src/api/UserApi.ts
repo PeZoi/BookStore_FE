@@ -41,7 +41,7 @@ export async function getAllUserRole(): Promise<UserModel[]> {
 
 export async function get1User(idUser: any): Promise<UserModel> {
    const endpoint = endpointBE + `/users/${idUser}`;
-   const responseUser = await requestAdmin(endpoint);
+   const responseUser = await request(endpoint);
    const responseRole = await getRoleByIdUser(idUser);
 
    const user: UserModel = {

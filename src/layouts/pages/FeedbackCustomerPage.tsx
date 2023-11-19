@@ -1,11 +1,21 @@
 import { Box, Button, TextField } from "@mui/material";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import FeedbackModel from "../../model/FeedbackModel";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 import { endpointBE } from "../utils/Constant";
+import { useAuth } from "../utils/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export const FeedbackCustomerPage: React.FC = () => {
+	const { isLoggedIn } = useAuth();
+	const navigation = useNavigate();
+
+	useEffect(() => {
+		if (!isLoggedIn) {
+			navigation("/login");
+		}
+	});
 	const token = localStorage.getItem("token");
 	const [feedback, setFeedback] = useState<FeedbackModel>({
 		idFeedback: 0,
@@ -55,6 +65,11 @@ export const FeedbackCustomerPage: React.FC = () => {
 		);
 	}
 
+	// Khúc này chủ yếu nếu mà không đăng nhập mà cố tình vào thì sẽ không render component ra
+	if (!isLoggedIn) {
+		return null;
+	}
+	
 	return (
 		<div className='container-book container bg-light my-3 py-3 px-5'>
 			<h3 className='text-center m-3'>NHẬN XÉT VỀ CHÚNG TÔI</h3>

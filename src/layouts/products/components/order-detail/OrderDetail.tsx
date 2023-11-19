@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import OrderModel from "../../../../model/OrderModel";
 import { Chip } from "@mui/material";
 import { StepperComponent } from "../../../utils/StepperComponent";
@@ -9,6 +9,7 @@ interface OrderDetailProps {
 	order: OrderModel;
 	activeStep: number;
 	steps: String[];
+	handleCloseModal: any;
 }
 
 export const OrderDetail: React.FC<OrderDetailProps> = (props) => {
@@ -29,7 +30,7 @@ export const OrderDetail: React.FC<OrderDetailProps> = (props) => {
 				variant='outlined'
 			/>
 			<div className='row'>
-				<div className='col-lg-3 col-md-3 col-sm-12'>
+				<div className='col-lg-3 col-md-6 col-sm-12'>
 					<p className='mt-2'>
 						Mã đơn hàng:{" "}
 						<strong className='ms-2'>{props.order.idOrder}</strong>
@@ -47,7 +48,7 @@ export const OrderDetail: React.FC<OrderDetailProps> = (props) => {
 						</strong>
 					</p>
 				</div>
-				<div className='col-lg-4 col-md-4 col-sm-12'>
+				<div className='col-lg-4 col-md-6 col-sm-12'>
 					<p>
 						Họ và tên:
 						<strong className='ms-2'>{props.order.fullName}</strong>
@@ -77,7 +78,14 @@ export const OrderDetail: React.FC<OrderDetailProps> = (props) => {
 			</p>
 			<hr className='mt-3' />
 			{props.order.cartItems?.map((cartItem, index) => (
-				<BookHorizontal cartItem={cartItem} key={index} />
+				<BookHorizontal
+					cartItem={cartItem}
+					key={index}
+					type={"review-customer"}
+					idOrder={props.order.idOrder}
+					handleCloseModalOrderDetail={props.handleCloseModal}
+					statusOrder={props.order.status}
+				/>
 			))}
 		</>
 	);

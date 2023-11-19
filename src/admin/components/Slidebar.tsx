@@ -9,6 +9,7 @@ import LocalMallRoundedIcon from "@mui/icons-material/LocalMallRounded";
 import FeedbackIcon from "@mui/icons-material/Feedback";
 import { logout } from "../../layouts/utils/JwtService";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../../layouts/utils/AuthContext";
 
 interface SlidebarProps {
 	active?: string;
@@ -16,6 +17,7 @@ interface SlidebarProps {
 }
 
 export const Slidebar: React.FC<SlidebarProps> = (props) => {
+	const { setLoggedIn } = useAuth();
 	const navigate = useNavigate();
 	return (
 		<div
@@ -122,7 +124,10 @@ export const Slidebar: React.FC<SlidebarProps> = (props) => {
 					<a
 						className='dropdown-item'
 						style={{ cursor: "pointer" }}
-						onClick={() => logout(navigate)}
+						onClick={() => {
+							setLoggedIn(false);
+							logout(navigate);
+						}}
 					>
 						Đăng xuất
 					</a>

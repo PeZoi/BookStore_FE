@@ -35,7 +35,11 @@ const OrderTable: React.FC<OrderTableProps> = (props) => {
 					payment: "COD",
 				}));
 
-				setData(orders);
+				const ordersSort = orders.sort(
+					(order1, order2) => order2.idOrder - order1.idOrder
+				);
+
+				setData(ordersSort);
 				setLoading(false);
 			})
 			.catch((error) => console.log(error));

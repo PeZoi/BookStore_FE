@@ -59,7 +59,7 @@ export async function get1Orders(idOrder: number): Promise<OrderModel> {
    // Sử dụng Promise.all để chờ tất cả các promise hoàn thành
    await Promise.all(responseOrderDetail._embedded.orderDetails.map(async (orderDetail: any) => {
       const responseBook = await request(endpointBE + `/order-detail/${orderDetail.idOrderDetail}/book`);
-      cartItems.push({ book: responseBook, quantity: orderDetail.quantity });
+      cartItems.push({ book: responseBook, quantity: orderDetail.quantity, review: orderDetail.review });
    }));
 
    const order: OrderModel = {
@@ -76,6 +76,7 @@ export async function get1Orders(idOrder: number): Promise<OrderModel> {
       phoneNumber: responseOrder.phoneNumber,
       note: responseOrder.note,
       cartItems: cartItems,
+
    }
 
    return order;

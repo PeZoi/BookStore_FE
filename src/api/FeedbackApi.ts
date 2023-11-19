@@ -6,10 +6,14 @@ export async function getAllFeedback(): Promise<FeedbackModel[]> {
    const endpoint = endpointBE + "/feedbacks?sort=idFeedback,desc";
    const response = await requestAdmin(endpoint);
 
-   const feedbacks: FeedbackModel[] = await response._embedded.feedbackses.map((feedbackData: any) => ({
-      ...feedbackData,
-      user: feedbackData._embedded.user.username,
-   }))
+   let feedbacks: FeedbackModel[] = [];
+
+   if (response) {
+      feedbacks = await response._embedded.feedbackses.map((feedbackData: any) => ({
+         ...feedbackData,
+         user: feedbackData._embedded.user.username,
+      }))
+   }
 
    return feedbacks;
 }

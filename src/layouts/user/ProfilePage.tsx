@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Tab from "@mui/material/Tab";
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useLayoutEffect, useState } from "react";
 import HiddenInputUpload from "../utils/HiddenInputUpload";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -31,12 +31,23 @@ import { endpointBE } from "../utils/Constant";
 import { toast } from "react-toastify";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
+import { useAuth } from "../utils/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface ProfilePageProps {
 	setReloadAvatar: any;
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = (props) => {
+	const { isLoggedIn } = useAuth();
+	const navigation = useNavigate();
+
+	useLayoutEffect(() => {
+		if (!isLoggedIn) {
+			navigation("/login");
+		}
+	});
+
 	// Các biến thông tin cá nhân
 	const [user, setUser] = useState<UserModel>({
 		idUser: 0,
@@ -258,6 +269,11 @@ const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 				console.log(error);
 				toast.error("Thay đổi mật khẩu không thành công");
 			});
+	}
+
+	// Khúc này chủ yếu nếu mà không đăng nhập mà cố tình vào thì sẽ không render component ra
+	if (!isLoggedIn) {
+		return null;
 	}
 
 	return (

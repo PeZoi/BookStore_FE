@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import BookCartProps from "./components/BookCartProps";
 import { Button } from "@mui/material";
 import CartItemModel from "../../model/CartItemModel";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { CheckoutPage } from "../pages/CheckoutPage";
+import { isToken } from "../utils/JwtService";
 
 interface BookCartListProps {
 	cartList: CartItemModel[];
@@ -14,6 +15,7 @@ interface BookCartListProps {
 }
 
 const BookCartList: React.FC<BookCartListProps> = (props) => {
+	const navigation = useNavigate();
 	// Xử lý xoá sách
 	function handleRemoveBook(idBook: number) {
 		const newCartList = props.cartList.filter(
@@ -114,7 +116,16 @@ const BookCartList: React.FC<BookCartListProps> = (props) => {
 							<Button
 								variant='contained'
 								sx={{ width: "100%", marginTop: "30px" }}
-								onClick={() => setIsCheckout(true)}
+								onClick={() => {
+									if (isToken()) {
+										setIsCheckout(true);
+									} else {
+										toast.warning(
+											"Bạn cần đăng nhập để thực hiện chức năng này"
+										);
+										navigation("/login");
+									}
+								}}
 							>
 								Thanh toán
 							</Button>

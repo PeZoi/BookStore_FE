@@ -17,11 +17,9 @@ export async function requestAdmin(endpoint: string) {
    const token = localStorage.getItem("token");
 
    if (!token) {
-      alert("Bạn chưa đăng nhập!");
       return;
    }
    if (!isTokenExpired(token)) {
-      alert("Token đã hết hạn. Vui lòng đăng nhập lại!");
       return;
    }
    // Truy cập đến đường dẫn
