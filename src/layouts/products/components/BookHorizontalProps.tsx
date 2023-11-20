@@ -93,7 +93,7 @@ export const BookHorizontal: React.FC<BookHorizontalProps> = (props) => {
 					</strong>
 				</span>
 			</div>
-			{props.type === "review-customer" &&
+			{props.type === "view-customer" &&
 				props.statusOrder === "Thành công" && (
 					<div className='d-flex flex-row-reverse'>
 						{props.cartItem.review === false ? (

@@ -10,6 +10,7 @@ interface OrderDetailProps {
 	activeStep: number;
 	steps: String[];
 	handleCloseModal: any;
+	type?: string;
 }
 
 export const OrderDetail: React.FC<OrderDetailProps> = (props) => {
@@ -81,7 +82,7 @@ export const OrderDetail: React.FC<OrderDetailProps> = (props) => {
 				<BookHorizontal
 					cartItem={cartItem}
 					key={index}
-					type={"review-customer"}
+					type={props.type}
 					idOrder={props.order.idOrder}
 					handleCloseModalOrderDetail={props.handleCloseModal}
 					statusOrder={props.order.status}

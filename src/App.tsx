@@ -29,6 +29,7 @@ import { FeedbackCustomerPage } from "./layouts/pages/FeedbackCustomerPage";
 import { Error403Page } from "./layouts/pages/403Page";
 import { AuthProvider } from "./layouts/utils/AuthContext";
 import { Error404Page } from "./layouts/pages/404Page";
+import { ForgotPassword } from "./layouts/user/ForgotPassword";
 
 const MyRoutes = () => {
 	const [reloadAvatar, setReloadAvatar] = useState(0);
@@ -113,6 +114,7 @@ const MyRoutes = () => {
 						path='/active/:email/:activationCode'
 						element={<ActiveAccount />}
 					/>
+					<Route path='/forgot-password' element={<ForgotPassword />} />
 					<Route path='/policy' element={<PolicyPage />} />
 					<Route path='/feedback' element={<FeedbackCustomerPage />} />
 					<Route path='/error-403' element={<Error403Page />} />

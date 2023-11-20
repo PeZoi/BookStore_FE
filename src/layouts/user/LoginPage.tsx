@@ -167,6 +167,9 @@ const LoginPage: React.FC<LoginPageProps> = (props) => {
 					</Button>
 				</div>
 			</form>
+			<div className='d-flex justify-content-end mt-2 px-3'>
+				<Link to={"/forgot-password"}>Quên mật khẩu</Link>
+			</div>
 		</div>
 	);
 };

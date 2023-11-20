@@ -167,6 +167,7 @@ export const OrderForm: React.FC<OrderFormProps> = (props) => {
 								steps={steps}
 								activeStep={activeStep}
 								handleCloseModal={props.handleCloseModal}
+								type={props.option}
 							/>
 						</>
 					)}
