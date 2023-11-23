@@ -23,10 +23,12 @@ interface CheckoutPageProps {
 	setIsCheckout: any;
 	cartList: CartItemModel[];
 	totalPriceProduct: number;
+
+	isBuyNow?: boolean;
 }
 
 export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
-	const { setCartList } = useCartItem();
+	const { setCartList, setTotalCart } = useCartItem();
 
 	const [isSuccess, setIsSuccess] = useState(false);
 	// Xử lý phương thức thanh toán
@@ -93,7 +95,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 			.then((response) => {
 				localStorage.removeItem("cart");
 				setIsSuccess(true);
-				setCartList([]);
+				if (!props.isBuyNow) {
+					setCartList([]);
+					setTotalCart(0);
+				}
 				toast.success("Thanh toán thành công");
 			})
 			.catch((error) => {
