@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-redeclare */
-import { Tooltip } from "@mui/material";
+import { Skeleton, Tooltip } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import TextEllipsis from "./text-ellipsis/TextEllipsis";
@@ -19,6 +19,8 @@ interface BookCartProps {
 }
 
 const BookCartProps: React.FC<BookCartProps> = (props) => {
+	const { setCartList } = useCartItem();
+
 	const confirm = useConfirm();
 
 	// Tạo các biến
@@ -133,12 +135,13 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 		}
 		// Cập nhật lại
 		localStorage.setItem("cart", JSON.stringify(cart));
+		setCartList(cart);
 	}
 
 	if (loading) {
 		return (
 			<>
-				<h4>Đang loadding ...</h4>
+				<Skeleton className='my-3' variant='rectangular' />
 			</>
 		);
 	}

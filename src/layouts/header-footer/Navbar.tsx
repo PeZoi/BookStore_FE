@@ -83,6 +83,11 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 								Trang chủ
 							</NavLink>
 						</li>
+						<li className='nav-item'>
+							<NavLink className='nav-link' to='/search'>
+								Kho sách
+							</NavLink>
+						</li>
 						<li className='nav-item dropdown dropdown-hover'>
 							<a
 								className='nav-link dropdown-toggle'

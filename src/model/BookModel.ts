@@ -17,6 +17,7 @@ class BookModel {
    relatedImg?: string[];
    idGenres?: number[];
    genresList?: GenreModel[];
+   isFavorited?: boolean;
 
    constructor(idBook: number, nameBook: string, author: string, isbn: string, description: string, listPrice: number, sellPrice: number, quantity: number, avgRating: number, soldQuantity: number, discountPercent: number, thumbnail: string) {
       this.idBook = idBook;

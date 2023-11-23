@@ -3,6 +3,7 @@ import BookModel from "../../model/BookModel";
 import { getNewBook } from "../../api/BookApi";
 import BookProps from "./components/BookProps";
 import { useCartItem } from "../utils/CartItemContext";
+import { Skeleton } from "@mui/material";
 
 interface NewBookListProps {}
 
@@ -25,8 +26,37 @@ const NewBookList: React.FC<NewBookListProps> = (props) => {
 
 	if (loading) {
 		return (
-			<div>
-				<h1>Đang tải dữ liệu</h1>
+			<div className='container-book container mb-5 py-5 px-5 bg-light'>
+				<div className='row'>
+					<div className='col-md-6 col-lg-3 mt-3'>
+						<Skeleton
+							className='my-3'
+							variant='rectangular'
+							height={400}
+						/>
+					</div>
+					<div className='col-md-6 col-lg-3 mt-3'>
+						<Skeleton
+							className='my-3'
+							variant='rectangular'
+							height={400}
+						/>
+					</div>
+					<div className='col-md-6 col-lg-3 mt-3'>
+						<Skeleton
+							className='my-3'
+							variant='rectangular'
+							height={400}
+						/>
+					</div>
+					<div className='col-md-6 col-lg-3 mt-3'>
+						<Skeleton
+							className='my-3'
+							variant='rectangular'
+							height={400}
+						/>
+					</div>
+				</div>
 			</div>
 		);
 	}

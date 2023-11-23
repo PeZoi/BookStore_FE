@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BookModel from "../../../model/BookModel";
 import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
@@ -19,10 +19,29 @@ interface BookProps {
 
 const BookProps: React.FC<BookProps> = ({ book }) => {
 	const { setTotalCart, cartList } = useCartItem();
+	const [isFavoriteBook, setIsFavoriteBook] = useState(false);
+
+	// Lấy tất cả sách yêu thích của người dùng đã đăng nhập ra
+	useEffect(() => {
+		if (isToken()) {
+			fetch(
+				endpointBE +
+					`/favorite-book/get-favorite-book/${getIdUserByToken()}`
+			)
+				.then((response) => response.json())
+				.then((data) => {
+					if (data.includes(book.idBook)) {
+						setIsFavoriteBook(true);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
+		}
+	}, []);
+
 	// Xử lý thêm sản phẩm vào giỏ hàng
 	const handleAddProduct = async (newBook: BookModel) => {
-		// const cartData: string | null = localStorage.getItem("cart");
-		// const cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
 		// cái isExistBook này sẽ tham chiếu đến cái cart ở trên, nên khi update thì cart nó cũng update theo
 		let isExistBook = cartList.find(
 			(cartItem) => cartItem.book.idBook === newBook.idBook
@@ -97,6 +116,42 @@ const BookProps: React.FC<BookProps> = ({ book }) => {
 		setTotalCart(cartList.length);
 	};
 
+	// Xử lý chức năng yêu sách
+	const handleFavoriteBook = async (newBook: BookModel) => {
+		if (!isToken()) {
+			toast.info("Bạn phải đăng nhập để sử dụng chức năng này");
+			return;
+		}
+		if (!isFavoriteBook) {
+			const token = localStorage.getItem("token");
+			fetch(endpointBE + `/favorite-book/add-book`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"content-type": "application/json",
+				},
+				body: JSON.stringify({
+					idBook: book.idBook,
+					idUser: getIdUserByToken(),
+				}),
+			}).catch((err) => console.log(err));
+		} else {
+			const token = localStorage.getItem("token");
+			fetch(endpointBE + `/favorite-book/delete-book`, {
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"content-type": "application/json",
+				},
+				body: JSON.stringify({
+					idBook: book.idBook,
+					idUser: getIdUserByToken(),
+				}),
+			}).catch((err) => console.log(err));
+		}
+		setIsFavoriteBook(!isFavoriteBook);
+	};
+
 	return (
 		<div className='col-md-6 col-lg-3 mt-3'>
 			<div className='card position-relative'>
@@ -157,13 +212,17 @@ const BookProps: React.FC<BookProps> = ({ book }) => {
 					</div>
 					<div className='row mt-2' role='group'>
 						<div className='col-6'>
-							{/* <span className='btn btn-secondary btn-block'> */}
 							<Tooltip title='Yêu thích'>
-								<IconButton size='small'>
+								<IconButton
+									size='small'
+									color={isFavoriteBook ? "error" : "default"}
+									onClick={() => {
+										handleFavoriteBook(book);
+									}}
+								>
 									<FavoriteIcon />
 								</IconButton>
 							</Tooltip>
-							{/* </span> */}
 						</div>
 						<div className='col-6'>
 							{book.quantity !== 0 && (

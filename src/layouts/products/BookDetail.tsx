@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getBookById } from "../../api/BookApi";
 import BookModel from "../../model/BookModel";
 import { Carousel } from "react-responsive-carousel";
@@ -17,16 +17,16 @@ import ImageModel from "../../model/ImageModel";
 import RatingStar from "./components/rating/Rating";
 import React from "react";
 import ReactSimpleImageViewer from "react-simple-image-viewer";
-import CartItemModel from "../../model/CartItemModel";
 import { toast } from "react-toastify";
 import { endpointBE } from "../utils/Constant";
 import { getIdUserByToken, isToken } from "../utils/JwtService";
 import { useCartItem } from "../utils/CartItemContext";
+import { Skeleton } from "@mui/material";
 
 interface BookDetailProps {}
 
 const BookDetail: React.FC<BookDetailProps> = (props) => {
-	const { setTotalCart } = useCartItem();
+	const { setTotalCart, cartList } = useCartItem();
 
 	// Lấy mã sách từ url
 	const { idBook } = useParams();
@@ -84,7 +84,6 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 	const add = () => {
 		if (quantity < (book?.quantity ? book?.quantity : 1)) {
 			setQuantity(quantity + 1);
-			// handleModifiedQuantity(props.cartItem.book.idBook, 1);
 		}
 	};
 
@@ -97,10 +96,8 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 
 	// Xử lý thêm sản phẩm vào giỏ hàng
 	const handleAddProduct = async (newBook: BookModel) => {
-		const cartData: string | null = localStorage.getItem("cart");
-		const cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
 		// cái isExistBook này sẽ tham chiếu đến cái cart ở trên, nên khi update thì cart nó cũng update theo
-		let isExistBook = cart.find(
+		let isExistBook = cartList.find(
 			(cartItem) => cartItem.book.idBook === newBook.idBook
 		);
 		// Thêm 1 sản phẩm vào giỏ hàng
@@ -150,7 +147,7 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 
 					if (response.ok) {
 						const idCart = await response.json();
-						cart.push({
+						cartList.push({
 							idCart: idCart,
 							quantity: quantity,
 							book: newBook,
@@ -160,17 +157,17 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 					console.log(error);
 				}
 			} else {
-				cart.push({
+				cartList.push({
 					quantity: quantity,
 					book: newBook,
 				});
 			}
 		}
 		// Lưu vào localStorage
-		localStorage.setItem("cart", JSON.stringify(cart));
+		localStorage.setItem("cart", JSON.stringify(cartList));
 		// Thông báo toast
 		toast.success("Thêm vào giỏ hàng thành công");
-		setTotalCart(cart.length);
+		setTotalCart(cartList.length);
 	};
 
 	// Viewer hình ảnh
@@ -196,8 +193,26 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 
 	if (loading) {
 		return (
-			<div>
-				<h1>Đang tải dữ liệu</h1>
+			<div className='container-book container mb-5 py-5 px-5 bg-light'>
+				<div className='row'>
+					<div className='col-4'>
+						<Skeleton
+							className='my-3'
+							variant='rectangular'
+							height={400}
+						/>
+					</div>
+					<div className='col-8 px-5'>
+						<Skeleton
+							className='my-3'
+							variant='rectangular'
+							height={100}
+						/>
+						<Skeleton className='my-3' variant='rectangular' />
+						<Skeleton className='my-3' variant='rectangular' />
+						<Skeleton className='my-3' variant='rectangular' />
+					</div>
+				</div>
 			</div>
 		);
 	}

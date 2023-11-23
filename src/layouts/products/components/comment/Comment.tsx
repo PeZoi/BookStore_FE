@@ -15,7 +15,6 @@ const Comment: React.FC<CommentProps> = (props) => {
 	const [reviews, setReviews] = useState<ReviewModel[] | null>(null);
 	useEffect(() => {
 		getAllReview(props.idBook).then((respose) => {
-			console.log(respose);
 			setReviews(respose);
 		});
 	}, []);

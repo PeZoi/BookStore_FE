@@ -123,16 +123,34 @@ export async function searchBook(keySearch?: string, idGenre?: number, filter?: 
 }
 
 export async function getBookById(idBook: number): Promise<BookModel | null> {
+   let bookResponse: BookModel = {
+      idBook: 0,
+      nameBook: "",
+      author: "",
+      description: "",
+      listPrice: NaN,
+      sellPrice: NaN,
+      quantity: NaN,
+      avgRating: NaN,
+      soldQuantity: NaN,
+      discountPercent: NaN,
+      thumbnail: "",
+   }
    const endpoint = endpointBE + `/books/${idBook}`;
-
    try {
       // Gọi phương thức request()
       const response = await request(endpoint);
 
       // Kiểm tra xem dữ liệu endpoint trả về có dữ liệu không
       if (response) {
+         bookResponse = response;
          // Trả về quyển sách
-         return response;
+         const responseImg = await getAllImageByBook(response.idBook);
+         const thumbnail = responseImg.filter(image => image.thumbnail);
+         return {
+            ...bookResponse,
+            thumbnail: thumbnail[0].urlImage,
+         };
       } else {
          throw new Error("Sách không tồn tại");
       }
