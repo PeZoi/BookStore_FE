@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from "react";
+import React from "react";
 import BookModel from "../../../model/BookModel";
-import ImageModel from "../../../model/ImageModel";
-import { getAllImageByBook } from "../../../api/ImageApi";
 import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import TextEllipsis from "./text-ellipsis/TextEllipsis";
@@ -21,45 +19,6 @@ interface BookProps {
 }
 
 const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
-	// const [imageList, setImageList] = useState<ImageModel[]>([]);
-	// const [loading, setLoading] = useState<boolean>(true);
-	// const [erroring, setErroring] = useState(null);
-
-	// useEffect(() => {
-	// 	getAllImageByBook(book.idBook)
-	// 		.then((response) => {
-	// 			setImageList(response);
-	// 			setLoading(false);
-	// 		})
-	// 		.catch((error) => {
-	// 			setLoading(false);
-	// 			setErroring(error.message);
-	// 		});
-	// }, []);
-
-	// if (loading) {
-	// 	return (
-	// 		<div>
-	// 			<h1>Đang tải dữ liệu</h1>
-	// 		</div>
-	// 	);
-	// }
-
-	// if (erroring) {
-	// 	return (
-	// 		<div>
-	// 			<h1>Gặp lỗi: {erroring}</h1>
-	// 		</div>
-	// 	);
-	// }
-
-	// Loading ảnh thumbnail
-	// let dataImage;
-	// if (imageList[0]) {
-	// 	const thumbnail = imageList.filter((i) => i.thumbnail);
-	// 	dataImage = thumbnail[0].urlImage || thumbnail[0].dataImage;
-	// }
-
 	// Xử lý thêm sản phẩm vào giỏ hàng
 	const handleAddProduct = async (newBook: BookModel) => {
 		const cartData: string | null = localStorage.getItem("cart");
@@ -146,9 +105,13 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 						className='my-0 d-inline-block position-absolute end-0'
 						style={{ top: "15px" }}
 					>
-						<span className='badge bg-primary'>
-							{book.discountPercent}%
-						</span>
+						{book.quantity === 0 ? (
+							<span className='badge bg-danger'>Hết hàng</span>
+						) : (
+							<span className='badge bg-primary'>
+								{book.discountPercent}%
+							</span>
+						)}
 					</h4>
 				)}
 				<Link to={`/book/${book.idBook}`}>
@@ -203,14 +166,16 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 							{/* </span> */}
 						</div>
 						<div className='col-6'>
-							<Tooltip title='Thêm vào giỏ hàng'>
-								<button
-									className='btn btn-primary btn-block'
-									onClick={() => handleAddProduct(book)}
-								>
-									<i className='fas fa-shopping-cart'></i>
-								</button>
-							</Tooltip>
+							{book.quantity !== 0 && (
+								<Tooltip title='Thêm vào giỏ hàng'>
+									<button
+										className='btn btn-primary btn-block'
+										onClick={() => handleAddProduct(book)}
+									>
+										<i className='fas fa-shopping-cart'></i>
+									</button>
+								</Tooltip>
+							)}
 						</div>
 					</div>
 				</div>

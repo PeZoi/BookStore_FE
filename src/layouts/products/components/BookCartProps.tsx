@@ -22,7 +22,13 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 	const confirm = useConfirm();
 
 	// Tạo các biến
-	const [quantity, setQuantity] = useState(props.cartItem.quantity);
+	const [quantity, setQuantity] = useState(
+		props.cartItem.book.quantity !== undefined
+			? props.cartItem.quantity > props.cartItem.book.quantity
+				? props.cartItem.book.quantity
+				: props.cartItem.quantity
+			: props.cartItem.quantity
+	);
 	const [imageList, setImageList] = useState<ImageModel[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [erroring, setErroring] = useState(null);

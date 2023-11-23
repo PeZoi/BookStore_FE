@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getBookById } from "../../api/BookApi";
 import BookModel from "../../model/BookModel";
 import { Carousel } from "react-responsive-carousel";
@@ -254,7 +254,15 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 							showIndicators={false}
 						>
 							{images?.map((image, index) => (
-								<div key={index} onClick={() => openImageViewer(index)}>
+								<div
+									key={index}
+									onClick={() => openImageViewer(index)}
+									style={{
+										width: "100%",
+										height: "400px",
+										objectFit: "cover",
+									}}
+								>
 									<img
 										alt=''
 										src={
@@ -370,15 +378,26 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 							</span>
 						</div>
 						<div className='mt-4 d-flex align-items-center'>
-							<Button
-								variant='outlined'
-								size='large'
-								startIcon={<ShoppingCartOutlined />}
-								className='me-3'
-								onClick={() => handleAddProduct(book)}
-							>
-								Thêm vào giỏ hàng
-							</Button>
+							{book.quantity === 0 ? (
+								<Button
+									variant='outlined'
+									size='large'
+									className='me-3'
+									color='error'
+								>
+									Hết hàng
+								</Button>
+							) : (
+								<Button
+									variant='outlined'
+									size='large'
+									startIcon={<ShoppingCartOutlined />}
+									className='me-3'
+									onClick={() => handleAddProduct(book)}
+								>
+									Thêm vào giỏ hàng
+								</Button>
+							)}
 							<Button variant='contained' size='large' className='ms-3'>
 								Mua ngay
 							</Button>

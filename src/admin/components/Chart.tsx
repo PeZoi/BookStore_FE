@@ -59,13 +59,13 @@ export const Chart: React.FC<ChartProps> = (props) => {
 		labels,
 		datasets: [
 			{
-				label: "Tổng số đơn hàng",
+				label: "Tổng số đơn hàng (thành công)",
 				data: props.dataNumberOfOrderOrderByMonth,
 				borderColor: "rgb(255, 99, 132)",
 				backgroundColor: "rgba(255, 99, 132, 0.5)",
 			},
 			{
-				label: "Tổng số tiền",
+				label: "Tổng số tiền (thành công)",
 				data: props.dataTotalPriceOrderByMonth,
 				borderColor: "rgb(12, 99, 132)",
 				backgroundColor: "rgba(12, 99, 132, 0.5)",

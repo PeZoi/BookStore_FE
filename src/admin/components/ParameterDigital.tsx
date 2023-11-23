@@ -2,9 +2,7 @@ import { Card, CardContent, Typography } from "@mui/material";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import PersonIcon from "@mui/icons-material/Person";
 import LocalMallIcon from "@mui/icons-material/LocalMall";
-import React, { useEffect, useState } from "react";
-import { getAllUserRole } from "../../api/UserApi";
-import { getAllOrders } from "../../api/OrderApi";
+import React from "react";
 
 interface ParameterDigitalProps {
 	totalPrice: number;

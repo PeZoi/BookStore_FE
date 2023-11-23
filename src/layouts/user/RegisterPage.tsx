@@ -107,7 +107,7 @@ const RegisterPage: React.FC = () => {
 
 				if (response.ok) {
 					toast.success("Đăng ký tài khoản thành công.");
-					toast.warning("Vui lòng kiểm tra email để kích hoạt tài khoản");
+					toast.info("Vui lòng kiểm tra email để kích hoạt tài khoản");
 					setStatusBtn(false);
 					return true;
 				} else {

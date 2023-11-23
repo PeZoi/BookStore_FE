@@ -82,9 +82,6 @@ export const ReviewForm: React.FC<ReviewFormProps> = (props) => {
 					label='Đánh giá sản phẩm'
 					variant='outlined'
 					required
-					multiline
-					minRows={3}
-					maxRows={4}
 					value={content}
 					onChange={(e) => setContent(e.target.value)}
 				/>

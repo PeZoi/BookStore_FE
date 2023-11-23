@@ -21,7 +21,7 @@ const Dashboard = () => {
 			const newDataTotalPrice = new Array(12).fill(0);
 
 			orders.forEach((order) => {
-				if (order.status !== "Bị huỷ") {
+				if (order.status === "Thành công") {
 					const orderDate = new Date(order.dateCreated);
 					const month = orderDate.getMonth();
 

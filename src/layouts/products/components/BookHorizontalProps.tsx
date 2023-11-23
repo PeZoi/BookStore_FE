@@ -9,6 +9,7 @@ import RateReviewRoundedIcon from "@mui/icons-material/RateReviewRounded";
 import DoneIcon from "@mui/icons-material/Done";
 import { FadeModal } from "../../utils/FadeModal";
 import { ReviewForm } from "./review/ReviewForm";
+import { Link } from "react-router-dom";
 
 interface BookHorizontalProps {
 	cartItem: CartItemModel;
@@ -55,12 +56,15 @@ export const BookHorizontal: React.FC<BookHorizontalProps> = (props) => {
 					/>
 					<div className='d-flex flex-column pb-2'>
 						<Tooltip title={props.cartItem.book.nameBook} arrow>
-							<span className='d-inline'>
+							<Link
+								to={`/book/${props.cartItem.book.idBook}`}
+								className='d-inline text-black'
+							>
 								<TextEllipsis
 									text={props.cartItem.book.nameBook + " "}
 									limit={100}
 								/>
-							</span>
+							</Link>
 						</Tooltip>
 						<div className='mt-auto'>
 							<span className='discounted-price text-danger'>
