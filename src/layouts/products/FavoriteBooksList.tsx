@@ -4,9 +4,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import TextEllipsis from "./components/text-ellipsis/TextEllipsis";
 
-interface FavoriteBooksListProps {
-	setTotalCart: any;
-}
+interface FavoriteBooksListProps {}
 
 const FavoriteBooksList: React.FC<FavoriteBooksListProps> = (props) => {
 	return (

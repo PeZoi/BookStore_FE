@@ -11,11 +11,11 @@ import ImageModel from "../../../model/ImageModel";
 import { useConfirm } from "material-ui-confirm";
 import { isToken } from "../../utils/JwtService";
 import { endpointBE } from "../../utils/Constant";
+import { useCartItem } from "../../utils/CartItemContext";
 
 interface BookCartProps {
 	cartItem: CartItemModel;
 	handleRemoveBook: any;
-	setTotalCart: any;
 }
 
 const BookCartProps: React.FC<BookCartProps> = (props) => {

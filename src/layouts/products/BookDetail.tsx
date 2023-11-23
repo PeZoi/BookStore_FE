@@ -21,13 +21,13 @@ import CartItemModel from "../../model/CartItemModel";
 import { toast } from "react-toastify";
 import { endpointBE } from "../utils/Constant";
 import { getIdUserByToken, isToken } from "../utils/JwtService";
+import { useCartItem } from "../utils/CartItemContext";
 
-interface BookDetailProps {
-	totalCart: number;
-	setTotalCart: any;
-}
+interface BookDetailProps {}
 
 const BookDetail: React.FC<BookDetailProps> = (props) => {
+	const { setTotalCart } = useCartItem();
+
 	// Lấy mã sách từ url
 	const { idBook } = useParams();
 	let idBookNumber: number = 0;
@@ -94,31 +94,6 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 			setQuantity(quantity - 1);
 		}
 	};
-
-	// Xử lý khi click vào nút thêm vào giỏ hàng
-	// Xử lý thêm sản phẩm vào giỏ hàng
-	// const handleAddProduct = (newBook: BookModel) => {
-	// 	const cartData: string | null = localStorage.getItem("cart");
-	// 	const cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
-	// 	// cái isExistBook này sẽ tham chiếu đến cái cart ở trên, nên khi update thì cart nó cũng update theo
-	// 	let isExistBook = cart.find(
-	// 		(cartItem) => cartItem.book.idBook === newBook.idBook
-	// 	);
-	// 	// Thêm 1 sản phẩm vào giỏ hàng
-	// 	if (isExistBook) {
-	// 		// nếu có rồi thì sẽ tăng số lượng
-	// 		isExistBook.quantity += quantity;
-	// 	} else {
-	// 		cart.push({
-	// 			quantity: quantity,
-	// 			book: newBook,
-	// 		});
-	// 		props.setTotalCart(cart.length);
-	// 	}
-	// 	// Lưu vào localStorage
-	// 	localStorage.setItem("cart", JSON.stringify(cart));
-	// 	toast.success("Thêm vào giỏ hàng thành công");
-	// };
 
 	// Xử lý thêm sản phẩm vào giỏ hàng
 	const handleAddProduct = async (newBook: BookModel) => {
@@ -195,7 +170,7 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 		localStorage.setItem("cart", JSON.stringify(cart));
 		// Thông báo toast
 		toast.success("Thêm vào giỏ hàng thành công");
-		props.setTotalCart(cart.length);
+		setTotalCart(cart.length);
 	};
 
 	// Viewer hình ảnh

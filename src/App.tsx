@@ -30,22 +30,10 @@ import { Error403Page } from "./layouts/pages/403Page";
 import { AuthProvider } from "./layouts/utils/AuthContext";
 import { Error404Page } from "./layouts/pages/404Page";
 import { ForgotPassword } from "./layouts/user/ForgotPassword";
+import { CartItemProvider } from "./layouts/utils/CartItemContext";
 
 const MyRoutes = () => {
 	const [reloadAvatar, setReloadAvatar] = useState(0);
-
-	// XỬ LÝ GIỎ HÀNG //////////////////////////////
-	const [cartList, setCartList] = useState<CartItemModel[]>([]);
-	const [totalCart, setTotalCart] = useState(0);
-
-	useEffect(() => {
-		const cartData: string | null = localStorage.getItem("cart");
-		let cart: CartItemModel[] = [];
-		cart = cartData ? JSON.parse(cartData) : [];
-		setCartList(cart);
-		setTotalCart(cart.length);
-	}, []);
-	////////////////////////////////////////////////
 
 	// XỬ LÝ ẨN HIỆN NAV VÀ FOOTER /////////////////
 	const location = useLocation();
@@ -56,118 +44,91 @@ const MyRoutes = () => {
 
 	return (
 		<AuthProvider>
-			<ConfirmProvider>
-				{/* Customer */}
-				{!isAdminPath && (
-					<Navbar
-						totalCart={totalCart}
-						setTotalCart={setTotalCart}
-						key={reloadAvatar}
-					/>
-				)}
-				<Routes>
-					<Route
-						path='/'
-						element={
-							<HomePage
-								setTotalCart={setTotalCart}
-								totalCart={totalCart}
-							/>
-						}
-					/>
-					<Route
-						path='/book/:idBook'
-						element={
-							<BookDetail
-								setTotalCart={setTotalCart}
-								totalCart={totalCart}
-							/>
-						}
-					/>
-					<Route path='/about' element={<About />} />
-					<Route
-						path='/search/:idGenreParam'
-						element={<FilterPage setTotalCart={setTotalCart} />}
-					/>
-					<Route
-						path='/search'
-						element={<FilterPage setTotalCart={setTotalCart} />}
-					/>
-					<Route
-						path='/my-favorite-books'
-						element={<MyFavoriteBooksPage setTotalCart={setTotalCart} />}
-					/>
-					<Route
-						path='/cart'
-						element={<CartPage setTotalCart={setTotalCart} />}
-					/>
-					<Route path='/register' element={<RegisterPage />} />
-					<Route
-						path='/login'
-						element={<LoginPage setTotalCart={setTotalCart} />}
-					/>
-					<Route
-						path='/profile'
-						element={<ProfilePage setReloadAvatar={setReloadAvatar} />}
-					/>
-					<Route
-						path='/active/:email/:activationCode'
-						element={<ActiveAccount />}
-					/>
-					<Route path='/forgot-password' element={<ForgotPassword />} />
-					<Route path='/policy' element={<PolicyPage />} />
-					<Route path='/feedback' element={<FeedbackCustomerPage />} />
-					<Route path='/error-403' element={<Error403Page />} />
-					{!isAdminPath && <Route path='*' element={<Error404Page />} />}
-				</Routes>
-				{!isAdminPath && <Footer />}
+			<CartItemProvider>
+				<ConfirmProvider>
+					{/* Customer */}
+					{!isAdminPath && <Navbar key={reloadAvatar} />}
+					<Routes>
+						<Route path='/' element={<HomePage />} />
+						<Route path='/book/:idBook' element={<BookDetail />} />
+						<Route path='/about' element={<About />} />
+						<Route
+							path='/search/:idGenreParam'
+							element={<FilterPage />}
+						/>
+						<Route path='/search' element={<FilterPage />} />
+						<Route
+							path='/my-favorite-books'
+							element={<MyFavoriteBooksPage />}
+						/>
+						<Route path='/cart' element={<CartPage />} />
+						<Route path='/register' element={<RegisterPage />} />
+						<Route path='/login' element={<LoginPage />} />
+						<Route
+							path='/profile'
+							element={<ProfilePage setReloadAvatar={setReloadAvatar} />}
+						/>
+						<Route
+							path='/active/:email/:activationCode'
+							element={<ActiveAccount />}
+						/>
+						<Route path='/forgot-password' element={<ForgotPassword />} />
+						<Route path='/policy' element={<PolicyPage />} />
+						<Route path='/feedback' element={<FeedbackCustomerPage />} />
+						<Route path='/error-403' element={<Error403Page />} />
+						{!isAdminPath && (
+							<Route path='*' element={<Error404Page />} />
+						)}
+					</Routes>
+					{!isAdminPath && <Footer />}
 
-				{/* Admin */}
-				{isAdminPath && (
-					<div className='row overflow-hidden w-100'>
-						<div className='col-2 col-md-3 col-lg-2'>
-							<Slidebar />
+					{/* Admin */}
+					{isAdminPath && (
+						<div className='row overflow-hidden w-100'>
+							<div className='col-2 col-md-3 col-lg-2'>
+								<Slidebar />
+							</div>
+							<div className='col-10 col-md-9 col-lg-10'>
+								<Routes>
+									<Route path='/admin' element={<DashboardPage />} />
+									<Route
+										path='/admin/dashboard'
+										element={<DashboardPage />}
+									/>
+									<Route
+										path='/admin/book'
+										element={<BookManagementPage />}
+									/>
+									<Route
+										path='/admin/user'
+										element={<UserManagementPage />}
+									/>
+									<Route
+										path='/admin/genre'
+										element={<GenreManagementPage />}
+									/>
+									<Route
+										path='/admin/order'
+										element={<OrderManagementPage />}
+									/>
+									<Route
+										path='/admin/feedback'
+										element={<FeedbackPage />}
+									/>
+									{isAdminPath && (
+										<Route path='*' element={<Error404Page />} />
+									)}
+								</Routes>
+							</div>
 						</div>
-						<div className='col-10 col-md-9 col-lg-10'>
-							<Routes>
-								<Route path='/admin' element={<DashboardPage />} />
-								<Route
-									path='/admin/dashboard'
-									element={<DashboardPage />}
-								/>
-								<Route
-									path='/admin/book'
-									element={<BookManagementPage />}
-								/>
-								<Route
-									path='/admin/user'
-									element={<UserManagementPage />}
-								/>
-								<Route
-									path='/admin/genre'
-									element={<GenreManagementPage />}
-								/>
-								<Route
-									path='/admin/order'
-									element={<OrderManagementPage />}
-								/>
-								<Route
-									path='/admin/feedback'
-									element={<FeedbackPage />}
-								/>
-								{isAdminPath && (
-									<Route path='*' element={<Error404Page />} />
-								)}
-							</Routes>
-						</div>
-					</div>
-				)}
-				<ToastContainer
-					position='bottom-left'
-					autoClose={3000}
-					pauseOnFocusLoss={false}
-				/>
-			</ConfirmProvider>
+					)}
+					<ToastContainer
+						position='bottom-left'
+						autoClose={3000}
+						pauseOnFocusLoss={false}
+					/>
+				</ConfirmProvider>
+			</CartItemProvider>
 		</AuthProvider>
 	);
 };

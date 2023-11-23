@@ -8,12 +8,13 @@ import { endpointBE } from "../utils/Constant";
 import CartItemModel from "../../model/CartItemModel";
 import { getCartAllByIdUser } from "../../api/CartApi";
 import { useAuth } from "../utils/AuthContext";
+import { useCartItem } from "../utils/CartItemContext";
 
-interface LoginPageProps {
-	setTotalCart: any;
-}
+interface LoginPageProps {}
 
 const LoginPage: React.FC<LoginPageProps> = (props) => {
+	const { setTotalCart, setCartList } = useCartItem();
+
 	const navigation = useNavigate();
 	const { isLoggedIn, setLoggedIn } = useAuth();
 
@@ -86,7 +87,8 @@ const LoginPage: React.FC<LoginPageProps> = (props) => {
 								cart = response;
 								// Thêm cart lúc đăng nhập
 								localStorage.setItem("cart", JSON.stringify(cart));
-								props.setTotalCart(cart.length);
+								setTotalCart(cart.length);
+								setCartList(cart);
 							}
 							getCart();
 						})
@@ -101,7 +103,8 @@ const LoginPage: React.FC<LoginPageProps> = (props) => {
 					cart = response;
 					// Thêm cart lúc đăng nhập
 					localStorage.setItem("cart", JSON.stringify(cart));
-					props.setTotalCart(cart.length);
+					setTotalCart(cart.length);
+					setCartList(cart);
 				}
 
 				// Kiểm tra role để chuyển về link

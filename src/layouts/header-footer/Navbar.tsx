@@ -12,13 +12,12 @@ import {
 } from "../utils/JwtService";
 import { Avatar, Button } from "@mui/material";
 import { useAuth } from "../utils/AuthContext";
+import { useCartItem } from "../utils/CartItemContext";
 
-interface NavbarProps {
-	totalCart: number | undefined;
-	setTotalCart: any;
-}
+interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = (props) => {
+	const { totalCart, setTotalCart, setCartList } = useCartItem();
 	const { setLoggedIn } = useAuth();
 	const navigate = useNavigate();
 
@@ -131,7 +130,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 					<Link className='text-reset me-3' to='/cart'>
 						<i className='fas fa-shopping-cart'></i>
 						<span className='badge rounded-pill badge-notification bg-danger'>
-							{props.totalCart ? props.totalCart : ""}
+							{totalCart ? totalCart : ""}
 						</span>
 					</Link>
 					{!isToken() && (
@@ -222,9 +221,10 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 											className='dropdown-item'
 											style={{ cursor: "pointer" }}
 											onClick={() => {
-												props.setTotalCart(0);
+												setTotalCart(0);
 												logout(navigate);
 												setLoggedIn(false);
+												setCartList([]);
 											}}
 										>
 											Logout

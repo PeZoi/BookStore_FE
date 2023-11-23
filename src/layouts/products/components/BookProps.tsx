@@ -6,25 +6,25 @@ import BookModel from "../../../model/BookModel";
 import { Link } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import TextEllipsis from "./text-ellipsis/TextEllipsis";
-import CartItemModel from "../../../model/CartItemModel";
 import { toast } from "react-toastify";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { IconButton } from "@mui/material";
 import { endpointBE } from "../../utils/Constant";
 import { getIdUserByToken, isToken } from "../../utils/JwtService";
+import { useCartItem } from "../../utils/CartItemContext";
 
 interface BookProps {
 	book: BookModel;
-	setTotalCart: any;
 }
 
-const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
+const BookProps: React.FC<BookProps> = ({ book }) => {
+	const { setTotalCart, cartList } = useCartItem();
 	// Xử lý thêm sản phẩm vào giỏ hàng
 	const handleAddProduct = async (newBook: BookModel) => {
-		const cartData: string | null = localStorage.getItem("cart");
-		const cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
+		// const cartData: string | null = localStorage.getItem("cart");
+		// const cart: CartItemModel[] = cartData ? JSON.parse(cartData) : [];
 		// cái isExistBook này sẽ tham chiếu đến cái cart ở trên, nên khi update thì cart nó cũng update theo
-		let isExistBook = cart.find(
+		let isExistBook = cartList.find(
 			(cartItem) => cartItem.book.idBook === newBook.idBook
 		);
 		// Thêm 1 sản phẩm vào giỏ hàng
@@ -74,7 +74,7 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 
 					if (response.ok) {
 						const idCart = await response.json();
-						cart.push({
+						cartList.push({
 							idCart: idCart,
 							quantity: 1,
 							book: newBook,
@@ -84,17 +84,17 @@ const BookProps: React.FC<BookProps> = ({ book, setTotalCart }) => {
 					console.log(error);
 				}
 			} else {
-				cart.push({
+				cartList.push({
 					quantity: 1,
 					book: newBook,
 				});
 			}
 		}
 		// Lưu vào localStorage
-		localStorage.setItem("cart", JSON.stringify(cart));
+		localStorage.setItem("cart", JSON.stringify(cartList));
 		// Thông báo toast
 		toast.success("Thêm vào giỏ hàng thành công");
-		setTotalCart(cart.length);
+		setTotalCart(cartList.length);
 	};
 
 	return (

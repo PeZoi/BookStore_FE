@@ -4,10 +4,7 @@ import BookList from "../products/BookList";
 import HotBookList from "../products/HotBookList";
 import NewBookList from "../products/NewBookList";
 
-interface HomePageProps {
-	totalCart: any;
-	setTotalCart: any;
-}
+interface HomePageProps {}
 
 const HomePage: React.FC<HomePageProps> = (props) => {
 	return (
@@ -23,21 +20,11 @@ const HomePage: React.FC<HomePageProps> = (props) => {
 				<Carousel />
 			</div>
 			{/* Hot Product */}
-			<HotBookList
-				setTotalCart={props.setTotalCart}
-				totalCart={props.totalCart}
-			/>
+			<HotBookList />
 			{/* New Product */}
-			<NewBookList
-				setTotalCart={props.setTotalCart}
-				totalCart={props.totalCart}
-			/>
+			<NewBookList />
 			{/* Product List */}
-			<BookList
-				setTotalCart={props.setTotalCart}
-				totalCart={props.totalCart}
-				size={8}
-			/>
+			<BookList size={8} />
 		</>
 	);
 };

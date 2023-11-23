@@ -3,9 +3,7 @@ import FavoriteBooksList from "../products/FavoriteBooksList";
 import { useAuth } from "../utils/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-interface MyFavoriteBooksPageProps {
-	setTotalCart: any;
-}
+interface MyFavoriteBooksPageProps {}
 
 const MyFavoriteBooksPage: React.FC<MyFavoriteBooksPageProps> = (props) => {
 	const { isLoggedIn } = useAuth();
@@ -23,7 +21,7 @@ const MyFavoriteBooksPage: React.FC<MyFavoriteBooksPageProps> = (props) => {
 
 	return (
 		<>
-			<FavoriteBooksList setTotalCart={props.setTotalCart} />
+			<FavoriteBooksList />
 		</>
 	);
 };

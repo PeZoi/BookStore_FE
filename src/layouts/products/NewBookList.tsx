@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import BookModel from "../../model/BookModel";
 import { getNewBook } from "../../api/BookApi";
 import BookProps from "./components/BookProps";
+import { useCartItem } from "../utils/CartItemContext";
 
-interface NewBookListProps {
-	setTotalCart: any;
-	totalCart: number;
-}
+interface NewBookListProps {}
 
 const NewBookList: React.FC<NewBookListProps> = (props) => {
 	const [bookList, setBookList] = useState<BookModel[]>([]);
@@ -46,11 +44,7 @@ const NewBookList: React.FC<NewBookListProps> = (props) => {
 			<hr className='mt-0' />
 			<div className='row'>
 				{bookList.map((book) => (
-					<BookProps
-						key={book.idBook}
-						book={book}
-						setTotalCart={props.setTotalCart}
-					/>
+					<BookProps key={book.idBook} book={book} />
 				))}
 			</div>
 		</div>

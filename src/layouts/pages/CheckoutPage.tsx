@@ -17,6 +17,7 @@ import { checkPhoneNumber } from "../utils/Validation";
 import { toast } from "react-toastify";
 import { endpointBE } from "../utils/Constant";
 import { CheckoutSuccess } from "./CheckoutSuccess";
+import { useCartItem } from "../utils/CartItemContext";
 
 interface CheckoutPageProps {
 	setIsCheckout: any;
@@ -25,6 +26,8 @@ interface CheckoutPageProps {
 }
 
 export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
+	const { setCartList } = useCartItem();
+
 	const [isSuccess, setIsSuccess] = useState(false);
 	// Xử lý phương thức thanh toán
 	const [value, setValue] = React.useState("COD");
@@ -90,6 +93,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 			.then((response) => {
 				localStorage.removeItem("cart");
 				setIsSuccess(true);
+				setCartList([]);
 				toast.success("Thanh toán thành công");
 			})
 			.catch((error) => {

@@ -7,7 +7,6 @@ import { useParams } from "react-router-dom";
 
 interface FilterPageProps {
 	keySearchNav?: string; // key search từ navbar
-	setTotalCart: any;
 }
 
 const FilterPage: React.FC<FilterPageProps> = (props) => {
@@ -58,7 +57,6 @@ const FilterPage: React.FC<FilterPageProps> = (props) => {
 				keySearch={keySearch}
 				idGenre={idGenreNumber ? idGenreNumber : idGenre}
 				filter={filter}
-				setTotalCart={props.setTotalCart}
 			/>
 		</>
 	);

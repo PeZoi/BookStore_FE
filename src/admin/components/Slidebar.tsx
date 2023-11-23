@@ -10,13 +10,12 @@ import FeedbackIcon from "@mui/icons-material/Feedback";
 import { logout } from "../../layouts/utils/JwtService";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../layouts/utils/AuthContext";
+import { useCartItem } from "../../layouts/utils/CartItemContext";
 
-interface SlidebarProps {
-	active?: string;
-	setActive?: any;
-}
+interface SlidebarProps {}
 
 export const Slidebar: React.FC<SlidebarProps> = (props) => {
+	const { setCartList } = useCartItem();
 	const { setLoggedIn } = useAuth();
 	const navigate = useNavigate();
 	return (
@@ -126,6 +125,7 @@ export const Slidebar: React.FC<SlidebarProps> = (props) => {
 						style={{ cursor: "pointer" }}
 						onClick={() => {
 							setLoggedIn(false);
+							setCartList([]);
 							logout(navigate);
 						}}
 					>
