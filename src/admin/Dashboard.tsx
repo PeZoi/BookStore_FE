@@ -38,7 +38,7 @@ const Dashboard = () => {
 
 	useEffect(() => {
 		updateData(orders);
-	}, [orders]);
+	}, [orders, updateData]);
 
 	// Lấy tổng số account
 	useEffect(() => {
@@ -54,13 +54,19 @@ const Dashboard = () => {
 		getAllOrders()
 			.then((response) => {
 				setOrders(response);
-				setNumberOfOrder(response.length);
-				const totalPriceResponse = response.reduce(
-					(prevValue, currentValue) => {
-						return prevValue + currentValue.totalPrice;
-					},
-					0
-				);
+				const numberOfOrder = response.reduce((prevValue, order) => {
+					if (order.status === "Thành công") {
+						return prevValue + 1;
+					}
+					return prevValue;
+				}, 0);
+				setNumberOfOrder(numberOfOrder);
+				const totalPriceResponse = response.reduce((prevValue, order) => {
+					if (order.status === "Thành công") {
+						return prevValue + order.totalPrice;
+					}
+					return prevValue;
+				}, 0);
 				setTotalPrice(totalPriceResponse);
 			})
 			.catch((error) => console.log(error));

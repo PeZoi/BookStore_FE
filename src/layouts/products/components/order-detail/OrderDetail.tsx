@@ -48,6 +48,10 @@ export const OrderDetail: React.FC<OrderDetailProps> = (props) => {
 							{props.order.totalPrice.toLocaleString("vi-vn")} đ
 						</strong>
 					</p>
+					<p>
+						Phương thức thanh toán:
+						<strong className='ms-2'>{props.order.payment}</strong>
+					</p>
 				</div>
 				<div className='col-lg-4 col-md-6 col-sm-12'>
 					<p>

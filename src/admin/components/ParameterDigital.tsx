@@ -27,7 +27,7 @@ export const ParameterDigital: React.FC<ParameterDigitalProps> = ({
 									color='text.secondary'
 									gutterBottom
 								>
-									TỔNG TIỀN KIẾM ĐƯỢC
+									TỔNG TIỀN KIẾM ĐƯỢC (THÀNH CÔNG)
 								</Typography>
 								<div className='d-flex align-item-center justify-content-between'>
 									<Typography
@@ -101,7 +101,7 @@ export const ParameterDigital: React.FC<ParameterDigitalProps> = ({
 									color='text.secondary'
 									gutterBottom
 								>
-									TỔNG HOÁ ĐƠN
+									TỔNG HOÁ ĐƠN (THÀNH CÔNG)
 								</Typography>
 								<div className='d-flex align-item-center justify-content-between'>
 									<Typography

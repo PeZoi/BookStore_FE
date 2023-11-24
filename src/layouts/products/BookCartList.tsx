@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BookCartProps from "./components/BookCartProps";
 import { Button } from "@mui/material";
-import CartItemModel from "../../model/CartItemModel";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { CheckoutPage } from "../pages/CheckoutPage";
@@ -20,7 +19,7 @@ const BookCartList: React.FC<BookCartListProps> = () => {
 		}, 0);
 		setTotalPriceProduct(total);
 		setTotalCart(cartList.length);
-	}, [cartList]); // Khúc này đang bị overloading
+	}, [cartList, setTotalCart]); // Khúc này đang bị overloading
 
 	const navigation = useNavigate();
 	// Xử lý xoá sách

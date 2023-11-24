@@ -32,7 +32,6 @@ export const OrderTable: React.FC<OrderTableProps> = (props) => {
 					...order,
 					id: order.idOrder,
 					nameCustomer: order.fullName,
-					payment: "COD",
 				}));
 
 				setData(orders);

@@ -31,6 +31,7 @@ export const OrderForm: React.FC<OrderFormProps> = (props) => {
 		dateCreated: new Date(),
 		status: "",
 		note: "",
+		payment: "",
 	});
 
 	// Step
@@ -85,7 +86,7 @@ export const OrderForm: React.FC<OrderFormProps> = (props) => {
 			});
 	}
 
-	const handleCancleOrder = (idOrder: number) => {
+	const handleCancleOrder = () => {
 		const token = localStorage.getItem("token");
 
 		fetch(endpointBE + "/order/update-order", {
@@ -154,9 +155,7 @@ export const OrderForm: React.FC<OrderFormProps> = (props) => {
 											className='me-3'
 											variant='contained'
 											color='error'
-											onClick={() =>
-												handleCancleOrder(order.idOrder)
-											}
+											onClick={() => handleCancleOrder()}
 										>
 											huỷ đơn hàng
 										</Button>

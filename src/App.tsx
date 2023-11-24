@@ -13,8 +13,7 @@ import RegisterPage from "./layouts/user/RegisterPage";
 import LoginPage from "./layouts/user/LoginPage";
 import ProfilePage from "./layouts/user/ProfilePage";
 import ActiveAccount from "./layouts/user/ActiveAccount";
-import { useEffect, useState } from "react";
-import CartItemModel from "./model/CartItemModel";
+import { useState } from "react";
 import { Slidebar } from "./admin/components/Slidebar";
 import DashboardPage from "./admin/Dashboard";
 import { ToastContainer } from "react-toastify";
@@ -31,6 +30,7 @@ import { AuthProvider } from "./layouts/utils/AuthContext";
 import { Error404Page } from "./layouts/pages/404Page";
 import { ForgotPassword } from "./layouts/user/ForgotPassword";
 import { CartItemProvider } from "./layouts/utils/CartItemContext";
+import CheckoutStatus from "./layouts/pages/CheckoutStatus";
 
 const MyRoutes = () => {
 	const [reloadAvatar, setReloadAvatar] = useState(0);
@@ -76,6 +76,10 @@ const MyRoutes = () => {
 						<Route path='/policy' element={<PolicyPage />} />
 						<Route path='/feedback' element={<FeedbackCustomerPage />} />
 						<Route path='/error-403' element={<Error403Page />} />
+						<Route
+							path='/check-out/status'
+							element={<CheckoutStatus />}
+						/>
 						{!isAdminPath && (
 							<Route path='*' element={<Error404Page />} />
 						)}

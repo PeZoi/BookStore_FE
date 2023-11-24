@@ -4,33 +4,41 @@ import OrderModel from "../model/OrderModel";
 import { request } from "./Request";
 
 export async function getAllOrders(): Promise<OrderModel[]> {
-   const endpoint: string = endpointBE + "/orders?sort=idOrder,desc";
-   const response = await request(endpoint);
+   try {
+      const endpoint: string = endpointBE + "/orders?sort=idOrder,desc";
+      const response = await request(endpoint);
 
-   const datas = response._embedded.orders.map((data: any) => {
-      const order: OrderModel = {
-         idOrder: data.idOrder,
-         deliveryAddress: data.deliveryAddress,
-         totalPrice: data.totalPrice,
-         totalPriceProduct: data.totalPriceProduct,
-         feeDelivery: data.feeDelivery,
-         feePayment: data.feePayment,
-         dateCreated: data.dateCreated,
-         status: data.status,
-         user: data._embedded.user,
-         fullName: data.fullName,
-         note: data.note,
-      }
-      return order;
-   })
+      const datas = await Promise.all(response._embedded.orders.map(async (data: any) => {
+         const responsePayment = await request(endpointBE + `/orders/${data.idOrder}/payment`);
+         return {
+            idOrder: data.idOrder,
+            deliveryAddress: data.deliveryAddress,
+            totalPrice: data.totalPrice,
+            totalPriceProduct: data.totalPriceProduct,
+            feeDelivery: data.feeDelivery,
+            feePayment: data.feePayment,
+            dateCreated: data.dateCreated,
+            status: data.status,
+            user: data._embedded.user,
+            fullName: data.fullName,
+            note: data.note,
+            payment: responsePayment.namePayment,
+         };
+      }));
 
-   return datas;
+      return datas;
+   } catch (error) {
+      console.error("Error while fetching orders:", error);
+      throw error;
+   }
 }
+
 
 export async function getAllOrdersByIdUser(idUser: number): Promise<OrderModel[]> {
    const endpoint = endpointBE + `/users/${idUser}/listOrders?sort=idOrder,desc`;
    const response = await request(endpoint);
-   const datas = response._embedded.orders.map((data: any) => {
+   const datas = await Promise.all(response._embedded.orders.map(async (data: any) => {
+      const responsePayment = await request(endpointBE + `/orders/${data.idOrder}/payment`);
       const order: OrderModel = {
          idOrder: data.idOrder,
          deliveryAddress: data.deliveryAddress,
@@ -43,9 +51,10 @@ export async function getAllOrdersByIdUser(idUser: number): Promise<OrderModel[]
          user: data._embedded.user,
          fullName: data.fullName,
          note: data.note,
+         payment: responsePayment.namePayment,
       }
       return order;
-   })
+   }))
 
    return datas;
 }
@@ -53,6 +62,7 @@ export async function getAllOrdersByIdUser(idUser: number): Promise<OrderModel[]
 export async function get1Orders(idOrder: number): Promise<OrderModel> {
    const endpoint: string = endpointBE + `/orders/${idOrder}`;
    const responseOrder = await request(endpoint);
+   const responsePayment = await request(endpointBE + `/orders/${responseOrder.idOrder}/payment`);
    const responseOrderDetail = await request(endpointBE + `/orders/${responseOrder.idOrder}/listOrderDetails`);
    let cartItems: CartItemModel[] = [];
 
@@ -76,7 +86,7 @@ export async function get1Orders(idOrder: number): Promise<OrderModel> {
       phoneNumber: responseOrder.phoneNumber,
       note: responseOrder.note,
       cartItems: cartItems,
-
+      payment: responsePayment.namePayment,
    }
 
    return order;

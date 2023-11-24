@@ -1,5 +1,6 @@
 import BookModel from "./BookModel";
 import CartItemModel from "./CartItemModel";
+import PaymentModel from "./Payment";
 import UserModel from "./UserModel";
 
 class OrderModel {
@@ -16,6 +17,7 @@ class OrderModel {
    fullName?: string;
    phoneNumber?: string;
    note?: string;
+   payment?: string;
    cartItems?: CartItemModel[]; // để tạm
 
 

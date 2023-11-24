@@ -16,7 +16,7 @@ import UserModel from "../../model/UserModel";
 import { checkPhoneNumber } from "../utils/Validation";
 import { toast } from "react-toastify";
 import { endpointBE } from "../utils/Constant";
-import { CheckoutSuccess } from "./CheckoutSuccess";
+import { CheckoutSuccess } from "./components/CheckoutSuccess";
 import { useCartItem } from "../utils/CartItemContext";
 
 interface CheckoutPageProps {
@@ -30,9 +30,9 @@ interface CheckoutPageProps {
 export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 	const { setCartList, setTotalCart } = useCartItem();
 
-	const [isSuccess, setIsSuccess] = useState(false);
+	const [isSuccessPayment, setIsSuccessPayment] = useState(false);
 	// Xử lý phương thức thanh toán
-	const [value, setValue] = React.useState("COD");
+	const [payment, setPayment] = React.useState(1); // mặc định là cod
 	const [fullName, setFullName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const [deliveryAddress, setDeliveryAddress] = useState("");
@@ -42,7 +42,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 	const [errorPhoneNumber, setErrorPhoneNumber] = useState("");
 
 	const handleChangePayment = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setValue((event.target as HTMLInputElement).value);
+		setPayment(parseInt((event.target as HTMLInputElement).value));
 	};
 
 	// Lấy dữ liệu của người dùng lên
@@ -61,9 +61,10 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 			});
 	}, []);
 
-	function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault();
 		const token = localStorage.getItem("token");
+
 		const booksRequest: any[] = [];
 
 		props.cartList.forEach((cartItem) => {
@@ -75,6 +76,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 
 		const request = {
 			idUser: getIdUserByToken(),
+			idPayment: payment,
 			fullName,
 			phoneNumber,
 			email: user?.email,
@@ -84,6 +86,42 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 			note,
 		};
 
+		// Khi thanh toán bằng vnpay
+		if (payment === 2) {
+			try {
+				const response = await fetch(
+					endpointBE +
+						"/vnpay/create-payment?amount=" +
+						props.totalPriceProduct,
+					{
+						method: "POST",
+						headers: {
+							Authorization: `Bearer ${token}`,
+							"content-type": "application/json",
+						},
+					}
+				);
+				if (!response.ok) {
+					throw new Error(`HTTP error! Status: ${response.status}`);
+				}
+				const paymentUrl = await response.text();
+
+				// Lưu order vào csdl
+				const isPayNow = true;
+				handleSaveOrder(request, isPayNow);
+
+				window.location.replace(paymentUrl);
+			} catch (error) {
+				console.log(error);
+			}
+		} else {
+			// Khi nhận hàng mới thanh toán
+			handleSaveOrder(request);
+		}
+	}
+
+	const handleSaveOrder = (request: any, isPayNow?: boolean) => {
+		const token = localStorage.getItem("token");
 		fetch(endpointBE + "/order/add-order", {
 			method: "POST",
 			headers: {
@@ -94,7 +132,9 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 		})
 			.then((response) => {
 				localStorage.removeItem("cart");
-				setIsSuccess(true);
+				if (!isPayNow) {
+					setIsSuccessPayment(true);
+				}
 				if (!props.isBuyNow) {
 					setCartList([]);
 					setTotalCart(0);
@@ -105,11 +145,11 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 				console.log(error);
 				toast.error("Thanh toán thất bại");
 			});
-	}
+	};
 
 	return (
 		<>
-			{!isSuccess ? (
+			{!isSuccessPayment ? (
 				<form onSubmit={handleSubmit}>
 					<div className='container bg-light my-3 rounded-3 p-3'>
 						<strong className='fs-6'>ĐỊA CHỈ GIAO HÀNG</strong>
@@ -172,13 +212,12 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 							<RadioGroup
 								aria-labelledby='demo-controlled-radio-buttons-group'
 								name='controlled-radio-buttons-group'
-								value={value}
+								value={payment}
 								onChange={handleChangePayment}
 							>
 								<FormControlLabel
-									value='female'
+									value={1}
 									control={<Radio />}
-									checked
 									label={
 										<div
 											style={{
@@ -200,9 +239,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 								/>
 
 								<FormControlLabel
-									value='male'
+									value={2}
 									control={<Radio />}
-									disabled
 									label={
 										<div
 											style={{
@@ -218,13 +256,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
 													marginRight: "10px",
 												}}
 											/>
-											Thanh toán bằng VNPAY{" "}
-											<span
-												className='text-danger ms-2'
-												style={{ fontSize: "12px" }}
-											>
-												(Đang phát triển)
-											</span>
+											Thanh toán bằng VNPAY
 										</div>
 									}
 								/>
