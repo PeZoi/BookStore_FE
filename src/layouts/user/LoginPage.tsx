@@ -9,10 +9,13 @@ import CartItemModel from "../../model/CartItemModel";
 import { getCartAllByIdUser } from "../../api/CartApi";
 import { useAuth } from "../utils/AuthContext";
 import { useCartItem } from "../utils/CartItemContext";
+import useScrollToTop from "../../hooks/ScrollToTop";
 
 interface LoginPageProps {}
 
 const LoginPage: React.FC<LoginPageProps> = (props) => {
+	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
+
 	const { setTotalCart, setCartList } = useCartItem();
 
 	const navigation = useNavigate();

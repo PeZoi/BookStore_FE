@@ -1,8 +1,11 @@
 import { Button } from "@mui/material";
 import React from "react";
 import { Link } from "react-router-dom";
+import useScrollToTop from "../../hooks/ScrollToTop";
 
 export const Error404Page: React.FC = () => {
+	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
+	
 	return (
 		<div
 			className='container text-center text-black'

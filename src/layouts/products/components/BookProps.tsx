@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import BookModel from "../../../model/BookModel";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import TextEllipsis from "./text-ellipsis/TextEllipsis";
 import { toast } from "react-toastify";
@@ -20,6 +20,7 @@ interface BookProps {
 const BookProps: React.FC<BookProps> = ({ book }) => {
 	const { setTotalCart, cartList } = useCartItem();
 	const [isFavoriteBook, setIsFavoriteBook] = useState(false);
+	const navigation = useNavigate();
 
 	// Lấy tất cả sách yêu thích của người dùng đã đăng nhập ra
 	useEffect(() => {
@@ -120,6 +121,7 @@ const BookProps: React.FC<BookProps> = ({ book }) => {
 	const handleFavoriteBook = async (newBook: BookModel) => {
 		if (!isToken()) {
 			toast.info("Bạn phải đăng nhập để sử dụng chức năng này");
+			navigation("/login");
 			return;
 		}
 		if (!isFavoriteBook) {

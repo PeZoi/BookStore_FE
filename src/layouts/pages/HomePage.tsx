@@ -3,10 +3,12 @@ import Carousel from "./components/Carousel";
 import BookList from "../products/BookList";
 import HotBookList from "../products/HotBookList";
 import NewBookList from "../products/NewBookList";
+import useScrollToTop from "../../hooks/ScrollToTop";
 
 interface HomePageProps {}
 
 const HomePage: React.FC<HomePageProps> = (props) => {
+	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
 	return (
 		<>
 			{/* Banner */}

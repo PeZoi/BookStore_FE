@@ -24,10 +24,12 @@ import { useCartItem } from "../utils/CartItemContext";
 import { Skeleton } from "@mui/material";
 import CartItemModel from "../../model/CartItemModel";
 import { CheckoutPage } from "../pages/CheckoutPage";
+import useScrollToTop from "../../hooks/ScrollToTop";
 
 interface BookDetailProps {}
 
 const BookDetail: React.FC<BookDetailProps> = (props) => {
+	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
 	const { setTotalCart, cartList } = useCartItem();
 
 	// Lấy mã sách từ url

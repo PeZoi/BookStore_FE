@@ -4,12 +4,15 @@ import ToolFilter from "./components/ToolFilter";
 import BookList from "../products/BookList";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
+import useScrollToTop from "../../hooks/ScrollToTop";
 
 interface FilterPageProps {
 	keySearchNav?: string; // key search từ navbar
 }
 
 const FilterPage: React.FC<FilterPageProps> = (props) => {
+	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
+
 	const [size, setSize] = useState(12); // Hiển thị bao nhiêu sản phẩm
 	const [keySearch, setKeySearch] = useState(""); // Từ khoá của sách
 	const [idGenre, setIdGenre] = useState(0); // Thể loại muốn hiển thị

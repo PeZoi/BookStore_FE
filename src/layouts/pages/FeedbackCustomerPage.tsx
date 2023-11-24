@@ -6,8 +6,11 @@ import { toast } from "react-toastify";
 import { endpointBE } from "../utils/Constant";
 import { useAuth } from "../utils/AuthContext";
 import { useNavigate } from "react-router-dom";
+import useScrollToTop from "../../hooks/ScrollToTop";
 
 export const FeedbackCustomerPage: React.FC = () => {
+	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
+	
 	const { isLoggedIn } = useAuth();
 	const navigation = useNavigate();
 

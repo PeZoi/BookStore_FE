@@ -3,8 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { endpointBE } from "../utils/Constant";
 import { useAuth } from "../utils/AuthContext";
+import useScrollToTop from "../../hooks/ScrollToTop";
 
 const ActiveAccount: React.FC = () => {
+	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
+
 	const { isLoggedIn } = useAuth();
 	const navigation = useNavigate();
 

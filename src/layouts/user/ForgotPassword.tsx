@@ -2,8 +2,11 @@ import { Button, TextField } from "@mui/material";
 import React, { FormEvent, useState } from "react";
 import { endpointBE } from "../utils/Constant";
 import { toast } from "react-toastify";
+import useScrollToTop from "../../hooks/ScrollToTop";
 
 export const ForgotPassword: React.FC = () => {
+	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
+	
 	const [email, setEmail] = useState("");
 	function handleSubmit(event: FormEvent<HTMLFormElement>): void {
 		event.preventDefault();

@@ -33,12 +33,15 @@ import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import { useAuth } from "../utils/AuthContext";
 import { useNavigate } from "react-router-dom";
+import useScrollToTop from "../../hooks/ScrollToTop";
 
 interface ProfilePageProps {
 	setReloadAvatar: any;
 }
 
 const ProfilePage: React.FC<ProfilePageProps> = (props) => {
+	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
+
 	const { isLoggedIn } = useAuth();
 	const navigation = useNavigate();
 
