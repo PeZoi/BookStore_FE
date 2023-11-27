@@ -111,30 +111,42 @@ export const BookHorizontal: React.FC<BookHorizontalProps> = (props) => {
 								>
 									Viết đánh giá
 								</Button>
-								<FadeModal
-									open={openModal}
-									handleOpen={handleOpenModal}
-									handleClose={handleCloseModal}
-								>
-									<ReviewForm
-										idOrder={props.idOrder ? props.idOrder : 0}
-										idBook={props.cartItem.book.idBook}
-										handleCloseModal={handleCloseModal}
-										handleCloseModalOrderDetail={
-											props.handleCloseModalOrderDetail
-										}
-										cartItem={cartItem}
-										setCartItem={setCartItem}
-									/>
-								</FadeModal>
 							</>
 						) : (
-							<Chip
-								color='primary'
-								label='Bạn đã đánh giá sản phẩm này rồi'
-								icon={<DoneIcon />}
-							/>
+							<>
+								<Button
+									className='mx-3'
+									variant='outlined'
+									size='small'
+									startIcon={<RateReviewRoundedIcon />}
+									style={{ width: "150px" }}
+									onClick={handleOpenModal}
+								>
+									Xem đánh giá
+								</Button>
+								<Chip
+									color='primary'
+									label='Bạn đã đánh giá sản phẩm này rồi'
+									icon={<DoneIcon />}
+								/>
+							</>
 						)}
+						<FadeModal
+							open={openModal}
+							handleOpen={handleOpenModal}
+							handleClose={handleCloseModal}
+						>
+							<ReviewForm
+								idOrder={props.idOrder ? props.idOrder : 0}
+								idBook={props.cartItem.book.idBook}
+								handleCloseModal={handleCloseModal}
+								handleCloseModalOrderDetail={
+									props.handleCloseModalOrderDetail
+								}
+								cartItem={cartItem}
+								setCartItem={setCartItem}
+							/>
+						</FadeModal>
 					</div>
 				)}
 			<hr className='mt-3' />

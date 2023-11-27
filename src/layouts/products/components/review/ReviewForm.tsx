@@ -1,5 +1,5 @@
 import { Button, TextField, Typography } from "@mui/material";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Rating } from "react-simple-star-rating";
 import { endpointBE } from "../../../utils/Constant";
 import { toast } from "react-toastify";
@@ -7,23 +7,27 @@ import { getIdUserByToken } from "../../../utils/JwtService";
 import CartItemModel from "../../../../model/CartItemModel";
 
 interface ReviewFormProps {
-	idOrder: number;
-	idBook: number;
-	handleCloseModal: any;
-	handleCloseModalOrderDetail: any;
-	cartItem: CartItemModel;
-	setCartItem: any;
+	idOrder?: number;
+	idBook?: number;
+	handleCloseModal?: any;
+	handleCloseModalOrderDetail?: any;
+	cartItem?: CartItemModel;
+	setCartItem?: any;
 }
 
 export const ReviewForm: React.FC<ReviewFormProps> = (props) => {
+	const [idReview, setIdReview] = useState(0);
 	const [ratingValue, setRatingValue] = useState(0);
 	const [errorRating, setErrorRating] = useState("");
 	const [content, setContent] = useState("");
 
+	// Xử lý thay đổi vote
 	const handleRating = (rate: number) => {
 		setErrorRating("");
 		setRatingValue(rate);
 	};
+
+	// Xử lý submit
 	function handleSubmitReview(event: FormEvent<HTMLFormElement>): void {
 		event.preventDefault();
 		event.stopPropagation();
@@ -33,22 +37,29 @@ export const ReviewForm: React.FC<ReviewFormProps> = (props) => {
 		}
 
 		const token = localStorage.getItem("token");
-		fetch(endpointBE + "/review/", {
-			method: "POST",
+		const endpoint = props.cartItem?.review
+			? "/review/update-review"
+			: "/review/add-review";
+		const method = props.cartItem?.review ? "PUT" : "POST";
+		fetch(endpointBE + endpoint, {
+			method: method,
 			headers: {
 				Authorization: `Bearer ${token}`,
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
+				idReview,
 				idUser: getIdUserByToken(),
 				idOrder: props.idOrder,
 				idBook: props.idBook,
-				ratingValue,
+				ratingPoint: ratingValue,
 				content,
 			}),
 		})
 			.then((response) => {
-				toast.success("Đánh giá sản phẩm thành công");
+				props.cartItem?.review
+					? toast.success("Chỉnh sửa đánh giá thành công")
+					: toast.success("Đánh giá sản phẩm thành công");
 				props.handleCloseModal();
 				props.handleCloseModalOrderDetail();
 				props.setCartItem({ ...props.cartItem, review: true });
@@ -58,6 +69,31 @@ export const ReviewForm: React.FC<ReviewFormProps> = (props) => {
 				props.handleCloseModal();
 			});
 	}
+
+	// Lấy data review khi đã review rồi
+	useEffect(() => {
+		if (props.cartItem?.review) {
+			const token = localStorage.getItem("token");
+			fetch(endpointBE + `/review/get-review`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					idOrder: props.idOrder,
+					idBook: props.idBook,
+				}),
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					setRatingValue(data.ratingPoint);
+					setContent(data.content);
+					setIdReview(data.idReview);
+				})
+				.catch((error) => console.log(error));
+		}
+	}, []);
 
 	return (
 		<div className='container'>
@@ -87,7 +123,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = (props) => {
 				/>
 				<div className='d-flex flex-row-reverse'>
 					<Button type='submit' variant='contained'>
-						Gửi đánh giá
+						{props.cartItem?.review ? "sửa đánh giá" : "Gửi đánh giá"}
 					</Button>
 				</div>
 			</form>
