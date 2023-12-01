@@ -34,7 +34,7 @@ export const Slidebar: React.FC<SlidebarProps> = (props) => {
 						width={100}
 					/>
 				</a>
-				<hr className='text- white d-none d-sm-block' />
+				<hr className='text- white d-none d-sm-block d-md-block' />
 				<ul className='nav nav-pills flex-column' id='parentM'>
 					<li className='nav-item'>
 						<NavLink
@@ -42,7 +42,9 @@ export const Slidebar: React.FC<SlidebarProps> = (props) => {
 							className={`nav-link d-flex align-items-center justify-content-center`}
 						>
 							<DashboardIcon fontSize='small' />
-							<span className='ms-2 d-none d-sm-inline'>Dashboard</span>
+							<span className='ms-2 d-none d-sm-inline d-md-inline'>
+								Dashboard
+							</span>
 						</NavLink>
 					</li>
 					<li className='nav-item'>
@@ -51,7 +53,7 @@ export const Slidebar: React.FC<SlidebarProps> = (props) => {
 							className={`nav-link d-flex align-items-center justify-content-center`}
 						>
 							<MenuBookRoundedIcon fontSize='small' />
-							<span className='ms-2 d-none d-sm-inline'>
+							<span className='ms-2 d-none d-sm-inline d-md-inline'>
 								Quản lý Sách
 							</span>
 						</NavLink>
@@ -62,7 +64,7 @@ export const Slidebar: React.FC<SlidebarProps> = (props) => {
 							className={`nav-link d-flex align-items-center justify-content-center`}
 						>
 							<CategoryRoundedIcon fontSize='small' />
-							<span className='ms-2 d-none d-sm-inline'>
+							<span className='ms-2 d-none d-sm-inline d-md-inline'>
 								Quản lý thể loại
 							</span>
 						</NavLink>
@@ -73,7 +75,7 @@ export const Slidebar: React.FC<SlidebarProps> = (props) => {
 							className={`nav-link d-flex align-items-center justify-content-center`}
 						>
 							<ManageAccountsIcon fontSize='small' />
-							<span className='ms-2 d-none d-sm-inline'>
+							<span className='ms-2 d-none d-sm-inline d-md-inline'>
 								Quản lý tài khoản
 							</span>
 						</NavLink>
@@ -84,7 +86,7 @@ export const Slidebar: React.FC<SlidebarProps> = (props) => {
 							className={`nav-link d-flex align-items-center justify-content-center `}
 						>
 							<LocalMallRoundedIcon fontSize='small' />
-							<span className='ms-2 d-none d-sm-inline'>
+							<span className='ms-2 d-none d-sm-inline d-md-inline'>
 								Quản lý đơn hàng
 							</span>
 						</NavLink>
@@ -95,7 +97,9 @@ export const Slidebar: React.FC<SlidebarProps> = (props) => {
 							className={`nav-link d-flex align-items-center justify-content-center `}
 						>
 							<FeedbackIcon fontSize='small' />
-							<span className='ms-2 d-none d-sm-inline'>Feedback</span>
+							<span className='ms-2 d-none d-sm-inline d-md-inline'>
+								Feedback
+							</span>
 						</NavLink>
 					</li>
 				</ul>

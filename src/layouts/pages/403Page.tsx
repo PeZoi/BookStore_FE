@@ -5,7 +5,7 @@ import useScrollToTop from "../../hooks/ScrollToTop";
 
 export const Error403Page: React.FC = () => {
 	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
-	
+
 	return (
 		<div
 			className='container text-center text-black'

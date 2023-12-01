@@ -7,6 +7,7 @@ import { AdminEnpoint } from "../../admin/AdminEnpoint";
 import {
 	getAvatarByToken,
 	getLastNameByToken,
+	getRoleByToken,
 	isToken,
 	logout,
 } from "../utils/JwtService";
@@ -47,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 	}
 
 	return (
-		<nav className='navbar navbar-expand-lg navbar-light bg-light'>
+		<nav className='navbar navbar-expand-lg navbar-light bg-light sticky-top'>
 			{/* <!-- Container wrapper --> */}
 			<div className='container-fluid'>
 				{/* <!-- Toggle button --> */}
@@ -221,6 +222,16 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 											Sách yêu thích của tôi
 										</Link>
 									</li>
+									{getRoleByToken() === "ADMIN" && (
+										<li>
+											<Link
+												className='dropdown-item'
+												to='/admin/dashboard'
+											>
+												Quản lý
+											</Link>
+										</li>
+									)}
 									<li>
 										<a
 											className='dropdown-item'

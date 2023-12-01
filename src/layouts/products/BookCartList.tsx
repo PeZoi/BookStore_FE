@@ -47,7 +47,7 @@ const BookCartList: React.FC<BookCartListProps> = () => {
 							<img
 								src='https://newnet.vn/themes/newnet/assets/img/empty-cart.png'
 								alt=''
-								width='60%'
+								width='63%'
 							/>
 							<Link
 								to={"/search"}
@@ -70,8 +70,8 @@ const BookCartList: React.FC<BookCartListProps> = () => {
 						<h2 className='mt-2 px-3 py-3 mb-0'>
 							GIỎ HÀNG <span>({cartList.length} sản phẩm)</span>
 						</h2>
-						<div className='col-8 me-3'>
-							<div className='container-book bg-light'>
+						<div className='col-lg-8 col-md-12 col-sm-12 '>
+							<div className='container-book bg-light '>
 								<div className='row px-4 py-3'>
 									<div className='col'>Sản phẩm</div>
 									<div className='col-3 text-center'>Số lượng</div>
@@ -79,7 +79,7 @@ const BookCartList: React.FC<BookCartListProps> = () => {
 									<div className='col-2 text-center'>Thao tác</div>
 								</div>
 							</div>
-							<div className='container-book bg-light mt-3 px-3'>
+							<div className='container-book bg-light mt-lg-0 mt-md-3 mt-sm-3 px-3'>
 								<div className='row px-4 py-3'>
 									{cartList.map((cartItem) => {
 										return (
@@ -97,7 +97,7 @@ const BookCartList: React.FC<BookCartListProps> = () => {
 
 						{/* Bên phải */}
 						<div
-							className='container-book bg-light col px-5 pb-4'
+							className='container-book bg-light col-lg col-md-12 col-sm-12 px-5 pb-4 mt-lg-0 mt-md-3 mt-sm-3'
 							style={{ height: "fit-content" }}
 						>
 							<div className='d-flex align-items-center justify-content-between mt-3'>

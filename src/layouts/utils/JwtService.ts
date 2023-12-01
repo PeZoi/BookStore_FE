@@ -53,6 +53,14 @@ export function getIdUserByToken() {
    }
 }
 
+export function getRoleByToken() {
+   const token = localStorage.getItem('token');
+   if (token) {
+      const decodedToken = jwtDecode(token) as JwtPayload;
+      return decodedToken.role;
+   }
+}
+
 export function logout(navigate: any) {
    navigate("/login");
    localStorage.removeItem('token');

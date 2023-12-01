@@ -3,7 +3,7 @@ import useScrollToTop from "../../hooks/ScrollToTop";
 
 const PolicyPage: React.FC = () => {
 	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
-	
+
 	return (
 		<div className='container mt-5'>
 			<h1>CHÍNH SÁCH ĐỔI / TRẢ / HOÀN TIỀN</h1>
@@ -40,7 +40,6 @@ const PolicyPage: React.FC = () => {
 				<li>
 					<p>Số lượng sản phẩm.</p>
 				</li>
-				<li></li>
 			</ul>
 			<p>
 				Trong trường hợp hiếm hoi sản phẩm quý khách nhận được có khiếm

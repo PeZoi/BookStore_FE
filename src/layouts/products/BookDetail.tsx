@@ -252,7 +252,7 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 				<>
 					<div className='container p-2 bg-white my-3 rounded'>
 						<div className='row mt-4 mb-4'>
-							<div className='col-4'>
+							<div className='col-lg-4 col-md-4 col-sm-12'>
 								<Carousel
 									emulateTouch={true}
 									swipeable={true}
@@ -292,7 +292,7 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 									/>
 								)}
 							</div>
-							<div className='col-8 px-5'>
+							<div className='col-lg-8 col-md-8 col-sm-12 px-5'>
 								<h2>{book.nameBook}</h2>
 								<div className='d-flex align-items-center'>
 									<p className='me-5'>

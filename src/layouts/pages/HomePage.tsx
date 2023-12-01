@@ -11,11 +11,13 @@ const HomePage: React.FC<HomePageProps> = (props) => {
 	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
 	return (
 		<>
-			{/* Banner */}
-			<Banner />
-			{/* Underline */}
-			<div className='d-flex justify-content-center align-items-center pb-4'>
-				<hr className='w-100 mx-5' />
+			<div className='d-md-none d-sm-none d-lg-block'>
+				{/* Banner */}
+				<Banner />
+				{/* Underline */}
+				<div className='d-flex justify-content-center align-items-center pb-4'>
+					<hr className='w-100 mx-5' />
+				</div>
 			</div>
 			{/* Slide img */}
 			<div className='container'>

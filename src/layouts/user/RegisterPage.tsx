@@ -81,36 +81,31 @@ const RegisterPage: React.FC = () => {
 			isPhoneNumberValid
 		) {
 			try {
-				// console.log({
-				// 	username,
-				// 	password,
-				// 	email,
-				// 	firstName,
-				// 	lastName,
-				// 	phoneNumber,
-				// });
-
 				const endpoint = endpointBE + "/user/register";
 
-				const response = await fetch(endpoint, {
-					method: "POST",
-					headers: {
-						"Content-type": "application/json",
-					},
-					body: JSON.stringify({
-						username,
-						password,
-						email,
-						firstName,
-						lastName,
-						phoneNumber,
-						gender: "M",
+				const response = await toast.promise(
+					fetch(endpoint, {
+						method: "POST",
+						headers: {
+							"Content-type": "application/json",
+						},
+						body: JSON.stringify({
+							username,
+							password,
+							email,
+							firstName,
+							lastName,
+							phoneNumber,
+							gender: "M",
+						}),
 					}),
-				});
+					{ pending: "Đang trong quá trình xử lý ..." }
+				);
 
 				if (response.ok) {
 					toast.success("Đăng ký tài khoản thành công.");
 					toast.info("Vui lòng kiểm tra email để kích hoạt tài khoản");
+					navigation("/login");
 					setStatusBtn(false);
 					return true;
 				} else {

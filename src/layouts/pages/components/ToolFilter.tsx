@@ -79,7 +79,7 @@ const ToolFilter: React.FC<ToolFilterProps> = (props) => {
 		<div className='d-flex align-items-center justify-content-between'>
 			<div className='row' style={{ flex: 1 }}>
 				<div className='col-lg-6 col-md-12 col-sm-12'>
-					<div className='d-flex align-items-center'>
+					<div className='d-flex align-items-center justify-content-lg-start justify-content-md-center justify-content-sm-center'>
 						{/* Genre */}
 						<FormControl sx={{ m: 1, minWidth: 120 }} size='small'>
 							<InputLabel id='demo-simple-select-helper-label'>
@@ -155,7 +155,7 @@ const ToolFilter: React.FC<ToolFilterProps> = (props) => {
 
 				{/* Search */}
 				<div className='col-lg-6 col-md-12 col-sm-12'>
-					<div className='d-inline-flex align-items-center justify-content-end w-100'>
+					<div className='d-inline-flex align-items-center justify-content-lg-end w-100 justify-content-md-center'>
 						<div className='d-inline-flex align-items-center justify-content-between mx-5'>
 							<TextField
 								size='small'

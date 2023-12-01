@@ -282,8 +282,8 @@ const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 	return (
 		<div className='container my-5'>
 			<Grid container>
-				<Grid item xs={3}>
-					<div className='bg-light rounded me-2 py-3'>
+				<Grid item sm={12} md={12} lg={3}>
+					<div className='bg-light rounded py-3 me-lg-2 me-md-0 me-sm-0'>
 						<div className='d-flex align-items-center justify-content-center flex-column'>
 							<Avatar
 								style={{ fontSize: "50px" }}
@@ -337,9 +337,9 @@ const ProfilePage: React.FC<ProfilePageProps> = (props) => {
 						</div>
 					</div>
 				</Grid>
-				<Grid item xs={9}>
+				<Grid item sm={12} md={12} lg={9}>
 					<div
-						className='bg-light rounded px-2 ms-2'
+						className='bg-light rounded px-2 ms-lg-2 ms-md-0 ms-sm-0 mt-lg-0 mt-md-3 mt-sm-3'
 						style={{ minHeight: "300px" }}
 					>
 						<Box sx={{ width: "100%", typography: "body1" }}>

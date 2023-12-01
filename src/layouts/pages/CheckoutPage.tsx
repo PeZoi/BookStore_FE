@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import { endpointBE } from "../utils/Constant";
 import { CheckoutSuccess } from "./components/CheckoutSuccess";
 import { useCartItem } from "../utils/CartItemContext";
+import useScrollToTop from "../../hooks/ScrollToTop";
 
 interface CheckoutPageProps {
 	setIsCheckout: any;
@@ -28,6 +29,8 @@ interface CheckoutPageProps {
 }
 
 export const CheckoutPage: React.FC<CheckoutPageProps> = (props) => {
+	useScrollToTop();
+
 	const { setCartList, setTotalCart } = useCartItem();
 
 	const [isSuccessPayment, setIsSuccessPayment] = useState(false);
