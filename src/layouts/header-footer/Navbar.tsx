@@ -85,6 +85,11 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 							</NavLink>
 						</li>
 						<li className='nav-item'>
+							<NavLink className='nav-link' to='/about'>
+								Giới thiệu
+							</NavLink>
+						</li>
+						<li className='nav-item'>
 							<NavLink className='nav-link' to='/search'>
 								Kho sách
 							</NavLink>

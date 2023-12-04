@@ -79,7 +79,7 @@ const BookCartList: React.FC<BookCartListProps> = () => {
 									<div className='col-2 text-center'>Thao tác</div>
 								</div>
 							</div>
-							<div className='container-book bg-light mt-lg-0 mt-md-3 mt-sm-3 px-3'>
+							<div className='container-book bg-light mt-3 px-3'>
 								<div className='row px-4 py-3'>
 									{cartList.map((cartItem) => {
 										return (
