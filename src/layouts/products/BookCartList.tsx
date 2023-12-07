@@ -40,9 +40,7 @@ const BookCartList: React.FC<BookCartListProps> = () => {
 		<>
 			{!isCheckout ? (
 				<div style={{ overflow: "hidden" }}>
-					{cartList.length !== 0 ? (
-						""
-					) : (
+					{cartList.length === 0 && (
 						<div className='d-flex align-items-center justify-content-center flex-column position-relative'>
 							<img
 								src='https://newnet.vn/themes/newnet/assets/img/empty-cart.png'
@@ -86,7 +84,6 @@ const BookCartList: React.FC<BookCartListProps> = () => {
 											<BookCartProps
 												cartItem={cartItem}
 												handleRemoveBook={handleRemoveBook}
-												// setTotalCart={props.setTotalCart}
 												key={cartItem.book.idBook}
 											/>
 										);
