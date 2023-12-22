@@ -42,7 +42,7 @@ export const OrderTable: React.FC<OrderTableProps> = (props) => {
 
 	const columns: GridColDef[] = [
 		{ field: "id", headerName: "ID", width: 80 },
-		{ field: "nameCustomer", headerName: "TÊN KHÁC HÀNG", width: 200 },
+		{ field: "nameCustomer", headerName: "TÊN KHÁCH HÀNG", width: 200 },
 		{ field: "dateCreated", headerName: "NGÀY TẠO", width: 100 },
 		{
 			field: "totalPrice",

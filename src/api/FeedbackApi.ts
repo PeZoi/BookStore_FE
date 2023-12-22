@@ -17,3 +17,15 @@ export async function getAllFeedback(): Promise<FeedbackModel[]> {
 
    return feedbacks;
 }
+export async function getTotalNumberOfFeedbacks(): Promise<number> {
+   const endpoint = endpointBE + "/feedbacks/search/countBy";
+   try {
+      const response = await requestAdmin(endpoint);
+      if (response) {
+         return response;
+      }
+   } catch (error) {
+      throw new Error("Lỗi không gọi được endpoint lấy tổng feedback\n" + error);
+   }
+   return 0;
+}

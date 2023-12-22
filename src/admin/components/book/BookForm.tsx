@@ -9,7 +9,7 @@ import GenreModel from "../../../model/GenreModel";
 import { getAllGenres } from "../../../api/GenreApi";
 import { SelectMultiple } from "../../../layouts/utils/SelectMultiple";
 import { LoadingButton } from "@mui/lab";
-import { getBookByIdTest } from "../../../api/BookApi";
+import { getBookByIdAllInformation } from "../../../api/BookApi";
 import { endpointBE } from "../../../layouts/utils/Constant";
 
 interface BookFormProps {
@@ -51,7 +51,7 @@ export const BookForm: React.FC<BookFormProps> = (props) => {
 	// Lấy dữ liệu khi update
 	useEffect(() => {
 		if (props.option === "update") {
-			getBookByIdTest(props.id).then((response) => {
+			getBookByIdAllInformation(props.id).then((response) => {
 				setBook(response as BookModel);
 				setPreviewThumbnail(response?.thumbnail as string);
 				setPreviewRelatedImages(response?.relatedImg as string[]);

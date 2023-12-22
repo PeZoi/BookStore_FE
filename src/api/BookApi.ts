@@ -3,7 +3,7 @@ import BookModel from '../model/BookModel'
 import GenreModel from '../model/GenreModel';
 import { getGenreByIdBook } from './GenreApi';
 import { getAllImageByBook } from './ImageApi';
-import { request } from './Request';
+import { request, requestAdmin } from './Request';
 
 interface resultInterface { // Tạo ra các biến trả về
    bookList: BookModel[];
@@ -65,6 +65,26 @@ export async function getNewBook(): Promise<resultInterface> {
    return getBook(endpoint);
 }
 
+export async function get3BestSellerBooks(): Promise<BookModel[]> {
+   const endpoint: string = endpointBE + "/books?sort=soldQuantity,desc&size=3";
+   let bookList = await getBook(endpoint);
+
+   // Use Promise.all to wait for all promises in the map to resolve
+   let newBookList = await Promise.all(bookList.bookList.map(async (book: any) => {
+      // Trả về quyển sách
+      const responseImg = await getAllImageByBook(book.idBook);
+      const thumbnail = responseImg.find(image => image.thumbnail);
+
+      return {
+         ...book,
+         thumbnail: thumbnail ? thumbnail.urlImage : null,
+      };
+   }));
+
+   return newBookList;
+}
+
+
 export async function searchBook(keySearch?: string, idGenre?: number, filter?: number, size?: number, page?: number): Promise<resultInterface> {
 
    // Nếu key search không undifined
@@ -122,6 +142,7 @@ export async function searchBook(keySearch?: string, idGenre?: number, filter?: 
    return getBook(endpoint);
 }
 
+// Lấy sách theo id (chỉ lấy thumbnail)
 export async function getBookById(idBook: number): Promise<BookModel | null> {
    let bookResponse: BookModel = {
       idBook: 0,
@@ -183,7 +204,24 @@ export async function getBookByIdCartItem(idCart: number): Promise<BookModel | n
    }
 }
 
-export async function getBookByIdTest(idBook: number): Promise<BookModel | null> {
+export async function getTotalNumberOfBooks(): Promise<number> {
+   const endpoint = endpointBE + `/book/get-total`;
+   try {
+      // Gọi phương thức request()
+      const response = await requestAdmin(endpoint);
+      // Kiểm tra xem dữ liệu endpoint trả về có dữ liệu không
+      if (response) {
+         // Trả về số lượng cuốn sách
+         return response;
+      }
+   } catch (error) {
+      throw new Error("Lỗi không gọi được endpoint lấy tổng cuốn sách\n" + error);
+   }
+   return 0;
+}
+
+// Lấy sách theo id (lấy thumbnail, ảnh liên quan, thể loại)
+export async function getBookByIdAllInformation(idBook: number): Promise<BookModel | null> {
    let bookResponse: BookModel = {
       idBook: 0,
       nameBook: "",

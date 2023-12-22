@@ -28,6 +28,7 @@ import {
 } from "./Labels";
 import OrderModel from "../../../model/OrderModel";
 import { PieChart } from "@mui/x-charts";
+import Top3BestSeller from "./Top3BestSeller";
 
 ChartJS.register(
 	CategoryScale,
@@ -246,6 +247,7 @@ export const Chart: React.FC<ChartProps> = (props) => {
 	const [orderFailure, setOrderFailure] = useState(0);
 	const [orderDelivering, setOrderDelivering] = useState(0);
 
+	// Lấy dữ liệu trạng thái đơn hàng
 	useEffect(() => {
 		const orderTotal = props.orders?.length ? props.orders.length : 0;
 		let orderSuccessfulTotal = 0;
@@ -268,48 +270,70 @@ export const Chart: React.FC<ChartProps> = (props) => {
 		setOrderFailure((orderFailureTotal / orderTotal) * 100);
 		setOrderDelivering((orderDeliveringTotal / orderTotal) * 100);
 	}, [props.orders]);
+
 	return (
-		<div className='conatiner p-4'>
-			<div className='shadow-4 rounded p-5 mb-5'>
-				<PieChart
-					series={[
-						{
-							data: [
+		<div className='conatiner p-4 '>
+			<div className='row'>
+				<div className='col-lg-6 col-md-12 col-sm-12'>
+					<div className='shadow-4 rounded py-5 mb-5 bg-light'>
+						<h4 className='text-black text-center mb-3 pb-3'>
+							Biểu đồ thống kê trạng thái đơn hàng
+							<hr />
+						</h4>
+						<PieChart
+							series={[
 								{
-									value: orderSuccessful,
-									label: "Đơn thành công",
-									color: "#4db44d",
+									data: [
+										{
+											value: orderSuccessful,
+											label: "Đơn thành công",
+											color: "#4db44d",
+										},
+										{
+											value: orderFailure,
+											label: "Đơn bị huỷ",
+											color: "#e03c3c",
+										},
+										{
+											value: orderProcessing,
+											label: "Đơn đang xử lý",
+											color: "#4e4ee6",
+										},
+										{
+											value: orderDelivering,
+											label: "Đơn đang giao",
+											color: "#e1e13d",
+										},
+									],
+									highlightScope: {
+										faded: "global",
+										highlighted: "item",
+									},
+									faded: {
+										innerRadius: 30,
+										additionalRadius: -30,
+										color: "gray",
+									},
+									arcLabel: (item) => `${item.value}%`,
 								},
-								{
-									value: orderFailure,
-									label: "Đơn bị huỷ",
-									color: "#e03c3c",
-								},
-								{
-									value: orderProcessing,
-									label: "Đơn đang xử lý",
-									color: "#4e4ee6",
-								},
-								{
-									value: orderDelivering,
-									label: "Đơn đang giao",
-									color: "#e1e13d",
-								},
-							],
-							highlightScope: { faded: "global", highlighted: "item" },
-							faded: {
-								innerRadius: 30,
-								additionalRadius: -30,
-								color: "gray",
-							},
-							arcLabel: (item) => `${item.value}%`,
-						},
-					]}
-					width={500}
-					height={200}
-				/>
+							]}
+							width={500}
+							height={250}
+						/>
+					</div>
+				</div>
+				<div className='col-lg-6 col-md-12 col-sm-12'>
+					<div className='shadow-4 rounded p-5 mb-5 bg-light'>
+						<h4 className='text-black text-center mb-3'>
+							Top 3 cuốn sách được mua nhiều nhất
+							<hr />
+						</h4>
+
+						<Top3BestSeller />
+					</div>
+				</div>
 			</div>
-			<div className='shadow-4 rounded p-5 d-flex align-items-end flex-column'>
+			<div className='shadow-4 rounded p-5 d-flex align-items-end flex-column bg-light'>
 				<div className='d-flex'>
 					<FormControl sx={{ m: 1, minWidth: 170 }} size='small'>
 						<InputLabel id='demo-select-small-label'>
