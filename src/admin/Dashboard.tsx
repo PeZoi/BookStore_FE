@@ -32,13 +32,8 @@ const Dashboard = () => {
 		getAllOrders()
 			.then((response) => {
 				setOrders(response);
-				const numberOfOrder = response.reduce((prevValue, order) => {
-					if (order.status === "Thành công") {
-						return prevValue + 1;
-					}
-					return prevValue;
-				}, 0);
-				setNumberOfOrder(numberOfOrder);
+				const numberOfOrders = response.length;
+				setNumberOfOrder(numberOfOrders);
 				const totalPriceResponse = response.reduce((prevValue, order) => {
 					if (order.status === "Thành công") {
 						return prevValue + order.totalPrice;

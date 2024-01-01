@@ -48,7 +48,7 @@ const Top3BestSeller = () => {
 									>
 										<TextEllipsis
 											text={book.nameBook + ""}
-											limit={28}
+											limit={25}
 										/>
 									</Link>
 								</td>

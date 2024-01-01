@@ -5,7 +5,7 @@ import { request } from "./Request";
 
 export async function getAllOrders(): Promise<OrderModel[]> {
    try {
-      const endpoint: string = endpointBE + "/orders?sort=idOrder,desc";
+      const endpoint: string = endpointBE + "/orders?sort=idOrder,desc&size=100000";
       const response = await request(endpoint);
 
       const datas = await Promise.all(response._embedded.orders.map(async (data: any) => {

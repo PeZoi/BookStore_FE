@@ -314,7 +314,7 @@ export const Chart: React.FC<ChartProps> = (props) => {
 										additionalRadius: -30,
 										color: "gray",
 									},
-									arcLabel: (item) => `${item.value}%`,
+									arcLabel: (item) => `${item.value.toFixed(0)}%`,
 								},
 							]}
 							width={500}

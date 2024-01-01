@@ -48,7 +48,10 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 	}
 
 	return (
-		<nav className='navbar navbar-expand-lg navbar-light bg-light sticky-top'>
+		<nav
+			className='navbar navbar-expand-lg navbar-light bg-light sticky-top'
+			style={{ zIndex: 2 }}
+		>
 			{/* <!-- Container wrapper --> */}
 			<div className='container-fluid'>
 				{/* <!-- Toggle button --> */}
@@ -248,7 +251,7 @@ const Navbar: React.FC<NavbarProps> = (props) => {
 												setCartList([]);
 											}}
 										>
-											Logout
+											Đăng xuất
 										</a>
 									</li>
 								</ul>

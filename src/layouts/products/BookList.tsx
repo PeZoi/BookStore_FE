@@ -7,7 +7,7 @@ import "../products/Book.css";
 import Pagination from "../utils/Pagination";
 import Button from "@mui/material/Button";
 import { Link } from "react-router-dom";
-import { Box, CircularProgress, Skeleton } from "@mui/material";
+import { Skeleton } from "@mui/material";
 
 interface BookListProps {
 	paginable?: boolean;
@@ -29,6 +29,7 @@ const BookList: React.FC<BookListProps> = (props) => {
 	// Xử lý phân trang
 	const handlePagination = (pageNumber: number) => {
 		setCurrentPage(pageNumber);
+		window.scrollTo(0, 0);
 	};
 
 	// Chỗ này xử lý khi thực hiện chức năng hiện số sản phẩm
