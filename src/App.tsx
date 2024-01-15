@@ -127,7 +127,7 @@ const MyRoutes = () => {
 						</div>
 					)}
 					<ToastContainer
-						position='bottom-left'
+						position='bottom-center'
 						autoClose={3000}
 						pauseOnFocusLoss={false}
 					/>

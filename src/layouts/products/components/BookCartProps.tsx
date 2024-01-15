@@ -12,6 +12,7 @@ import { useConfirm } from "material-ui-confirm";
 import { isToken } from "../../utils/JwtService";
 import { endpointBE } from "../../utils/Constant";
 import { useCartItem } from "../../utils/CartItemContext";
+import { toast } from "react-toastify";
 
 interface BookCartProps {
 	cartItem: CartItemModel;
@@ -87,6 +88,8 @@ const BookCartProps: React.FC<BookCartProps> = (props) => {
 			) {
 				setQuantity(quantity + 1);
 				handleModifiedQuantity(props.cartItem.book.idBook, 1);
+			} else {
+				toast.warning("Số lượng tồn kho không đủ");
 			}
 		}
 	};

@@ -396,24 +396,26 @@ const BookDetail: React.FC<BookDetailProps> = (props) => {
 											Hết hàng
 										</Button>
 									) : (
-										<Button
-											variant='outlined'
-											size='large'
-											startIcon={<ShoppingCartOutlined />}
-											className='me-3'
-											onClick={() => handleAddProduct(book)}
-										>
-											Thêm vào giỏ hàng
-										</Button>
+										<>
+											<Button
+												variant='outlined'
+												size='large'
+												startIcon={<ShoppingCartOutlined />}
+												className='me-3'
+												onClick={() => handleAddProduct(book)}
+											>
+												Thêm vào giỏ hàng
+											</Button>
+											<Button
+												variant='contained'
+												size='large'
+												className='ms-3'
+												onClick={() => handleBuyNow(book)}
+											>
+												Mua ngay
+											</Button>
+										</>
 									)}
-									<Button
-										variant='contained'
-										size='large'
-										className='ms-3'
-										onClick={() => handleBuyNow(book)}
-									>
-										Mua ngay
-									</Button>
 								</div>
 							</div>
 						</div>

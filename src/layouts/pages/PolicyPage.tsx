@@ -5,7 +5,7 @@ const PolicyPage: React.FC = () => {
 	useScrollToTop(); // Mỗi lần vào component này thì sẽ ở trên cùng
 
 	return (
-		<div className='container mt-5'>
+		<div className='container my-5 bg-super-light p-4 rounded'>
 			<h1>CHÍNH SÁCH ĐỔI / TRẢ / HOÀN TIỀN</h1>
 			<p>
 				Chúng tôi luôn trân trọng sự tin tưởng và ủng hộ của quý khách hàng
